@@ -1,0 +1,61 @@
+project:
+  type: website
+  preview:
+    port: 7771
+    browser: false
+
+execute:
+  freeze: auto
+  cache: true
+
+website:
+  title: "Vikraman's site"
+  site-url: https://site.vikraman.org
+  description: "Vikraman's personal website"
+  favicon: favicon.svg
+  # nav bar
+  navbar:
+    left:
+      - href: about/index.qmd
+        text: About
+      - now/index.qmd
+      - papers/index.qmd
+      - talks/index.qmd
+      - notes/index.qmd
+      - projects/index.qmd
+  # search bar
+  search:
+    location: navbar
+    type: overlay
+    keyboard-shortcut: ["?", "H"]
+  # navigation
+  reader-mode: true
+  page-navigation: true
+  back-to-top-navigation: true
+  # footer
+  page-footer:
+    right: "Built using [Quarto](https://quarto.org)"
+
+format:
+  html:
+    # styling
+    theme:
+      light: theme/theme-light.scss
+      dark: theme/theme-dark.scss
+    respect-user-color-scheme: true
+    # layout
+    page-layout: full
+    grid:
+      body-width: 750px
+      margin-width: 450px
+    title-block-banner: true
+    toc: true
+    anchor-sections: true
+    smooth-scroll: true
+    # math
+    html-math-method:
+      method: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js
+    # external links
+    link-external-newwindow: true
+    link-external-filter: '^(?:http:|https:)\/\/site\.vikraman\.org\/'
