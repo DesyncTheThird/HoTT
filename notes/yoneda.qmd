@@ -2,38 +2,65 @@
 title: Yoneda
 subtitle: <Subtitle>
 date: today
-filters:
-  - imagify
-imagify:
-  header-includes: \usepackage{quiver}
 ---
 
+::: {.hidden}
+
+\newcommand{\type}[1]{\mathsf{#1}}
+\newcommand{\term}[1]{\mathrm{}}
+
+\newcommand{\tpt}[2]\term{transport}({#1,#2})
+\newcommand{\tp}[1]{{#1}_{\ast}}
+
+\newcommand{\yo}{\mathop{よ}}
+
+:::
 
 ::: {#def-natural-transformation}
 
 A **natural transformation** between two type families $F,G:A\rightarrow\mathcal{U}$ is a family of maps
 $$
-    \alpha:(x:A)\rightarrow(F(x)\rightarrow G(x))
+    \alpha\colon (x:A)\rightarrow(F(x)\rightarrow G(x))
 $$
 We denote the type of natural transformations between $F$ and $G$ by $\mathrm{Nat}(F,G)$.
 
 :::
 
+
+
+
+::: {#def-yoneda-embedding}
+
+The Yoneda embedding $よ_A:A\rightarrow(A\rightarrow\mathcal{U})$ is defined by
+$$
+    よ_A(a)\colon \equiv \lambda x.(a=x).
+$$
+
+
+:::
+
+
 ::: {#thm-yoneda}
 
-Let $y_A:A\rightarrow(A\rightarrow\mathcal{U})$ be defined by
+For any type family $F:A\rightarrow\mathcal{U}$, the map
 $$
-    y_A(a):\equiv \lambda x.(a=x).
+\begin{align*}
+    f:\mathrm{Nat}(よ_A(a),F)&\rightarrow F(a)\\
+    \alpha&\mapsto &\alpha(a)(\mathrm{refl}_a)
+\end{align*}
 $$
+is an equivalence.
 
-Then, for any type family $F:A\rightarrow\mathcal{U}$, the map
+:::
 
-$$
-    f:\mathrm{Nat}(y_A,F)\rightarrow F(A).
-$$
-defined by
-$$
 
+::: {.proof}
+We construct the inverse map
+$$
+\begin{align*}
+    g:F(a)&\rightarrow\mathrm{Nat}(よ_A(a),F)\\
+    u&\mapsto J(\lambda)
+\end{align*}
 $$
 
 
@@ -47,14 +74,4 @@ $$
 
 
 
-
-
-
-
-
-
-
-
-
-
-pe
+ertyrtyrtyrtyrt
