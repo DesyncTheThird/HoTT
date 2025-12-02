@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "notes/yoneda.html",
+    "href": "notes/yoneda.html",
+    "title": "Yoneda",
+    "section": "",
+    "text": "Definition 1 A natural transformation between two type families \\(F,G:A\\rightarrow\\mathcal{U}\\) is a family of maps \\[\n    \\alpha:(x:A)\\rightarrow(F(x)\\rightarrow G(x))\n\\] We denote the type of natural transformations between \\(F\\) and \\(G\\) by \\(\\mathrm{Nat}(F,G)\\).\n\n\nTheorem 1 Let \\(y_A:A\\rightarrow(A\\rightarrow\\mathcal{U})\\) be defined by \\[\n    y_A(a):\\equiv \\lambda x.(a=x).\n\\]\nThen, for any type family \\(F:A\\rightarrow\\mathcal{U}\\), the map\n\\[\n    f:\\mathrm{Nat}(y_A,F)\\rightarrow F(A).\n\\] defined by $$\n$$\n\npe\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site:\nnot Vikraman’s personal website\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Notes",
+    "section": "",
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n      \n        Author\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\nAuthor\n\n\n\n\n\n\n\n\nDec 2, 2025\n\n\nYoneda\n\n\n \n\n\n\n\n\n\nNov 9, 2025\n\n\nSandbox\n\n\nVikraman Choudhury\n\n\n\n\n\n\nNo matching items\n Back to top"
+  },
+  {
+    "objectID": "notes/sandbox.html",
+    "href": "notes/sandbox.html",
+    "title": "Sandbox",
+    "section": "",
+    "text": "Introduction\nThis is a sandbox document to test typesetting and layout. This website and notes are built using Quarto1.\n1 Quarto has a website and a Github repository.\n\nMath\n\n\\[\n\\newcommand{\\blank}{{-}}\n\\newcommand{\\ladj}{\\dashv}\n\\newcommand{\\dual}{^{\\perp}}\n\\newcommand{\\parr}{\n  \\require{html}\n  \\mathop{\\style{display: inline-block; transform: rotate(180deg)}{\\&}}\n}\n\\]\n\nThis is a math character \\(\\alpha\\), and this is some inline math \\((\\blank) \\otimes A \\ladj A\\dual \\parr (\\blank)\\).\nThis is a prooftree in display math mode2. \\[\n\\require{bussproofs}\n\\begin{prooftree}\n  \\AxiomC{ $\\Gamma, A \\vdash B$ }\n  \\RightLabel{ $\\to$I }\n  \\UnaryInfC{ $\\Gamma \\vdash A \\to B$ }\n  \\AxiomC{ $\\Gamma \\vdash A$ }\n  \\RightLabel{ $\\to$E }\n  \\BinaryInfC{ $\\Gamma \\vdash B$ }\n\\end{prooftree}\n\\]\n2 This is another prooftree but in the margin. \\[\n\\begin{prooftree}\n  \\AxiomC{ $P$ }\n  \\AxiomC{ $P \\to Q$ }\n  \\BinaryInfC { $Q$ }\n\\end{prooftree}\n\\]\n\n\n\n\nDiagrams\nThis renders diagrams in markdown Figure 1.\n\n\n\n\nThis is some imagified LaTeX math.\n\nA TikZ picture Figure 1 (a).\n\n\n\n\n\n\n(a)\n\n\n\nA commutative diagram Figure 1 (b).\n\n\n\n\n\n\n(b)\n\n\n\n\n\n\nFigure 1\n\n\n\nThis is a quiver iframe.\n\n\n\n\n\n\n\n Back to top"
+  }
+]
