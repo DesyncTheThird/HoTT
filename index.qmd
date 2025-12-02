@@ -1,7 +1,11 @@
 ---
 title: "Notes"
+title-block-style: default
+listing:
+  contents: "notes/*.qmd"
+  sort:
+    - "date desc"
+    - "title"
+  type: table
+  categories: true
 ---
-
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.

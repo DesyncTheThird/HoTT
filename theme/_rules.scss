@@ -6,46 +6,6 @@ main {
     }
 }
 
-ul.papers.list,
-ul.talks.list {
-    li {
-        margin: 0.25rem 0;
-    }
-
-    .listing-name {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-    }
-
-    .listing-authors,
-    .listing-venue,
-    .listing-proceedings {
-        margin-bottom: 0.25rem;
-    }
-
-    .listing-links {
-        list-style: none;
-        padding: 0;
-
-        li {
-            display: inline-block;
-            text-align: center;
-            min-width: 4rem;
-            background-color: darken($body-bg, 10%);
-            border-radius: 0.5rem;
-
-            a {
-                display: block;
-                font-size: 0.9rem;
-                padding: 0.25rem 0.5rem;
-                border-radius: 0.5rem;
-                text-decoration: none;
-            }
-        }
-    }
-}
-
 #quarto-margin-sidebar {
     z-index: 0 !important;
 }

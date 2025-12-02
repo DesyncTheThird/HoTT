@@ -1,0 +1,60 @@
+---
+title: Yoneda
+subtitle: <Subtitle>
+date: today
+filters:
+  - imagify
+imagify:
+  header-includes: \usepackage{quiver}
+---
+
+
+::: {#def-natural-transformation}
+
+A **natural transformation** between two type families $F,G:A\rightarrow\mathcal{U}$ is a family of maps
+$$
+    \alpha:(x:A)\rightarrow(F(x)\rightarrow G(x))
+$$
+We denote the type of natural transformations between $F$ and $G$ by $\mathrm{Nat}(F,G)$.
+
+:::
+
+::: {#thm-yoneda}
+
+Let $y_A:A\rightarrow(A\rightarrow\mathcal{U})$ be defined by
+$$
+    y_A(a):\equiv \lambda x.(a=x).
+$$
+
+Then, for any type family $F:A\rightarrow\mathcal{U}$, the map
+
+$$
+    f:\mathrm{Nat}(y_A,F)\rightarrow F(A).
+$$
+defined by
+$$
+
+$$
+
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pe

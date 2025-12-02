@@ -1,21 +1,19 @@
-@import "colors";
-
-$primary: $crimson;
-$secondary: $bronze;
-$success: $teal;
-$info: $teal;
-$warning: $bronze;
-$danger: $crimson;
-$light: $off-white;
-$dark: $gray;
+$primary: #0d47a1;    // deep navy
+$secondary: #2196f3;  // bright blue
+$success: #007bb2;    // sea blue
+$info: #0288d1;       // info blue
+$warning: #4f9fe6;    // muted sky
+$danger: #0b3d91;     // dark blue accent
+$light: #eaf6ff;      // very pale blue
+$dark: #0b2545;       // dark navy
 
 // body
-$body-bg: lighten($cream, 10%);
-$body-color: $oxblood;
+$body-bg: #f1f6fb;
+$body-color: #062447;
 
 // links
 $link-color: darken($body-color, 10%);
-$link-hover-bg-color: darken($body-bg, 20%);
+$link-hover-bg-color: darken($body-bg, 12%);
 
 // navbar
 $navbar-bg: $primary;

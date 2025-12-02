@@ -1,0 +1,9 @@
+---
+title: <Title>
+subtitle: <Subtitle>
+date: date
+filters:
+  - imagify
+imagify:
+  header-includes: \usepackage{quiver}
+---
