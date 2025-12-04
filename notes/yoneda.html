@@ -324,7 +324,7 @@ window.Quarto = {
 
 
 <div class="hidden">
-<p>{transport}({#1,#2})</p>
+
 </div>
 <div id="def-natural-transformation" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 1</strong></span> A <strong>natural transformation</strong> between two type families <span class="math inline">\(F,G:A\rightarrow\mathcal{U}\)</span> is a family of maps <span class="math display">\[
@@ -334,14 +334,14 @@ window.Quarto = {
 </div>
 <div id="def-yoneda-embedding" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 2</strong></span> The Yoneda embedding <span class="math inline">\(よ_A:A\rightarrow(A\rightarrow\mathcal{U})\)</span> is defined by <span class="math display">\[
-    よ_A(a):\equiv \lambda x.(a=x).
+    よ_A(a):\equiv\lambda x.(a=x).
 \]</span></p>
 </div>
 <div id="thm-yoneda" class="theorem">
 <p><span class="theorem-title"><strong>Theorem 1</strong></span> For any type family <span class="math inline">\(F:A\rightarrow\mathcal{U}\)</span>, the map <span class="math display">\[
 \begin{align*}
-    f:\mathrm{Nat}(よ_A(a),F)&amp;\rightarrow F(a)\\
-    \alpha&amp;\mapsto\alpha(a)(\mathrm{refl}_a)
+    f:\mathsf{Nat}(よ_A(a),F)&amp;\rightarrow F(a)\\
+    \alpha&amp;\mapsto\alpha(a)(\operatorname{\mathsf{refl}}_a)
 \end{align*}
 \]</span></p>
 <p>is an equivalence.</p>
@@ -349,8 +349,23 @@ window.Quarto = {
 <div class="proof">
 <p><span class="proof-title"><em>Proof</em>. </span>We construct the inverse map <span class="math display">\[
 \begin{align*}
-    g:F(a)&amp;\rightarrow\mathrm{Nat}(よ_A(a),F)\\
-    u&amp;\mapsto J(\lambda)
+    g:F(a)&amp;\rightarrow\mathsf{Nat}(よ_A(a),F)\\
+    u&amp;\mapsto J\bigl(\lambda(x:A)\lambda(p:x=_Aa).F(x),u\bigr)
+\end{align*}
+\]</span></p>
+<p>We show <span class="math inline">\(g\circ f=\operatorname{\mathsf{id}}_{\mathsf{Nat}(よ_A(a),F)}\)</span>. By funext, it is sufficient to show: <span class="math display">\[
+\begin{equation*}
+    (x:A)\rightarrow(p:a=_Ax)\rightarrow\bigl(g\circ f(\alpha)\bigr)(x)(p)=\alpha(x)(p)
+\end{equation*}
+\]</span> By based path induction on <span class="math inline">\(p\)</span>, <span class="math display">\[
+\begin{align*}
+    J\Bigl(\lambda x\lambda p.(g\circ f(\alpha)\bigr)(x)(p)=\alpha(x)(p)\Bigr)
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align*}
+    g\bigl(f(\alpha)\bigr)(a,\operatorname{\mathsf{refl}}_a)&amp;\equiv J(\lambda x\lambda p.f(\alpha))(a,\operatorname{\mathsf{refl}}_a)\\
+    &amp;\equiv\alpha(a,\operatorname{\mathsf{refl}}_a)\tag{$J_\beta$}
 \end{align*}
 \]</span></p>
 </div>
