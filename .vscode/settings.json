@@ -1,0 +1,11 @@
+{
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "\\.qmd$",
+                "cmd": ".\\scripts\\touch.cmd",
+                "isAsync": true
+            }
+        ]
+    }
+}
