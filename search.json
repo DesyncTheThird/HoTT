@@ -4,7 +4,7 @@
     "href": "notes/yoneda.html",
     "title": "Yoneda",
     "section": "",
-    "text": "{transport}({#1,#2})\n\n\nDefinition 1 A natural transformation between two type families \\(F,G:A\\rightarrow\\mathcal{U}\\) is a family of maps \\[\n    \\alpha\\colon (x:A)\\rightarrow(F(x)\\rightarrow G(x))\n\\] We denote the type of natural transformations between \\(F\\) and \\(G\\) by \\(\\mathrm{Nat}(F,G)\\).\n\n\nDefinition 2 The Yoneda embedding \\(よ_A:A\\rightarrow(A\\rightarrow\\mathcal{U})\\) is defined by \\[\n    よ_A(a)\\colon \\equiv \\lambda x.(a=x).\n\\]\n\n\nTheorem 1 For any type family \\(F:A\\rightarrow\\mathcal{U}\\), the map \\[\n\\begin{align*}\n    f:\\mathrm{Nat}(よ_A(a),F)&\\rightarrow F(a)\\\\\n    \\alpha&\\mapsto &\\alpha(a)(\\mathrm{refl}_a)\n\\end{align*}\n\\] is an equivalence.\n\n\nProof. We construct the inverse map \\[\n\\begin{align*}\n    g:F(a)&\\rightarrow\\mathrm{Nat}(よ_A(a),F)\\\\\n    u&\\mapsto J(\\lambda)\n\\end{align*}\n\\]\n\nertyrtyrtyrtyrt\n\n\n\n Back to top"
+    "text": "{transport}({#1,#2})\n\n\nDefinition 1 A natural transformation between two type families \\(F,G:A\\rightarrow\\mathcal{U}\\) is a family of maps \\[\n    \\alpha:(x:A)\\rightarrow(F(x)\\rightarrow G(x))\n\\]\nWe denote the type of natural transformations between \\(F\\) and \\(G\\) by \\(\\mathrm{Nat}(F,G)\\).\n\n\nDefinition 2 The Yoneda embedding \\(よ_A:A\\rightarrow(A\\rightarrow\\mathcal{U})\\) is defined by \\[\n    よ_A(a):\\equiv \\lambda x.(a=x).\n\\]\n\n\nTheorem 1 For any type family \\(F:A\\rightarrow\\mathcal{U}\\), the map \\[\n\\begin{align*}\n    f:\\mathrm{Nat}(よ_A(a),F)&\\rightarrow F(a)\\\\\n    \\alpha&\\mapsto\\alpha(a)(\\mathrm{refl}_a)\n\\end{align*}\n\\]\nis an equivalence.\n\n\nProof. We construct the inverse map \\[\n\\begin{align*}\n    g:F(a)&\\rightarrow\\mathrm{Nat}(よ_A(a),F)\\\\\n    u&\\mapsto J(\\lambda)\n\\end{align*}\n\\]\n\n\n\n\n Back to top"
   },
   {
     "objectID": "about.html",
@@ -18,7 +18,7 @@
     "href": "index.html",
     "title": "Notes",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n      \n        Author\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\nAuthor\n\n\n\n\n\n\n\n\nDec 2, 2025\n\n\nYoneda\n\n\n \n\n\n\n\n\n\nNov 9, 2025\n\n\nSandbox\n\n\nVikraman Choudhury\n\n\n\n\n\n\nNo matching items\n Back to top"
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n      \n        Author\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\nAuthor\n\n\n\n\n\n\n\n\nDec 4, 2025\n\n\nYoneda\n\n\n \n\n\n\n\n\n\nNov 9, 2025\n\n\nSandbox\n\n\nVikraman Choudhury\n\n\n\n\n\n\nNo matching items\n Back to top"
   },
   {
     "objectID": "notes/sandbox.html",
