@@ -6,15 +6,15 @@ date: today
 
 ::: hidden
 \newcommand{\type}[1]{\mathsf{#1}}
-\newcommand{\term}[1]{\mathrm{}}
+\newcommand{\term}[1]{\operatorname{\mathsf{#1}}}
 
-\newcommand{\tpt}[2]\term
-
-{transport}({#1,#2})
+\newcommand{\tpt}[2]{\term{transport}({#1,#2})}
 
 \newcommand{\tp}[1]{{#1}_{\ast}}
 
 \newcommand{\yo}{\mathop{よ}}
+
+\newcommand{\defeq}{\stackrel{\triangle}{=}}
 :::
 
 ::: {#def-natural-transformation}
@@ -29,7 +29,7 @@ We denote the type of natural transformations between $F$ and $G$ by $\mathrm{Na
 ::: {#def-yoneda-embedding}
 The Yoneda embedding $よ_A:A\rightarrow(A\rightarrow\mathcal{U})$ is defined by
 $$
-    よ_A(a):\equiv \lambda x.(a=x).
+    よ_A(a):\equiv\lambda x.(a=x).
 $$
 :::
 
@@ -37,8 +37,8 @@ $$
 For any type family $F:A\rightarrow\mathcal{U}$, the map
 $$
 \begin{align*}
-    f:\mathrm{Nat}(よ_A(a),F)&\rightarrow F(a)\\
-    \alpha&\mapsto\alpha(a)(\mathrm{refl}_a)
+    f:\type{Nat}(よ_A(a),F)&\rightarrow F(a)\\
+    \alpha&\mapsto\alpha(a)(\term{refl}_a)
 \end{align*}
 $$
 
@@ -46,17 +46,38 @@ is an equivalence.
 :::
 
 ::: proof
-
 We construct the inverse map
 $$
 \begin{align*}
-    g:F(a)&\rightarrow\mathrm{Nat}(よ_A(a),F)\\
-    u&\mapsto J(\lambda)
+    g:F(a)&\rightarrow\type{Nat}(よ_A(a),F)\\
+    u&\mapsto J\bigl(\lambda(x:A)\lambda(p:x=_Aa).F(x),u\bigr)
 \end{align*}
 $$
 
-:::
+We show $g\circ f=\term{id}_{\type{Nat}(よ_A(a),F)}$. By funext, it is sufficient to show:
+$$
+\begin{equation*}
+    (x:A)\rightarrow(p:a=_Ax)\rightarrow\bigl(g\circ f(\alpha)\bigr)(x)(p)=\alpha(x)(p)
+\end{equation*}
+$$
+By based path induction on $p$, it suffices to construct the method $c_0\defeq$:
+$$
+\begin{align*}
+    J\Bigl(\lambda x\lambda p.(g\circ f(\alpha)\bigr)(x)(p)=\alpha(x)(p)\Bigr)
+\end{align*}
+$$
 
+
+$$
+\begin{align*}
+    g\bigl(f(\alpha)\bigr)(a,\term{refl}_a)&\equiv J(\lambda x\lambda p.f(\alpha))(a,\term{refl}_a)\\
+    &\equiv\alpha(a,\term{refl}_a)\tag{$J_\beta$}
+\end{align*}
+$$
+
+
+
+:::
 
 
 

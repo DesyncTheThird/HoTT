@@ -1,0 +1,45 @@
+---
+title: Induction
+subtitle: <Subtitle>
+date: today
+---
+
+::: hidden
+\newcommand{\type}[1]{\mathsf{#1}}
+\newcommand{\term}[1]{\mathrm{#1}}
+
+\newcommand{\tpt}[2]{\term{transport}({#1,#2})}
+
+\newcommand{\tp}[1]{{#1}_{\ast}}
+
+\newcommand{\yo}{\mathop{よ}}
+
+\require{bussproofs}
+:::
+
+
+
+
+
+
+::: {#def-induction-principle}
+Given a type $T$ with constructors $C_0,\ldots,C_n$, the *induction principle* or *dependent eliminator* $\term{ind}_T$
+:::
+
+
+
+
+
+
+
+
+::: {#def-path-induction}
+$$
+    \begin{prooftree}
+        \AxiomC{B}
+        \UnaryInfC{A}
+    \end{prooftree}
+$$
+
+:::
+
