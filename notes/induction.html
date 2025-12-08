@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-12-05">
+<meta name="dcterms.date" content="2025-12-08">
 
 <title>Induction – HoTT.jpeg</title>
 <style>
@@ -295,14 +295,14 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">December 5, 2025</p>
+        <p class="date">December 8, 2025</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">December 5, 2025</p>
+        <p class="date-modified">December 8, 2025</p>
       </div>
     </div>
       
@@ -327,7 +327,7 @@ window.Quarto = {
 
 </div>
 <div id="def-induction-principle" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 1</strong></span> Given a type <span class="math inline">\(T\)</span> with constructors <span class="math inline">\(C_0,\ldots,C_n\)</span>, the <em>induction principle</em> or <em>dependent eliminator</em> <span class="math inline">\(\mathrm{ind}_T\)</span></p>
+<p><span class="theorem-title"><strong>Definition 1</strong></span> Given a type <span class="math inline">\(T\)</span> with constructors <span class="math inline">\(C_0,\ldots,C_n\)</span>, the <em>induction principle</em> or <em>dependent eliminator</em> <span class="math inline">\(\operatorname{\mathsf{ind}}_T\)</span></p>
 </div>
 <div id="def-path-induction" class="theorem definition">
 <p><span class="theorem-title"><strong>Definition 2</strong></span> <span class="math display">\[
@@ -335,6 +335,13 @@ window.Quarto = {
         \AxiomC{B}
         \UnaryInfC{A}
     \end{prooftree}
+\]</span></p>
+</div>
+<div id="def-funext" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 3</strong></span> <span class="math display">\[
+\begin{align*}
+    \operatorname{\mathsf{funext}}:\{A,B:\mathcal{U}\}\rightarrow\{f,g:A\rightarrow B\}\rightarrow\bigl((x:A)\rightarrow f(x)=_{B(x)}g(x)\bigr)\rightarrow f=_{(x:A)\rightarrow B(x)}g
+\end{align*}
 \]</span></p>
 </div>
 
