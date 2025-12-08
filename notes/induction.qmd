@@ -6,13 +6,15 @@ date: today
 
 ::: hidden
 \newcommand{\type}[1]{\mathsf{#1}}
-\newcommand{\term}[1]{\mathrm{#1}}
+\newcommand{\term}[1]{\operatorname{\mathsf{#1}}}
 
 \newcommand{\tpt}[2]{\term{transport}({#1,#2})}
 
 \newcommand{\tp}[1]{{#1}_{\ast}}
 
 \newcommand{\yo}{\mathop{よ}}
+
+\newcommand{\defeq}{\stackrel{\triangle}{=}}
 
 \require{bussproofs}
 :::
@@ -43,3 +45,12 @@ $$
 
 :::
 
+
+
+::: {#def-funext}
+$$
+\begin{align*}
+    \term{funext}:\{A,B:\mathcal{U}\}\rightarrow\{f,g:A\rightarrow B\}\rightarrow\bigl((x:A)\rightarrow f(x)=_{B(x)}g(x)\bigr)\rightarrow f=_{(x:A)\rightarrow B(x)}g
+\end{align*}
+$$
+:::

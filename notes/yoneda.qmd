@@ -11,10 +11,14 @@ date: today
 \newcommand{\tpt}[2]{\term{transport}({#1,#2})}
 
 \newcommand{\tp}[1]{{#1}_{\ast}}
+\newcommand{\id}[1][]{\term{id}_{#1}}
+\newcommand{\refl}[1][]{\term{refl}_{#1}}
 
 \newcommand{\yo}{\mathop{よ}}
 
 \newcommand{\defeq}{\stackrel{\triangle}{=}}
+
+\require{bussproofs}
 :::
 
 ::: {#def-natural-transformation}
@@ -38,7 +42,7 @@ For any type family $F:A\rightarrow\mathcal{U}$, the map
 $$
 \begin{align*}
     f:\type{Nat}(よ_A(a),F)&\rightarrow F(a)\\
-    \alpha&\mapsto\alpha(a)(\term{refl}_a)
+    \alpha&\mapsto\alpha(a,\refl[a])
 \end{align*}
 $$
 
@@ -54,28 +58,44 @@ $$
 \end{align*}
 $$
 
-We show $g\circ f=\term{id}_{\type{Nat}(よ_A(a),F)}$. By funext, it is sufficient to show:
+We show $g\circ f=\id[\type{Nat}(よ_A(a),F)]$. By $\term{funext}$, it is sufficient to show:
 $$
-\begin{equation*}
-    (x:A)\rightarrow(p:a=_Ax)\rightarrow\bigl(g\circ f(\alpha)\bigr)(x)(p)=\alpha(x)(p)
-\end{equation*}
+    \bigl(\alpha:\type{Nat}(よ_A(a),F)\bigr)\rightarrow (g\circ f)(\alpha)=\alpha
 $$
-By based path induction on $p$, it suffices to construct the method $c_0\defeq$:
+
+but $\alpha:(x:A)\rightarrow よ_A(a)(x)\rightarrow F(x)$ is a (higher) function, so by two more applications of $\term{funext}$, we need:
+$$
+    \bigl(\alpha:\type{Nat}(よ_A(a),F)\bigr)\rightarrow(x:A)\rightarrow(p:a=_Ax)\rightarrow\bigl(g\circ f(\alpha)\bigr)(x,p)=\alpha(x,p)
+$$
+
+By based path induction on $p$, it suffices to construct the method $c_0:\bigl(g\circ f(\alpha)\bigr)(a,\refl[a])=\alpha(a,\refl[a])$; but this equality is judgemental:
 $$
 \begin{align*}
-    J\Bigl(\lambda x\lambda p.(g\circ f(\alpha)\bigr)(x)(p)=\alpha(x)(p)\Bigr)
+    g\bigl(f(\alpha)\bigr)(a,\refl[a])&\equiv J(\lambda x\lambda p.f(\alpha))(a,\refl[a])\\
+    &\equiv\alpha(a,\refl[a])\tag{$J_\beta$}
 \end{align*}
 $$
 
+So the overall proof term is given by:
+$$
+    \term{funext}\lambda\alpha.\term{funext}\term{funext}J\Bigl(\lambda x\lambda p.(g\circ f(\alpha)\bigr)(x)(p)=\alpha(x)(p),\refl[\alpha(a)(\refl[a])]\Bigr)
+$$
 
+To show $f\circ g=\id[F(a)]$, we again reduce by $\term{funext}$ to:
+$$
+    (x:A)\rightarrow f\circ g(x)=x
+$$
 $$
 \begin{align*}
-    g\bigl(f(\alpha)\bigr)(a,\term{refl}_a)&\equiv J(\lambda x\lambda p.f(\alpha))(a,\term{refl}_a)\\
-    &\equiv\alpha(a,\term{refl}_a)\tag{$J_\beta$}
+    (f\circ g)(u)&\equiv f\Bigl(J\bigl(\lambda x\lambda p.F(x),u\bigr)\Bigr)\\
+    &\equiv\Bigl(J\bigl(\lambda x\lambda p.F(x),u\bigr)\Bigr)(a,\refl[a])\\
+    &\equiv u\tag{$J_\beta$}
 \end{align*}
 $$
-
-
+so the proof term is:
+$$
+    \term{funext}(\refl[u])
+$$
 
 :::
 
