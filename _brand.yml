@@ -1,0 +1,15 @@
+typography:
+  fonts:
+    - source: google
+      family: Merriweather
+      weight: [400, 700]
+    - source: google
+      family: Space Mono
+      weight: 400
+    - source: google
+      family: Gentium Book Plus
+      weight: [400, 700]
+      style: [normal, italic]
+  base: Gentium Book Plus
+  headings: Merriweather
+  monospace: Space Mono
