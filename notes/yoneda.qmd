@@ -102,3 +102,20 @@ $$
 
 
 
+
+
+
+# Introduction
+
+::: {.column-margin}
+This is another prooftree but in the margin.
+$$
+\begin{prooftree}
+  \AxiomC{ $P$ }
+  \AxiomC{ $P \to Q$ }
+  \BinaryInfC { $Q$ }
+\end{prooftree}
+$$
+:::
+
+

@@ -1,0 +1,167 @@
+---
+title: Transport Lemmata
+subtitle: AAAAAAAAAAAAAAAA
+date: today
+---
+
+::: hidden
+\newcommand{\type}[1]{\mathsf{#1}}
+\newcommand{\term}[1]{\operatorname{\mathsf{#1}}}
+
+\newcommand{\tpt}[2]{\term{transport}({#1,#2})}
+\newcommand{\tp}[1]{{#1}^{\ast}}
+
+\newcommand{\id}[1][]{\term{id}_{#1}}
+\newcommand{\refl}[1][]{\term{refl}_{#1}}
+
+\newcommand{\yo}{\mathop{よ}}
+
+\newcommand{\defeq}{\stackrel{\triangle}{=}}
+
+\require{bussproofs}
+:::
+
+
+::: {def-transport}
+
+Transport lifts equalities in $A$ to a function (in fact, an equivalence) between the fibres of a type family over $A$. That is, for any type $A$, path $p:x=_Ay$, dependent type family $P:A\rightarrow\mathcal{U}$, and point $u:P(x)$, the *transport* of $u$ along $p$ is a term
+$$
+    \tpt{P,p}(u):P(y)
+$$
+We also write
+$$
+    \tp{p}(u)
+$$
+for this term.
+
+Transport satisfies the following computation rule:
+$$
+    \tpt{\refl[x],u}=u
+$$
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Transport
+
+Let $A : \mathsf{Type}$ and $B : A \to \mathsf{Type}$ be a dependent type.
+For any identity $p : x =_A y$ and any $u : B(x)$, the **transport**
+along $p$ is the element
+$$
+\mathsf{transport}^{B}(p,u) : B(y),
+$$
+defined by identity elimination, with the defining equation
+$$
+\mathsf{transport}^{B}(\mathsf{refl}_x , u) \;\equiv\; u.
+$$
+
+### Naturality of transport
+
+For any dependent function $f : \prod_{x:A} B(x) \to C(x)$, transport satisfies
+$$
+\mathsf{transport}^{C}(p, f(x,u))
+  = f\bigl(y,\,\mathsf{transport}^{B}(p,u)\bigr).
+$$
+This follows by path induction on $p$.
+
+### Functoriality
+
+Transport behaves functorially in the following sense:
+
+1. **Identity:**  
+   For all $u : B(x)$,
+   $$
+   \mathsf{transport}^{B}(\mathsf{refl}_x, u) = u.
+   $$
+
+2. **Composition:**  
+   If $p : x = y$ and $q : y = z$, then for any $u : B(x)$,
+   $$
+   \mathsf{transport}^{B}(q\cdot p,\, u)
+     = \mathsf{transport}^{B}(q,\,
+         \mathsf{transport}^{B}(p,u)).
+   $$
+
+3. **Inverse paths:**  
+   For any $p : x = y$,
+   $$
+   \mathsf{transport}^{B}(p^{-1},\, \mathsf{transport}^{B}(p,u))
+     = u.
+   $$
+
+### Transport in constant families
+
+If $B$ is constant, i.e. $B(x) \equiv C$ for all $x$, then transport is trivial:
+$$
+\mathsf{transport}^{B}(p,u) = u.
+$$
+
+### Transport in $\Sigma$-types
+
+If $B : A \to \mathsf{Type}$ and $(x,u), (y,v) : \sum_{x:A} B(x)$, then a path
+$$
+p : (x,u) = (y,v)
+$$
+corresponds to a pair consisting of a path $q : x = y$ and a path
+$$
+r : \mathsf{transport}^{B}(q,u) = v.
+$$
+In particular, projection to the first component satisfies
+$$
+\mathsf{ap}_{\pi_1}(p) = q,
+$$
+and the second component is controlled by transport.
+
+### Transport and dependent action on paths
+
+For any $B : A \to \mathsf{Type}$ and dependent section $f : \prod_{x:A} B(x)$,
+the dependent action on paths is given by
+$$
+\mathsf{apd}_{f}(p)
+  : \mathsf{transport}^{B}(p, f(x)) = f(y),
+$$
+with $\mathsf{apd}_{f}(\mathsf{refl}_x) \equiv \mathsf{refl}_{f(x)}$.
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
