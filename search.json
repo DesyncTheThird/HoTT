@@ -7,18 +7,11 @@
     "text": "Definition 1 A natural transformation between two type families \\(F,G:A\\rightarrow\\mathcal{U}\\) is a family of maps \\[\n    \\alpha:(x:A)\\rightarrow(F(x)\\rightarrow G(x))\n\\]\nWe denote the type of natural transformations between \\(F\\) and \\(G\\) by \\(\\mathrm{Nat}(F,G)\\).\n\n\nDefinition 2 The Yoneda embedding \\(よ_A:A\\rightarrow(A\\rightarrow\\mathcal{U})\\) is defined by \\[\n    よ_A(a):\\equiv\\lambda x.(a=x).\n\\]\n\n\nTheorem 1 For any type family \\(F:A\\rightarrow\\mathcal{U}\\), the map \\[\n\\begin{align*}\n    f:\\mathsf{Nat}(よ_A(a),F)&\\rightarrow F(a)\\\\\n    \\alpha&\\mapsto\\alpha(a,\\operatorname{\\mathsf{refl}}_{a})\n\\end{align*}\n\\]\nis an equivalence.\n\n\nProof. We construct the inverse map \\[\n\\begin{align*}\n    g:F(a)&\\rightarrow\\mathsf{Nat}(よ_A(a),F)\\\\\n    u&\\mapsto J\\bigl(\\lambda(x:A)\\lambda(p:x=_Aa).F(x),u\\bigr)\n\\end{align*}\n\\]\nWe show \\(g\\circ f=\\operatorname{\\mathsf{id}}_{\\mathsf{Nat}(よ_A(a),F)}\\). By \\(\\operatorname{\\mathsf{funext}}\\), it is sufficient to show: \\[\n    \\bigl(\\alpha:\\mathsf{Nat}(よ_A(a),F)\\bigr)\\rightarrow (g\\circ f)(\\alpha)=\\alpha\n\\]\nbut \\(\\alpha:(x:A)\\rightarrow よ_A(a)(x)\\rightarrow F(x)\\) is a (higher) function, so by two more applications of \\(\\operatorname{\\mathsf{funext}}\\), we need: \\[\n    \\bigl(\\alpha:\\mathsf{Nat}(よ_A(a),F)\\bigr)\\rightarrow(x:A)\\rightarrow(p:a=_Ax)\\rightarrow\\bigl(g\\circ f(\\alpha)\\bigr)(x,p)=\\alpha(x,p)\n\\]\nBy based path induction on \\(p\\), it suffices to construct the method \\(c_0:\\bigl(g\\circ f(\\alpha)\\bigr)(a,\\operatorname{\\mathsf{refl}}_{a})=\\alpha(a,\\operatorname{\\mathsf{refl}}_{a})\\); but this equality is judgemental: \\[\n\\begin{align*}\n    g\\bigl(f(\\alpha)\\bigr)(a,\\operatorname{\\mathsf{refl}}_{a})&\\equiv J(\\lambda x\\lambda p.f(\\alpha))(a,\\operatorname{\\mathsf{refl}}_{a})\\\\\n    &\\equiv\\alpha(a,\\operatorname{\\mathsf{refl}}_{a})\\tag{$J_\\beta$}\n\\end{align*}\n\\]\nSo the overall proof term is given by: \\[\n    \\operatorname{\\mathsf{funext}}\\lambda\\alpha.\\operatorname{\\mathsf{funext}}\\operatorname{\\mathsf{funext}}J\\Bigl(\\lambda x\\lambda p.(g\\circ f(\\alpha)\\bigr)(x)(p)=\\alpha(x)(p),\\operatorname{\\mathsf{refl}}_{\\alpha(a)(\\operatorname{\\mathsf{refl}}_{a})}\\Bigr)\n\\]\nTo show \\(f\\circ g=\\operatorname{\\mathsf{id}}_{F(a)}\\), we again reduce by \\(\\operatorname{\\mathsf{funext}}\\) to: \\[\n    (x:A)\\rightarrow f\\circ g(x)=x\n\\] \\[\n\\begin{align*}\n    (f\\circ g)(u)&\\equiv f\\Bigl(J\\bigl(\\lambda x\\lambda p.F(x),u\\bigr)\\Bigr)\\\\\n    &\\equiv\\Bigl(J\\bigl(\\lambda x\\lambda p.F(x),u\\bigr)\\Bigr)(a,\\operatorname{\\mathsf{refl}}_{a})\\\\\n    &\\equiv u\\tag{$J_\\beta$}\n\\end{align*}\n\\] so the proof term is: \\[\n    \\operatorname{\\mathsf{funext}}(\\operatorname{\\mathsf{refl}}_{u})\n\\]\n\n\n\n\n Back to top"
   },
   {
-    "objectID": "notes/induction.html",
-    "href": "notes/induction.html",
-    "title": "Induction",
+    "objectID": "notes/sandbox.html",
+    "href": "notes/sandbox.html",
+    "title": "Sandbox",
     "section": "",
-    "text": "Definition 1 Given a type \\(T\\) with constructors \\(C_0,\\ldots,C_n\\), the induction principle or dependent eliminator \\(\\operatorname{\\mathsf{ind}}_T\\)\n\n\nDefinition 2 \\[\n    \\begin{prooftree}\n        \\AxiomC{B}\n        \\UnaryInfC{A}\n    \\end{prooftree}\n\\]\n\n\nDefinition 3 \\[\n\\begin{align*}\n    \\operatorname{\\mathsf{funext}}:\\{A,B:\\mathcal{U}\\}\\rightarrow\\{f,g:A\\rightarrow B\\}\\rightarrow\\bigl((x:A)\\rightarrow f(x)=_{B(x)}g(x)\\bigr)\\rightarrow f=_{(x:A)\\rightarrow B(x)}g\n\\end{align*}\n\\]\n\n\n\n\n Back to top"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Notes",
-    "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n      \n        Author\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\nAuthor\n\n\n\n\n\n\n\n\nDec 12, 2025\n\n\nInduction\n\n\n \n\n\n\n\n\n\nDec 12, 2025\n\n\nYoneda\n\n\n \n\n\n\n\n\n\nNov 9, 2025\n\n\nSandbox\n\n\nVikraman Choudhury\n\n\n\n\n\n\nNo matching items\n Back to top"
+    "text": "Introduction\nThis is a sandbox document to test typesetting and layout. This website and notes are built using Quarto1.\n1 Quarto has a website and a Github repository.\n\nMath\n\n\\[\n\\newcommand{\\blank}{{-}}\n\\newcommand{\\ladj}{\\dashv}\n\\newcommand{\\dual}{^{\\perp}}\n\\newcommand{\\parr}{\n  \\require{html}\n  \\mathop{\\style{display: inline-block; transform: rotate(180deg)}{\\&}}\n}\n\\]\n\nThis is a math character \\(\\alpha\\), and this is some inline math \\((\\blank) \\otimes A \\ladj A\\dual \\parr (\\blank)\\).\nThis is a prooftree in display math mode2. \\[\n\\require{bussproofs}\n\\begin{prooftree}\n  \\AxiomC{ $\\Gamma, A \\vdash B$ }\n  \\RightLabel{ $\\to$I }\n  \\UnaryInfC{ $\\Gamma \\vdash A \\to B$ }\n  \\AxiomC{ $\\Gamma \\vdash A$ }\n  \\RightLabel{ $\\to$E }\n  \\BinaryInfC{ $\\Gamma \\vdash B$ }\n\\end{prooftree}\n\\]\n2 This is another prooftree but in the margin. \\[\n\\begin{prooftree}\n  \\AxiomC{ $P$ }\n  \\AxiomC{ $P \\to Q$ }\n  \\BinaryInfC { $Q$ }\n\\end{prooftree}\n\\]\n\n\n\n\nDiagrams\nThis renders diagrams in markdown Figure 1.\n\n\n\n\nThis is some imagified LaTeX math.\n\nA TikZ picture Figure 1 (a).\n\n\n\n\n\n\n(a)\n\n\n\nA commutative diagram Figure 1 (b).\n\n\n\n\n\n\n(b)\n\n\n\n\n\n\nFigure 1\n\n\n\nThis is a quiver iframe.\n\n\n\n\n\n\n\n Back to top"
   },
   {
     "objectID": "about.html",
@@ -28,10 +21,24 @@
     "text": "About this site:\nnot Vikraman’s personal website\n\n\n\n Back to top"
   },
   {
-    "objectID": "notes/sandbox.html",
-    "href": "notes/sandbox.html",
-    "title": "Sandbox",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Notes",
     "section": "",
-    "text": "Introduction\nThis is a sandbox document to test typesetting and layout. This website and notes are built using Quarto1.\n1 Quarto has a website and a Github repository.\n\nMath\n\n\\[\n\\newcommand{\\blank}{{-}}\n\\newcommand{\\ladj}{\\dashv}\n\\newcommand{\\dual}{^{\\perp}}\n\\newcommand{\\parr}{\n  \\require{html}\n  \\mathop{\\style{display: inline-block; transform: rotate(180deg)}{\\&}}\n}\n\\]\n\nThis is a math character \\(\\alpha\\), and this is some inline math \\((\\blank) \\otimes A \\ladj A\\dual \\parr (\\blank)\\).\nThis is a prooftree in display math mode2. \\[\n\\require{bussproofs}\n\\begin{prooftree}\n  \\AxiomC{ $\\Gamma, A \\vdash B$ }\n  \\RightLabel{ $\\to$I }\n  \\UnaryInfC{ $\\Gamma \\vdash A \\to B$ }\n  \\AxiomC{ $\\Gamma \\vdash A$ }\n  \\RightLabel{ $\\to$E }\n  \\BinaryInfC{ $\\Gamma \\vdash B$ }\n\\end{prooftree}\n\\]\n2 This is another prooftree but in the margin. \\[\n\\begin{prooftree}\n  \\AxiomC{ $P$ }\n  \\AxiomC{ $P \\to Q$ }\n  \\BinaryInfC { $Q$ }\n\\end{prooftree}\n\\]\n\n\n\n\nDiagrams\nThis renders diagrams in markdown Figure 1.\n\n\n\n\nThis is some imagified LaTeX math.\n\nA TikZ picture Figure 1 (a).\n\n\n\n\n\n\n(a)\n\n\n\nA commutative diagram Figure 1 (b).\n\n\n\n\n\n\n(b)\n\n\n\n\n\n\nFigure 1\n\n\n\nThis is a quiver iframe.\n\n\n\n\n\n\n\n Back to top"
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n      \n        Author\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\nAuthor\n\n\n\n\n\n\n\n\nDec 12, 2025\n\n\nInduction\n\n\n \n\n\n\n\n\n\nDec 12, 2025\n\n\nPrelude\n\n\n \n\n\n\n\n\n\nDec 12, 2025\n\n\nYoneda\n\n\n \n\n\n\n\n\n\nNov 9, 2025\n\n\nSandbox\n\n\nVikraman Choudhury\n\n\n\n\n\n\nNo matching items\n Back to top"
+  },
+  {
+    "objectID": "notes/induction.html",
+    "href": "notes/induction.html",
+    "title": "Induction",
+    "section": "",
+    "text": "Definition 1 Given a type \\(T\\) with constructors \\(C_0,\\ldots,C_n\\), the induction principle or dependent eliminator \\(\\operatorname{\\mathsf{ind}}_T\\)\n\n\nDefinition 2 \\[\n    \\begin{prooftree}\n        \\AxiomC{B}\n        \\UnaryInfC{A}\n    \\end{prooftree}\n\\]\n\n\nDefinition 3 \\[\n\\begin{align*}\n    \\operatorname{\\mathsf{funext}}:\\{A,B:\\mathcal{U}\\}\\rightarrow\\{f,g:A\\rightarrow B\\}\\rightarrow\\bigl((x:A)\\rightarrow f(x)=_{B(x)}g(x)\\bigr)\\rightarrow f=_{(x:A)\\rightarrow B(x)}g\n\\end{align*}\n\\]\n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "notes/prelude.html",
+    "href": "notes/prelude.html",
+    "title": "Prelude",
+    "section": "",
+    "text": "These are some basic definitions and notations used throughout the notes.\n\n$$ %% meta \n%% types and terms\n%% Fin\n%% field accessors \n%% universes\n%% unit type \n%% empty type \n%% Bool \n%% sums\n%% identity type\n%% functions\n%% equivalences \n%% truncations\n%% quotients\n%% propositions\n%% loops\n%% aut\n%% dependent function\n%% dependent product\n%% propositions\n$$\n\nThese are some types. \\[\n%\n  ({x:A}) \\to {B(x)}%\n\\quad\\text{and}\\quad %\n  {({x:A})}\\mathrel{\\times}{B(x)}%\n\\\\\na %\n  \\mathrel{%\n    {{=}^{}_{A}}%\n  }%\nb \\quad\\text{and}\\quad u %\n  \\mathrel{%\n    {{=}^{P}_{p}}%\n  }%\nv \\\\\n\\]\n\n\n\n Back to top"
   }
 ]

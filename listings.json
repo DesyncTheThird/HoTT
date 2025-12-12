@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/notes/induction.html",
+      "/notes/prelude.html",
       "/notes/yoneda.html",
       "/notes/sandbox.html"
     ]
