@@ -1,0 +1,18 @@
+---
+title: Prelude
+date: today
+---
+
+These are some basic definitions and notations used throughout the notes.
+
+::: {.hidden}
+$$
+{{< include vc-hott.sty >}}
+$$
+:::
+
+These are some types.
+$$
+\dfun{x:A}{B(x)} \quad\text{and}\quad \dsum{x:A}{B(x)} \\
+a \id{A} b \quad\text{and}\quad u \id[P]{p} v \\
+$$

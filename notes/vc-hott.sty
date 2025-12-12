@@ -1,0 +1,145 @@
+%% meta
+\newcommand{\defeq}{\mathrel{\coloneq}}
+\newcommand{\jdgeq}{\mathrel{\equiv}}
+\newcommand{\blank}{\scriptstyle{-}}
+
+%% types and terms
+\newcommand{\type}[1]{\mathsf{#1}}
+\newcommand{\term}[1]{\operatorname{\mathsf{#1}}}
+\newcommand{\typef}[1]{\operatorname{\mathsf{#1}}}
+
+%% Fin
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\Fin}[1][]{
+  \type{Fin{\ifstrempty{#1}{}{_{#1}}}}
+}
+
+%% field accessors
+\DeclareMathSymbol{\fdot}{\mathord}{symbols}{"01}
+
+%% universes
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\UUFin}[1][]{%
+  \ifstrempty{#1}
+  {\UU_{\Fin}}
+  {\UU_{\Fin[#1]}}%
+}
+\newcommand{\El}{\term{El}}
+\newcommand{\SubP}[2]{\Trunc[-1]{{#1} \id_{\UU} {#2}}}
+\newcommand{\Sub}[1]{\dsum{X\colon\UU}{\SubP{X}{#1}}}
+
+\newcommand{\hProp}{\type{hProp}}
+\newcommand{\hSet}{\type{hSet}}
+\newcommand{\Set}{\type{Set}}
+
+%% unit type
+\newcommand{\unit}{{\mathbf{1}}}
+\newcommand{\unitt}{\unit}
+\newcommand{\ttt}{\star}
+
+%% empty type
+\newcommand{\emptyt}{{\mathbf{0}}}
+
+%% Bool
+\newcommand{\Bool}{{\mathbf{2}}}
+
+%% sums
+\newcommand{\inl}{\term{inl}}
+\newcommand{\inr}{\term{inr}}
+\newcommand{\copair}[1]{[#1]}
+
+%% identity type
+\newcommand{\id}[2][]{%
+  \mathrel{%
+    {{=}^{#1}_{#2}}%
+  }%
+}
+\newcommand{\refl}[1][]{%
+  \ifstrempty{#1}
+  {\term{refl}}
+  {\term{refl}_{#1}}%
+}
+\newcommand{\ap}[2]{\term{ap}_{#1}({#2})}
+\newcommand{\apd}[2]{\term{apd}_{#1}({#2})}
+\newcommand{\coe}[1]{\term{coe}({#1})}
+\newcommand{\tpt}[3][]{%
+  \term{tpt}_{#2}^{#3}({#4})%
+}
+\newcommand{\tr}[2]{{#1}_{\star}({#2})}
+\newcommand{\ua}{\term{ua}}
+\newcommand{\tptEqv}[1]{\term{tpt-equiv}({#1})}
+\newcommand{\loops}[1][]{%
+  \ifstrempty{#1}
+  {\Omega}
+  {\Omega{(#1)}}%
+}
+
+%% functions
+\newcommand{\inv}[1]{{#1}^{\mathsmaller{-1}}}
+\newcommand{\comp}{\mathrel{\circ}}
+\newcommand{\htpy}{\mathrel{\sim}}
+\newcommand{\im}[2][]{\term{im\ifstrempty{#1}{}{_{#1}}}(#2)}
+\newcommand{\fib}{\term{fib}}
+
+%% equivalences
+\newcommand{\eqv}{\mathrel{\simeq}}
+\newcommand{\idfunc}{\term{id}}
+\newcommand{\natiso}{\eqv}
+
+%% truncations
+\newcommand{\Trunc}[2][]{%
+  \ifstrempty{#1}
+  {\left\Vert #2\right\Vert}
+  {\left\Vert #2\right\Vert_{\mathsmaller{#1}}}%
+}
+\newcommand{\trunc}[1]{\vert #1\vert}
+
+%% quotients
+\newcommand{\quot}[2]{{{\displaystyle #1}}{\sslash}{_{\displaystyle #2}}}
+\newcommand{\quotinc}{\term{q}}
+\newcommand{\quotrel}{\term{q-rel}}
+\newcommand{\qlift}[1]{\mathrel{\hat{#1}}}
+
+%% propositions
+\newcommand{\isContr}[1]{\mathop{\term{isContr}}({#1})}
+\newcommand{\isProp}[1]{\mathop{\term{isProp}}({#1})}
+\newcommand{\isSet}[1]{\mathop{\term{isSet}}({#1})}
+\newcommand{\isGpd}[1]{\mathop{\term{isGpd}}({#1})}
+\newcommand{\isEquiv}[1]{\mathop{\term{isEquiv}}({#1})}
+
+%% loops
+\newcommand{\B}[1]{\mathcal{B}{#1}}
+\newcommand{\pt}{\term{\star}}
+
+%% aut
+\newcommand{\Aut}[1][]{\mathsf{Aut}\ifstrempty{#1}{}{\ps{#1}}}
+\newcommand{\BAut}[1][]{\B{\mathsf{Aut}\ifstrempty{#1}{}{\ps{#1}}}}
+
+%% dependent function
+\newcommand{\dfun}[2]{%
+  ({#1}) \to {#2}%
+}
+
+%% dependent product
+\newcommand{\dsum}[2]{%
+  {({#1})}\mathrel{\times}{#2}%
+}
+\newcommand{\pair}[1]{\ps{#1}}
+\newcommand{\fst}{\pi_1}
+\newcommand{\snd}{\pi_2}
+
+%% propositions
+\newcommand{\fora}[3][inline]{%
+  \if#1s%
+    \forall_{\mathsmaller{(#2).}}{#3}%
+  \else%
+    \forall{\textstyle\mathsmaller{(#2).}}{#3}%
+  \fi%
+}
+\newcommand{\exis}[3][inline]{%
+  \if#1s%
+    \exists_{\mathsmaller{(#2).}}{#3}%
+  \else%
+    \exists{\textstyle\mathsmaller{(#2).}}{#3}%
+  \fi%
+}
