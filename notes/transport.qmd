@@ -11,7 +11,7 @@ date: today
 \newcommand{\tpt}[2]{\term{transport}({#1,#2})}
 \newcommand{\tp}[1]{{#1}^{\ast}}
 
-\newcommand{\id}[1][]{\term{id}_{#1}}
+\newcommand{\id}{\term{id}}
 \newcommand{\refl}[1][]{\term{refl}_{#1}}
 
 \newcommand{\yo}{\mathop{よ}}
@@ -19,25 +19,84 @@ date: today
 \newcommand{\defeq}{\stackrel{\triangle}{=}}
 
 \require{bussproofs}
+
+{{< include vc-hott.sty >}}
+
 :::
 
 
 ::: {def-transport}
 
-Transport lifts equalities in $A$ to a function (in fact, an equivalence) between the fibres of a type family over $A$. That is, for any type $A$, path $p:x=_Ay$, dependent type family $P:A\rightarrow\mathcal{U}$, and point $u:P(x)$, the *transport* of $u$ along $p$ is a term
+Transport lifts equalities in $A$ to a function (in fact, an equivalence) between the fibres of a type family over $A$. That is, for any type $A$, path $p:x=_Ay$, and dependent type family $P:A\rightarrow\mathcal{U}$, *transport along $p$* is the term
 $$
-    \tpt{P,p}(u):P(y)
+    \tpt{P}{p}:\equiv J(\lambda x\lambda p.P(a)\rightarrow P(x),\id_{P(a)})(p)
 $$
 We also write
 $$
-    \tp{p}(u)
+    \tp{p}(u):P(y)
 $$
-for this term.
+for the transport of a term $u:P(x)$ *along* $p$.
 
 Transport satisfies the following computation rule:
 $$
-    \tpt{\refl[x],u}=u
+    \tpt{\refl[x]}{u}=u
 $$
+
+:::
+
+
+
+
+
+
+::: {def-pathover}
+
+
+$P:A\rightarrow\mathcal{U}$, $p:a=_Ab$, $u:P(a)$, $v:P(b)$
+
+$$
+    u=v[P\downarrow p]\qquad\defeq\qquad\tpt{P}{p}(u) = v
+$$
+
+
+:::
+
+
+
+
+
+
+
+::: {lemma-pathover-constant}
+
+If $P:A\rightarrow\mathcal{U}$ is constant $\lambda a.T$, then
+
+$$
+    \bigl(u=v\;[\lambda a.T\downarrow p]\bigr)\simeq(u=_Tv)
+$$
+
+:::
+
+
+::: {lemma-pathover-identity}
+
+If $P:\mathcal{U}\rightarrow\mathcal{U}$ is the identity $\lambda X.X$, then:
+
+$$
+    \bigl(A=B\;[\lambda X.X\downarrow p]\bigr)\simeq(A=_\mathcal{U}B)
+$$
+
+
+If $P:A\rightarrow\mathcal{U}$ maps into an identity $\lambda x.f(x)=g(x)$, where $f,g:(a:A)\rightarrow B(a)$, then:
+
+$$
+    \bigl(u=v\;[\lambda x.f(x)=g(x))\downarrow p]\bigr)\simeq(\apd{f}{p}\cdot u\cdot\apd{g}{p})
+$$
+
+
+
+
+
 
 :::
 
@@ -63,87 +122,40 @@ $$
 
 
 
-## Transport
 
-Let $A : \mathsf{Type}$ and $B : A \to \mathsf{Type}$ be a dependent type.
-For any identity $p : x =_A y$ and any $u : B(x)$, the **transport**
-along $p$ is the element
-$$
-\mathsf{transport}^{B}(p,u) : B(y),
-$$
-defined by identity elimination, with the defining equation
-$$
-\mathsf{transport}^{B}(\mathsf{refl}_x , u) \;\equiv\; u.
-$$
 
-### Naturality of transport
 
-For any dependent function $f : \prod_{x:A} B(x) \to C(x)$, transport satisfies
-$$
-\mathsf{transport}^{C}(p, f(x,u))
-  = f\bigl(y,\,\mathsf{transport}^{B}(p,u)\bigr).
-$$
-This follows by path induction on $p$.
 
-### Functoriality
 
-Transport behaves functorially in the following sense:
 
-1. **Identity:**  
-   For all $u : B(x)$,
-   $$
-   \mathsf{transport}^{B}(\mathsf{refl}_x, u) = u.
-   $$
 
-2. **Composition:**  
-   If $p : x = y$ and $q : y = z$, then for any $u : B(x)$,
-   $$
-   \mathsf{transport}^{B}(q\cdot p,\, u)
-     = \mathsf{transport}^{B}(q,\,
-         \mathsf{transport}^{B}(p,u)).
-   $$
 
-3. **Inverse paths:**  
-   For any $p : x = y$,
-   $$
-   \mathsf{transport}^{B}(p^{-1},\, \mathsf{transport}^{B}(p,u))
-     = u.
-   $$
 
-### Transport in constant families
 
-If $B$ is constant, i.e. $B(x) \equiv C$ for all $x$, then transport is trivial:
-$$
-\mathsf{transport}^{B}(p,u) = u.
-$$
 
-### Transport in $\Sigma$-types
 
-If $B : A \to \mathsf{Type}$ and $(x,u), (y,v) : \sum_{x:A} B(x)$, then a path
-$$
-p : (x,u) = (y,v)
-$$
-corresponds to a pair consisting of a path $q : x = y$ and a path
-$$
-r : \mathsf{transport}^{B}(q,u) = v.
-$$
-In particular, projection to the first component satisfies
-$$
-\mathsf{ap}_{\pi_1}(p) = q,
-$$
-and the second component is controlled by transport.
 
-### Transport and dependent action on paths
 
-For any $B : A \to \mathsf{Type}$ and dependent section $f : \prod_{x:A} B(x)$,
-the dependent action on paths is given by
-$$
-\mathsf{apd}_{f}(p)
-  : \mathsf{transport}^{B}(p, f(x)) = f(y),
-$$
-with $\mathsf{apd}_{f}(\mathsf{refl}_x) \equiv \mathsf{refl}_{f(x)}$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+::: {lemma-AAAAAAAAAA}
+
+
 
 :::
+
 
 
 
