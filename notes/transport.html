@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2025-12-15">
 
-<title>Prelude – HoTT.jpeg</title>
+<title>Transport Lemmata – HoTT.jpeg</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -326,7 +326,8 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Prelude</h1>
+      <h1 class="title">Transport Lemmata</h1>
+            <p class="subtitle lead">AAAAAAAAAAAAAAAA</p>
                       </div>
   </div>
     
@@ -365,9 +366,8 @@ window.Quarto = {
 
 
 
-<p>These are some basic definitions and notations used throughout the notes.</p>
 <div class="hidden">
-<p>$$ %% meta </p>
+<p>%% meta </p>
 %% types and terms
 %% Fin
 <p>%% field accessors </p>
@@ -387,24 +387,43 @@ window.Quarto = {
 %% dependent function
 %% dependent product
 %% propositions
-<p>$$</p>
 </div>
-<p>These are some types. <span class="math display">\[
-%
-  ({x:A}) \to {B(x)}%
-\quad\text{and}\quad %
-  {({x:A})}\mathrel{\times}{B(x)}%
-\\
-a %
-  \mathrel{%
-    {{=}^{}_{A}}%
-  }%
-b \quad\text{and}\quad u %
-  \mathrel{%
-    {{=}^{P}_{p}}%
-  }%
-v \\
+<div class="{def-transport}">
+<p>Transport lifts equalities in <span class="math inline">\(A\)</span> to a function (in fact, an equivalence) between the fibres of a type family over <span class="math inline">\(A\)</span>. That is, for any type <span class="math inline">\(A\)</span>, path <span class="math inline">\(p:x=_Ay\)</span>, and dependent type family <span class="math inline">\(P:A\rightarrow\mathcal{U}\)</span>, <em>transport along <span class="math inline">\(p\)</span></em> is the term <span class="math display">\[
+    \operatorname{\mathsf{transport}}({P,p}):\equiv J(\lambda x\lambda p.P(a)\rightarrow P(x),\operatorname{\mathsf{id}}_{P(a)})(p)
+\]</span> We also write <span class="math display">\[
+    {p}^{\ast}(u):P(y)
+\]</span> for the transport of a term <span class="math inline">\(u:P(x)\)</span> <em>along</em> <span class="math inline">\(p\)</span>.</p>
+<p>Transport satisfies the following computation rule: <span class="math display">\[
+    \operatorname{\mathsf{transport}}({\operatorname{\mathsf{refl}}_{x},u})=u
 \]</span></p>
+</div>
+<div class="{def-pathover}">
+<p><span class="math inline">\(P:A\rightarrow\mathcal{U}\)</span>, <span class="math inline">\(p:a=_Ab\)</span>, <span class="math inline">\(u:P(a)\)</span>, <span class="math inline">\(v:P(b)\)</span></p>
+<p><span class="math display">\[
+    u=v[P\downarrow p]\qquad\stackrel{\triangle}{=}\qquad\operatorname{\mathsf{transport}}({P,p})(u) = v
+\]</span></p>
+</div>
+<div class="{lemma-pathover-constant}">
+<p>If <span class="math inline">\(P:A\rightarrow\mathcal{U}\)</span> is constant <span class="math inline">\(\lambda a.T\)</span>, then</p>
+<p><span class="math display">\[
+    \bigl(u=v\;[\lambda a.T\downarrow p]\bigr)\simeq(u=_Tv)
+\]</span></p>
+</div>
+<div class="{lemma-pathover-identity}">
+<p>If <span class="math inline">\(P:\mathcal{U}\rightarrow\mathcal{U}\)</span> is the identity <span class="math inline">\(\lambda X.X\)</span>, then:</p>
+<p><span class="math display">\[
+    \bigl(A=B\;[\lambda X.X\downarrow p]\bigr)\simeq(A=_\mathcal{U}B)
+\]</span></p>
+<p>If <span class="math inline">\(P:A\rightarrow\mathcal{U}\)</span> maps into an identity <span class="math inline">\(\lambda x.f(x)=g(x)\)</span>, where <span class="math inline">\(f,g:(a:A)\rightarrow B(a)\)</span>, then:</p>
+<p><span class="math display">\[
+    \bigl(u=v\;[\lambda x.f(x)=g(x)\rightarrow p]\bigr)\simeq(\operatorname{\mathsf{apd}}_{f}({p})\cdot u\cdot\operatorname{\mathsf{apd}}_{g}({p}))
+\]</span></p>
+</div>
+<p>r</p>
+<div class="{lemma-AAAAAAAAAA}">
+
+</div>
 
 
 

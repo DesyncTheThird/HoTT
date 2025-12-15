@@ -2,26 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://desyncthethird.github.io/HoTT/notes/yoneda.html</loc>
-    <lastmod>2025-12-12T17:12:58.479Z</lastmod>
-  </url>
-  <url>
-    <loc>https://desyncthethird.github.io/HoTT/notes/sandbox.html</loc>
-    <lastmod>2025-12-12T17:12:58.479Z</lastmod>
-  </url>
-  <url>
-    <loc>https://desyncthethird.github.io/HoTT/about.html</loc>
-    <lastmod>2025-12-12T17:12:58.478Z</lastmod>
-  </url>
-  <url>
-    <loc>https://desyncthethird.github.io/HoTT/index.html</loc>
-    <lastmod>2025-12-12T17:12:58.478Z</lastmod>
-  </url>
-  <url>
-    <loc>https://desyncthethird.github.io/HoTT/notes/induction.html</loc>
-    <lastmod>2025-12-12T17:12:58.478Z</lastmod>
+    <lastmod>2025-12-15T16:42:48.286Z</lastmod>
   </url>
   <url>
     <loc>https://desyncthethird.github.io/HoTT/notes/prelude.html</loc>
-    <lastmod>2025-12-12T17:12:58.478Z</lastmod>
+    <lastmod>2025-12-15T16:42:48.286Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/notes/induction.html</loc>
+    <lastmod>2025-12-15T16:42:48.285Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/index.html</loc>
+    <lastmod>2025-12-15T16:42:48.285Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/about.html</loc>
+    <lastmod>2025-12-15T16:42:48.285Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/notes/sandbox.html</loc>
+    <lastmod>2025-12-15T16:42:48.286Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/notes/transport.html</loc>
+    <lastmod>2025-12-15T16:42:48.286Z</lastmod>
   </url>
 </urlset>
