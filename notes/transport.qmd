@@ -93,9 +93,17 @@ $$
     \bigl(u=v\;[\lambda x.f(x)=g(x))\downarrow p]\bigr)\simeq(\apd{f}{p}\cdot u\cdot\apd{g}{p})
 $$
 
+:::
 
 
 
+::: {def-pathover-composition}
+
+
+$f:B\rightarrow\mathcal{U}$, $g:A\rightarrow B$, and $P\defeq f\circ g:A\rightarrow\mathcal{U}$:
+$$
+    \bigl(u=v\;[f\circ g\downarrow p]\bigr)\simeq(u=v\;[f\downarrow \ap{g}{p}])
+$$
 
 
 :::
@@ -103,6 +111,18 @@ $$
 
 
 
+::: {def-pathover-pairs}
+
+
+
+
+$A:\mathcal{U}$ $B:A\rightarrow\mathcal{U}$ $P:(a:A)\times B(a)$ $p:a=_Ab$ $u:P(a)$ $v:P(b)$ $f:(x:B(a))\rightarrowC(a,x)$, $g:(y:B(b))\rightarrow C(b,y)$
+$$
+    \bigl(x=y\;[B\downarrow p]\bigr)\simeq\bigl(f(x)=g(y)\;[P\downarrow\operatorname{pair{=}}(p,q)]\bigr)
+$$
+
+
+:::
 
 
 
