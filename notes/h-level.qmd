@@ -1,0 +1,190 @@
+---
+title: Transport Lemmata
+subtitle: AAAAAAAAAAAAAAAA
+date: today
+---
+
+::: hidden
+\newcommand{\type}[1]{\mathsf{#1}}
+\newcommand{\term}[1]{\operatorname{\mathsf{#1}}}
+
+\newcommand{\tpt}[2]{\term{transport}({#1,#2})}
+\newcommand{\tp}[1]{{#1}^{\ast}}
+
+\newcommand{\id}{\term{id}}
+\newcommand{\refl}[1][]{\term{refl}_{#1}}
+
+\newcommand{\yo}{\mathop{よ}}
+
+\newcommand{\defeq}{\stackrel{\triangle}{=}}
+
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\BAut}{\operatorname{BAut}}
+
+\require{bussproofs}
+
+{{< include vc-hott.sty >}}
+
+:::
+
+
+
+::: {def-hlevel}
+
+A type $A$ is *contractible* if there exists a *centre of contraction* $c:A$ such that for every term $x:A$, $c=_Ax$.
+
+\begin{equation*}
+    \textsf{isContra}(A):=\sum_{c:A}\prod_{x:A}
+\end{equation*}
+
+We define the *homotopy level* of a type as follows:
+\begin{align*}
+    \textsf{is-($-2$)-type}(A)&:=\textsf{isContra}(A)\\
+    \textsf{is-suc($n$)-type}(A)&:=\prod_{x,y:A}\textsf{is-$n$-type}(x=_Ay)
+\end{align*}
+That is, a type is a ($-2$)-type if it is contractible, and is an $n$-type if all of its equality types are ($n-1$)-types.
+
+We alias some common homotopy levels as follows:
+\begin{equation*}
+    \textsf{isProp}(A)&:=\textsf{is-($-1$)-type}(A)\\
+    \textsf{isSet}(A)&:=\textsf{is-$0$-type}(A)
+\end{equation*}
+
+:::
+
+::: {lem-hlevel-cumulative}
+
+Homotopy levels are cumulative. That is:
+
+\begin{equation*}
+    \textsf{is-$n$-type}(A)\rightarrow\textsf{is-($n+1$)-type}(A)
+\end{equation*}
+
+:::
+
+
+::: {lem-hlevels-misc}
+
+\begin{itemize}
+    \item If $A:\mathcal{U}$ is an $n$-type, and $A\simeq B$, then $B$ is an $n$-type.
+    
+    \item For any $A:\mathcal{U}$, its $n$-truncation $\|A\|_n$ is an $n$-type. In particular, if $B$ is an $n$-type, then
+    \begin{equation*}
+        (A\rightarrow B)\simeq\bigl(\|A\|_n\rightarrow B\bigr)
+    \end{equation*}
+    
+    \item Let $B:\mathcal{U}$ be an $n$-type. Then, for any $A:\mathcal{U}$, the function type
+    \begin{equation*}
+        A\rightarrow B
+    \end{equation*}
+    is an $n$-type.
+
+    \item Let $B:A\rightarrow\mathcal{U}$ be a type family with $B(a)$ an $n$-type for all $a:A$. Then, the dependent function type
+    \begin{equation*}
+        \prod_{a:A}B(a)
+    \end{equation*}
+    is an $n$-type.
+
+    \item Let $A,B:\mathcal{U}$ be an $n$-type and $m$-type, respectively. Then, the product type
+    \begin{equation*}
+        A\times B
+    \end{equation*}
+    is an $\max(n,m)$-type.
+
+    \item Let $A:\mathcal{U}$ be an $n$-type and $B:A\rightarrow\mathcal{U}$ be a type family with $B(a)$ an $m$-type for all $a:A$. Then, the dependent product type
+    \begin{equation*}
+        \sum_{a:A}B(a)
+    \end{equation*}
+    is an $\max(n,m)$-type.
+
+    \item Let $B:\mathcal{U}$ be an $n$-type. Then, for any function $f:A\rightarrow B$, every homotopy fibre
+    \begin{equation*}
+        \textsf{fib}_f(b):=\sum_{a:A}f(a)=_Bb
+    \end{equation*}
+    is an $n$-type if and only if $A$ is an $n$-type.
+\end{itemize}
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+::: {def-aut}
+
+Given a type $T$, we define the type $\Aut(T)$ of self equivalences of $T$ as:
+\begin{equation*}
+    \Aut(T):=T\simeq T
+\end{equation*}
+
+:::
+
+
+::: {def-baut}
+
+Given a type $T$, we define the type $\BAut(T)$ as:
+\begin{equation*}
+    \BAut(T):=\sum_{X:\mathcal{U}}
+\end{equation*}
+
+:::
+
+
+::: {thm-aut-hlevel}
+
+If $T$ is an $n$-type, then $\Aut(T)$ is also an $n$-type.
+
+:::
+
+
+::: proof
+
+ccc
+
+:::
+
+
+
+
+::: {thm-baut-hlevel}
+
+If $T$ is an $n$-type, then $\BAut(T)$ is an ($n+1$)-type.
+
+:::
+
+
+::: proof
+
+bbb
+
+:::
+
+
+
+
+
+
+::: {thm-loop-deloop}
+
+$$\Omega\BAut(T)\simeq\Aut(T)$$
+
+:::
+
+
+::: proof
+
+aaa
+
+:::
+
+
