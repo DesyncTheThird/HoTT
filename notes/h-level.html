@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-01-31">
+<meta name="dcterms.date" content="2026-02-01">
 
 <title>Transport Lemmata – HoTT.jpeg</title>
 <style>
@@ -338,14 +338,14 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 31, 2026</p>
+        <p class="date">February 1, 2026</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">January 31, 2026</p>
+        <p class="date-modified">February 1, 2026</p>
       </div>
     </div>
       
@@ -391,7 +391,7 @@ window.Quarto = {
 <div class="{def-hlevel}">
 <p>A type <span class="math inline">\(A\)</span> is <em>contractible</em> if there exists a <em>centre of contraction</em> <span class="math inline">\(c:A\)</span> such that for every term <span class="math inline">\(x:A\)</span>, <span class="math inline">\(c=_Ax\)</span>.</p>
 <p><span class="math display">\[\begin{equation*}
-    \textsf{isContra}(A):=\sum_{c:A}\prod_{x:A}
+    \textsf{isContra}(A):=\sum_{c:A}\prod_{x:A}c=_Ax
 \end{equation*}\]</span></p>
 <p>We define the <em>homotopy level</em> of a type as follows: <span class="math display">\[\begin{align*}
     \textsf{is-($-2$)-type}(A)&amp;:=\textsf{isContra}(A)\\
@@ -412,9 +412,12 @@ window.Quarto = {
 
 </div>
 <div class="{def-aut}">
-<p>Given a type <span class="math inline">\(T\)</span>, we define the type <span class="math inline">\(\operatorname{Aut}(T)\)</span> of self equivalences of <span class="math inline">\(T\)</span> as: <span class="math display">\[\begin{equation*}
-    \operatorname{Aut}(T):=T\simeq T
-\end{equation*}\]</span></p>
+<p>Given a type <span class="math inline">\(T\)</span>, we define the type <span class="math inline">\(\operatorname{Aut}(T)\)</span> of self equivalences of <span class="math inline">\(T\)</span> as: <span class="math display">\[\begin{align*}
+    \operatorname{Aut}(T)&amp;:=T\simeq T\\
+    &amp;\hphantom{:}=\sum_{f:T\rightarrow T}\mathsf{isEquiv}(f)%\\
+    % &amp;\hphantom{:}=\sum_{f:T\rightarrow T}\prod_{b:T}\mathsf{isContra}\sum_{a:T}f(a)=_Tb\\
+    % &amp;\hphantom{:}=\sum_{f:T\rightarrow T}\prod_{b:T}\sum_{c:\sum_{a:T}f(a)=_Tb}\prod_{p:\sum_{a:T}f(a)=_Tb}c=_{\sum_{a:T}f(a)=_Tb}p
+\end{align*}\]</span></p>
 </div>
 <div class="{def-baut}">
 <p>Given a type <span class="math inline">\(T\)</span>, we define the type <span class="math inline">\(\operatorname{BAut}(T)\)</span> as: <span class="math display">\[\begin{equation*}
@@ -425,7 +428,13 @@ window.Quarto = {
 <p>If <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type, then <span class="math inline">\(\operatorname{Aut}(T)\)</span> is also an <span class="math inline">\(n\)</span>-type.</p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Proof</em>. </span>ccc</p>
+<p><span class="proof-title"><em>Proof</em>. </span>Let <span class="math inline">\(\langle f,p\rangle,\langle g,q\rangle:\operatorname{Aut}(T)\)</span>. Then, <span class="math display">\[\begin{equation*}
+    \langle f,p\rangle=\langle g,q\rangle\simeq(f=g)\times(p=q)
+\end{equation*}\]</span> Since <span class="math inline">\(p,q:\mathsf{isEquiv}(f)\)</span> are propositions, <span class="math inline">\(p=q\)</span> is contractible, so <span class="math display">\[\begin{equation*}
+    \langle f,p\rangle=\langle g,q\rangle\simeq(f=g)
+\end{equation*}\]</span> By function extensionality, <span class="math display">\[\begin{equation*}
+    (f=g)\simeq\prod_{x:T}f(x)=g(x)
+\end{equation*}\]</span> Since <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type, the equalities <span class="math inline">\(f(x)=g(x)\)</span> are <span class="math inline">\((n-1)\)</span>-types, so <span class="math inline">\(f=g\)</span> is also an <span class="math inline">\((n-1)\)</span>-type, and hence <span class="math inline">\(\operatorname{Aut}(T)\)</span> is an <span class="math inline">\(n\)</span>-type.</p>
 </div>
 <div class="{thm-baut-hlevel}">
 <p>If <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type, then <span class="math inline">\(\operatorname{BAut}(T)\)</span> is an (<span class="math inline">\(n+1\)</span>)-type.</p>
