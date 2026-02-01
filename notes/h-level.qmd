@@ -34,7 +34,7 @@ date: today
 A type $A$ is *contractible* if there exists a *centre of contraction* $c:A$ such that for every term $x:A$, $c=_Ax$.
 
 \begin{equation*}
-    \textsf{isContra}(A):=\sum_{c:A}\prod_{x:A}
+    \textsf{isContra}(A):=\sum_{c:A}\prod_{x:A}c=_Ax
 \end{equation*}
 
 We define the *homotopy level* of a type as follows:
@@ -123,9 +123,12 @@ Homotopy levels are cumulative. That is:
 ::: {def-aut}
 
 Given a type $T$, we define the type $\Aut(T)$ of self equivalences of $T$ as:
-\begin{equation*}
-    \Aut(T):=T\simeq T
-\end{equation*}
+\begin{align*}
+    \Aut(T)&:=T\simeq T\\
+    &\hphantom{:}=\sum_{f:T\rightarrow T}\mathsf{isEquiv}(f)%\\
+    % &\hphantom{:}=\sum_{f:T\rightarrow T}\prod_{b:T}\mathsf{isContra}\sum_{a:T}f(a)=_Tb\\
+    % &\hphantom{:}=\sum_{f:T\rightarrow T}\prod_{b:T}\sum_{c:\sum_{a:T}f(a)=_Tb}\prod_{p:\sum_{a:T}f(a)=_Tb}c=_{\sum_{a:T}f(a)=_Tb}p
+\end{align*}
 
 :::
 
@@ -149,7 +152,19 @@ If $T$ is an $n$-type, then $\Aut(T)$ is also an $n$-type.
 
 ::: proof
 
-ccc
+Let $\langle f,p\rangle,\langle g,q\rangle:\Aut(T)$. Then,
+\begin{equation*}
+    \langle f,p\rangle=\langle g,q\rangle\simeq(f=g)\times(p=q)
+\end{equation*}
+Since $p,q:\mathsf{isEquiv}(f)$ are propositions, $p=q$ is contractible, so
+\begin{equation*}
+    \langle f,p\rangle=\langle g,q\rangle\simeq(f=g)
+\end{equation*}
+By function extensionality,
+\begin{equation*}
+    (f=g)\simeq\prod_{x:T}f(x)=g(x)
+\end{equation*}
+Since $T$ is an $n$-type, the equalities $f(x)=g(x)$ are $(n-1)$-types, so $f=g$ is also an $(n-1)$-type, and hence $\Aut(T)$ is an $n$-type.
 
 :::
 
