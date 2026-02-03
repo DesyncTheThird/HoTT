@@ -1,5 +1,5 @@
 ---
-title: Transport Lemmata
+title: Homotopy Levels
 subtitle: AAAAAAAAAAAAAAAA
 date: today
 ---
@@ -31,8 +31,7 @@ date: today
 
 ::: {def-hlevel}
 
-A type $A$ is *contractible* if there exists a *centre of contraction* $c:A$ such that for every term $x:A$, $c=_Ax$.
-
+A type $A$ is *contractible* if there exists a *centre of contraction* $c:A$ such that for every term $x:A$, $c=_Ax$:
 \begin{equation*}
     \textsf{isContra}(A):=\sum_{c:A}\prod_{x:A}c=_Ax
 \end{equation*}
@@ -40,7 +39,7 @@ A type $A$ is *contractible* if there exists a *centre of contraction* $c:A$ suc
 We define the *homotopy level* of a type as follows:
 \begin{align*}
     \textsf{is-($-2$)-type}(A)&:=\textsf{isContra}(A)\\
-    \textsf{is-suc($n$)-type}(A)&:=\prod_{x,y:A}\textsf{is-$n$-type}(x=_Ay)
+    \textsf{is-($n+1$)-type}(A)&:=\prod_{x,y:A}\textsf{is-$n$-type}(x=_Ay)
 \end{align*}
 That is, a type is a ($-2$)-type if it is contractible, and is an $n$-type if all of its equality types are ($n-1$)-types.
 
@@ -48,6 +47,15 @@ We alias some common homotopy levels as follows:
 \begin{equation*}
     \textsf{isProp}(A)&:=\textsf{is-($-1$)-type}(A)\\
     \textsf{isSet}(A)&:=\textsf{is-$0$-type}(A)
+\end{equation*}
+
+:::
+
+::: {lem-hlevel-prop}
+
+For any type $A$, $\textsf{is-$n$-type}(A)$ is a proposition for all $n$.
+\begin{equation*}
+    \mathsf{isProp}\bigl(\textsf{is-$n$-type}(A)\bigr)
 \end{equation*}
 
 :::
@@ -91,7 +99,7 @@ Homotopy levels are cumulative. That is:
     \end{equation*}
     is an $\max(n,m)$-type.
 
-    \item Let $A:\mathcal{U}$ be an $n$-type and $B:A\rightarrow\mathcal{U}$ be a type family with $B(a)$ an $m$-type for all $a:A$. Then, the dependent product type
+    \item Let $A:\mathcal{U}$ be an $n$-type and $B:A\rightarrow\mathcal{U}$ be a type family with $B(a)$ an $m$-type for all $a:A$. Then, the dependent pair type
     \begin{equation*}
         \sum_{a:A}B(a)
     \end{equation*}
@@ -137,7 +145,7 @@ Given a type $T$, we define the type $\Aut(T)$ of self equivalences of $T$ as:
 
 Given a type $T$, we define the type $\BAut(T)$ as:
 \begin{equation*}
-    \BAut(T):=\sum_{X:\mathcal{U}}
+    \BAut(T):=\sum_{X:\mathcal{U}}\|X=T\|_{-1}
 \end{equation*}
 
 :::
@@ -152,19 +160,7 @@ If $T$ is an $n$-type, then $\Aut(T)$ is also an $n$-type.
 
 ::: proof
 
-Let $\langle f,p\rangle,\langle g,q\rangle:\Aut(T)$. Then,
-\begin{equation*}
-    \langle f,p\rangle=\langle g,q\rangle\simeq(f=g)\times(p=q)
-\end{equation*}
-Since $p,q:\mathsf{isEquiv}(f)$ are propositions, $p=q$ is contractible, so
-\begin{equation*}
-    \langle f,p\rangle=\langle g,q\rangle\simeq(f=g)
-\end{equation*}
-By function extensionality,
-\begin{equation*}
-    (f=g)\simeq\prod_{x:T}f(x)=g(x)
-\end{equation*}
-Since $T$ is an $n$-type, the equalities $f(x)=g(x)$ are $(n-1)$-types, so $f=g$ is also an $(n-1)$-type, and hence $\Aut(T)$ is an $n$-type.
+Suppose $T\simeq 1$ is contractible. Then, $\Aut(T)\simeq\Aut(1)$ is contractible. Otherwise, suppose $T$ is an $n$-type for $n\geq-1$ and let $\langle f,p\rangle,\langle g,q\rangle:\Aut(T)$. Since $\mathsf{isEquiv}(f)$ is a proposition for all $f:T\rightarrow T$, the homotopy level of the dependent pair $\sum_{f:T\rightarrow T}\mathsf{isEquiv}(f)$ is the maximum of $-1$ and the homotopy level of $T\rightarrow T$, the latter of which is the homotopy level of the codomain $T$. Since $n\geq-1$, $\max(-1,n)=n$, and $\Aut(T)$ is an $n$-type.
 
 :::
 
@@ -180,25 +176,46 @@ If $T$ is an $n$-type, then $\BAut(T)$ is an ($n+1$)-type.
 
 ::: proof
 
-bbb
+Let $\langle X,p\rangle,\langle Y,q\rangle:\BAut(T)$. Then,
+\begin{equation*}
+    \bigl(\langle X,p\rangle=\langle Y,q\rangle\bigr)\simeq\sum_{\varphi:X=Y}\varphi_\ast(p)=q
+\end{equation*}
+Since $\varphi_\ast(p)$ and $q$ are propositions, their equality is contractible, so the homotopy level of this dependent pair is the level of $X=Y$.
+
+Since being an $n$-type is a proposition, we may assume $X\simeq T$ and $Y\simeq T$. Since equivalences preserve homotopy level, $X$ and $Y$ are $n$-types. Combining the equivalences also yields $X\simeq Y$. Since $X,Y$ are $n$-types, $X\simeq Y$ is an $n$-type, and thus by univalence, $(X=Y)\simeq(X\simeq Y)$ is an $n$-type. Hence $\BAut(T)$ is an ($n+1$)-type.
 
 :::
 
 
 
+::: {def-loop}
+
+Given a pointed type $(A,a)$, we define the *loop space* $\Omega A$ as the equality type:
+\begin{equation*}
+    \Omega A:=(a=a)
+\end{equation*} 
+
+:::
 
 
 
 ::: {thm-loop-deloop}
-
-$$\Omega\BAut(T)\simeq\Aut(T)$$
+For any $T$, 
+\begin{equation*}
+    \Omega\BAut(T)\simeq\Aut(T)
+\end{equation*}
+where $\BAut(T)$ is pointed at $|\refl|$.
 
 :::
 
 
 ::: proof
 
-aaa
+By the definition of a loop space,
+\begin{equation*}
+    \Omega\BAut(T):=\bigl((T,|\refl|)=(T,|\refl|)\bigr)=\sum_{P:T=T}P_\ast(|\refl|)=|\refl|
+\end{equation*}
+Since this is an equality of propositions, this sum is equivalent to $T=T$. By univalence, $(T=T)\simeq(T\simeq T)=:\Aut(T)$.
 
 :::
 
