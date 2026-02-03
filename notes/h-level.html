@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-02-01">
+<meta name="dcterms.date" content="2026-02-03">
 
-<title>Transport Lemmata – HoTT.jpeg</title>
+<title>Homotopy Levels – HoTT.jpeg</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -326,7 +326,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Transport Lemmata</h1>
+      <h1 class="title">Homotopy Levels</h1>
             <p class="subtitle lead">AAAAAAAAAAAAAAAA</p>
                       </div>
   </div>
@@ -338,14 +338,14 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 1, 2026</p>
+        <p class="date">February 3, 2026</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">February 1, 2026</p>
+        <p class="date-modified">February 3, 2026</p>
       </div>
     </div>
       
@@ -389,17 +389,21 @@ window.Quarto = {
 %% propositions
 </div>
 <div class="{def-hlevel}">
-<p>A type <span class="math inline">\(A\)</span> is <em>contractible</em> if there exists a <em>centre of contraction</em> <span class="math inline">\(c:A\)</span> such that for every term <span class="math inline">\(x:A\)</span>, <span class="math inline">\(c=_Ax\)</span>.</p>
-<p><span class="math display">\[\begin{equation*}
+<p>A type <span class="math inline">\(A\)</span> is <em>contractible</em> if there exists a <em>centre of contraction</em> <span class="math inline">\(c:A\)</span> such that for every term <span class="math inline">\(x:A\)</span>, <span class="math inline">\(c=_Ax\)</span>: <span class="math display">\[\begin{equation*}
     \textsf{isContra}(A):=\sum_{c:A}\prod_{x:A}c=_Ax
 \end{equation*}\]</span></p>
 <p>We define the <em>homotopy level</em> of a type as follows: <span class="math display">\[\begin{align*}
     \textsf{is-($-2$)-type}(A)&amp;:=\textsf{isContra}(A)\\
-    \textsf{is-suc($n$)-type}(A)&amp;:=\prod_{x,y:A}\textsf{is-$n$-type}(x=_Ay)
+    \textsf{is-($n+1$)-type}(A)&amp;:=\prod_{x,y:A}\textsf{is-$n$-type}(x=_Ay)
 \end{align*}\]</span> That is, a type is a (<span class="math inline">\(-2\)</span>)-type if it is contractible, and is an <span class="math inline">\(n\)</span>-type if all of its equality types are (<span class="math inline">\(n-1\)</span>)-types.</p>
 <p>We alias some common homotopy levels as follows: <span class="math display">\[\begin{equation*}
     \textsf{isProp}(A)&amp;:=\textsf{is-($-1$)-type}(A)\\
     \textsf{isSet}(A)&amp;:=\textsf{is-$0$-type}(A)
+\end{equation*}\]</span></p>
+</div>
+<div class="{lem-hlevel-prop}">
+<p>For any type <span class="math inline">\(A\)</span>, <span class="math inline">\(\textsf{is-\)</span>n<span class="math inline">\(-type}(A)\)</span> is a proposition for all <span class="math inline">\(n\)</span>. <span class="math display">\[\begin{equation*}
+    \mathsf{isProp}\bigl(\textsf{is-$n$-type}(A)\bigr)
 \end{equation*}\]</span></p>
 </div>
 <div class="{lem-hlevel-cumulative}">
@@ -421,32 +425,38 @@ window.Quarto = {
 </div>
 <div class="{def-baut}">
 <p>Given a type <span class="math inline">\(T\)</span>, we define the type <span class="math inline">\(\operatorname{BAut}(T)\)</span> as: <span class="math display">\[\begin{equation*}
-    \operatorname{BAut}(T):=\sum_{X:\mathcal{U}}
+    \operatorname{BAut}(T):=\sum_{X:\mathcal{U}}\|X=T\|_{-1}
 \end{equation*}\]</span></p>
 </div>
 <div class="{thm-aut-hlevel}">
 <p>If <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type, then <span class="math inline">\(\operatorname{Aut}(T)\)</span> is also an <span class="math inline">\(n\)</span>-type.</p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Proof</em>. </span>Let <span class="math inline">\(\langle f,p\rangle,\langle g,q\rangle:\operatorname{Aut}(T)\)</span>. Then, <span class="math display">\[\begin{equation*}
-    \langle f,p\rangle=\langle g,q\rangle\simeq(f=g)\times(p=q)
-\end{equation*}\]</span> Since <span class="math inline">\(p,q:\mathsf{isEquiv}(f)\)</span> are propositions, <span class="math inline">\(p=q\)</span> is contractible, so <span class="math display">\[\begin{equation*}
-    \langle f,p\rangle=\langle g,q\rangle\simeq(f=g)
-\end{equation*}\]</span> By function extensionality, <span class="math display">\[\begin{equation*}
-    (f=g)\simeq\prod_{x:T}f(x)=g(x)
-\end{equation*}\]</span> Since <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type, the equalities <span class="math inline">\(f(x)=g(x)\)</span> are <span class="math inline">\((n-1)\)</span>-types, so <span class="math inline">\(f=g\)</span> is also an <span class="math inline">\((n-1)\)</span>-type, and hence <span class="math inline">\(\operatorname{Aut}(T)\)</span> is an <span class="math inline">\(n\)</span>-type.</p>
+<p><span class="proof-title"><em>Proof</em>. </span>Suppose <span class="math inline">\(T\simeq 1\)</span> is contractible. Then, <span class="math inline">\(\operatorname{Aut}(T)\simeq\operatorname{Aut}(1)\)</span> is contractible. Otherwise, suppose <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type for <span class="math inline">\(n\geq-1\)</span> and let <span class="math inline">\(\langle f,p\rangle,\langle g,q\rangle:\operatorname{Aut}(T)\)</span>. Since <span class="math inline">\(\mathsf{isEquiv}(f)\)</span> is a proposition for all <span class="math inline">\(f:T\rightarrow T\)</span>, the homotopy level of the dependent pair <span class="math inline">\(\sum_{f:T\rightarrow T}\mathsf{isEquiv}(f)\)</span> is the maximum of <span class="math inline">\(-1\)</span> and the homotopy level of <span class="math inline">\(T\rightarrow T\)</span>, the latter of which is the homotopy level of the codomain <span class="math inline">\(T\)</span>. Since <span class="math inline">\(n\geq-1\)</span>, <span class="math inline">\(\max(-1,n)=n\)</span>, and <span class="math inline">\(\operatorname{Aut}(T)\)</span> is an <span class="math inline">\(n\)</span>-type.</p>
 </div>
 <div class="{thm-baut-hlevel}">
 <p>If <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type, then <span class="math inline">\(\operatorname{BAut}(T)\)</span> is an (<span class="math inline">\(n+1\)</span>)-type.</p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Proof</em>. </span>bbb</p>
+<p><span class="proof-title"><em>Proof</em>. </span>Let <span class="math inline">\(\langle X,p\rangle,\langle Y,q\rangle:\operatorname{BAut}(T)\)</span>. Then, <span class="math display">\[\begin{equation*}
+    \bigl(\langle X,p\rangle=\langle Y,q\rangle\bigr)\simeq\sum_{\varphi:X=Y}\varphi_\ast(p)=q
+\end{equation*}\]</span> Since <span class="math inline">\(\varphi_\ast(p)\)</span> and <span class="math inline">\(q\)</span> are propositions, their equality is contractible, so the homotopy level of this dependent pair is the level of <span class="math inline">\(X=Y\)</span>.</p>
+<p>Since being an <span class="math inline">\(n\)</span>-type is a proposition, we may assume <span class="math inline">\(X\simeq T\)</span> and <span class="math inline">\(Y\simeq T\)</span>. Since equivalences preserve homotopy level, <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are <span class="math inline">\(n\)</span>-types. Combining the equivalences also yields <span class="math inline">\(X\simeq Y\)</span>. Since <span class="math inline">\(X,Y\)</span> are <span class="math inline">\(n\)</span>-types, <span class="math inline">\(X\simeq Y\)</span> is an <span class="math inline">\(n\)</span>-type, and thus by univalence, <span class="math inline">\((X=Y)\simeq(X\simeq Y)\)</span> is an <span class="math inline">\(n\)</span>-type. Hence <span class="math inline">\(\operatorname{BAut}(T)\)</span> is an (<span class="math inline">\(n+1\)</span>)-type.</p>
+</div>
+<div class="{def-loop}">
+<p>Given a pointed type <span class="math inline">\((A,a)\)</span>, we define the <em>loop space</em> <span class="math inline">\(\Omega A\)</span> as the equality type: <span class="math display">\[\begin{equation*}
+    \Omega A:=(a=a)
+\end{equation*}\]</span></p>
 </div>
 <div class="{thm-loop-deloop}">
-<p><span class="math display">\[\Omega\operatorname{BAut}(T)\simeq\operatorname{Aut}(T)\]</span></p>
+<p>For any <span class="math inline">\(T\)</span>, <span class="math display">\[\begin{equation*}
+    \Omega\operatorname{BAut}(T)\simeq\operatorname{Aut}(T)
+\end{equation*}\]</span> where <span class="math inline">\(\operatorname{BAut}(T)\)</span> is pointed at <span class="math inline">\(|\operatorname{\mathsf{refl}}_{}|\)</span>.</p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Proof</em>. </span>aaa</p>
+<p><span class="proof-title"><em>Proof</em>. </span>By the definition of a loop space, <span class="math display">\[\begin{equation*}
+    \Omega\operatorname{BAut}(T):=\bigl((T,|\operatorname{\mathsf{refl}}_{}|)=(T,|\operatorname{\mathsf{refl}}_{}|)\bigr)=\sum_{P:T=T}P_\ast(|\operatorname{\mathsf{refl}}_{}|)=|\operatorname{\mathsf{refl}}_{}|
+\end{equation*}\]</span> Since this is an equality of propositions, this sum is equivalent to <span class="math inline">\(T=T\)</span>. By univalence, <span class="math inline">\((T=T)\simeq(T\simeq T)=:\operatorname{Aut}(T)\)</span>.</p>
 </div>
 
 
