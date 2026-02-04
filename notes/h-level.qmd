@@ -160,7 +160,15 @@ If $T$ is an $n$-type, then $\Aut(T)$ is also an $n$-type.
 
 ::: proof
 
-Suppose $T\simeq 1$ is contractible. Then, $\Aut(T)\simeq\Aut(1)$ is contractible. Otherwise, suppose $T$ is an $n$-type for $n\geq-1$ and let $\langle f,p\rangle,\langle g,q\rangle:\Aut(T)$. Since $\mathsf{isEquiv}(f)$ is a proposition for all $f:T\rightarrow T$, the homotopy level of the dependent pair $\sum_{f:T\rightarrow T}\mathsf{isEquiv}(f)$ is the maximum of $-1$ and the homotopy level of $T\rightarrow T$, the latter of which is the homotopy level of the codomain $T$. Since $n\geq-1$, $\max(-1,n)=n$, and $\Aut(T)$ is an $n$-type.
+Let $\langle f,p\rangle,\langle g,q\rangle:\Aut(T)$.
+
+Suppose $T$ is contractible. Then,
+\begin{align*}
+    \bigl(\langle f,p\rangle=\langle g,q\rangle\bigr)\simeq(P:f=g)\times\bigl(P_\ast(p)=q\bigr)
+\end{align*}
+By assumption, $T$ is contractible, so $T\rightarrow T$ is contractible, and in particular, the identity type $f=g$ is contractible. Since $P_\ast(p)$ and $q$ are propositions, their equality type is contractible. Hence, $\Aut(T)$ is contractible.
+
+Otherwise, suppose $T$ is an $n$-type for $n\geq-1$. Since $\mathsf{isEquiv}(f)$ is a proposition for all $f:T\rightarrow T$, the homotopy level of the dependent pair $\sum_{f:T\rightarrow T}\mathsf{isEquiv}(f)$ is the maximum of $-1$ and the homotopy level of $T\rightarrow T$, the latter of which is the homotopy level of the codomain $T$. Since $n\geq-1$, $\max(-1,n)=n$, and $\Aut(T)$ is an $n$-type.
 
 :::
 
@@ -178,9 +186,9 @@ If $T$ is an $n$-type, then $\BAut(T)$ is an ($n+1$)-type.
 
 Let $\langle X,p\rangle,\langle Y,q\rangle:\BAut(T)$. Then,
 \begin{equation*}
-    \bigl(\langle X,p\rangle=\langle Y,q\rangle\bigr)\simeq\sum_{\varphi:X=Y}\varphi_\ast(p)=q
+    \bigl(\langle X,p\rangle=\langle Y,q\rangle\bigr)\simeq\sum_{P:X=Y}P_\ast(p)=q
 \end{equation*}
-Since $\varphi_\ast(p)$ and $q$ are propositions, their equality is contractible, so the homotopy level of this dependent pair is the level of $X=Y$.
+Since $P_\ast(p)$ and $q$ are propositions, their equality is contractible, so the homotopy level of this dependent pair is the level of $X=Y$.
 
 Since being an $n$-type is a proposition, we may assume $X\simeq T$ and $Y\simeq T$. Since equivalences preserve homotopy level, $X$ and $Y$ are $n$-types. Combining the equivalences also yields $X\simeq Y$. Since $X,Y$ are $n$-types, $X\simeq Y$ is an $n$-type, and thus by univalence, $(X=Y)\simeq(X\simeq Y)$ is an $n$-type. Hence $\BAut(T)$ is an ($n+1$)-type.
 
