@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-02-03">
+<meta name="dcterms.date" content="2026-02-04">
 
 <title>Homotopy Levels – HoTT.jpeg</title>
 <style>
@@ -338,14 +338,14 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 3, 2026</p>
+        <p class="date">February 4, 2026</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">February 3, 2026</p>
+        <p class="date-modified">February 4, 2026</p>
       </div>
     </div>
       
@@ -432,15 +432,19 @@ window.Quarto = {
 <p>If <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type, then <span class="math inline">\(\operatorname{Aut}(T)\)</span> is also an <span class="math inline">\(n\)</span>-type.</p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Proof</em>. </span>Suppose <span class="math inline">\(T\simeq 1\)</span> is contractible. Then, <span class="math inline">\(\operatorname{Aut}(T)\simeq\operatorname{Aut}(1)\)</span> is contractible. Otherwise, suppose <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type for <span class="math inline">\(n\geq-1\)</span> and let <span class="math inline">\(\langle f,p\rangle,\langle g,q\rangle:\operatorname{Aut}(T)\)</span>. Since <span class="math inline">\(\mathsf{isEquiv}(f)\)</span> is a proposition for all <span class="math inline">\(f:T\rightarrow T\)</span>, the homotopy level of the dependent pair <span class="math inline">\(\sum_{f:T\rightarrow T}\mathsf{isEquiv}(f)\)</span> is the maximum of <span class="math inline">\(-1\)</span> and the homotopy level of <span class="math inline">\(T\rightarrow T\)</span>, the latter of which is the homotopy level of the codomain <span class="math inline">\(T\)</span>. Since <span class="math inline">\(n\geq-1\)</span>, <span class="math inline">\(\max(-1,n)=n\)</span>, and <span class="math inline">\(\operatorname{Aut}(T)\)</span> is an <span class="math inline">\(n\)</span>-type.</p>
+<p><span class="proof-title"><em>Proof</em>. </span>Let <span class="math inline">\(\langle f,p\rangle,\langle g,q\rangle:\operatorname{Aut}(T)\)</span>.</p>
+<p>Suppose <span class="math inline">\(T\)</span> is contractible. Then, <span class="math display">\[\begin{align*}
+    \bigl(\langle f,p\rangle=\langle g,q\rangle\bigr)\simeq(P:f=g)\times\bigl(P_\ast(p)=q\bigr)
+\end{align*}\]</span> By assumption, <span class="math inline">\(T\)</span> is contractible, so <span class="math inline">\(T\rightarrow T\)</span> is contractible, and in particular, the identity type <span class="math inline">\(f=g\)</span> is contractible. Since <span class="math inline">\(P_\ast(p)\)</span> and <span class="math inline">\(q\)</span> are propositions, their equality type is contractible. Hence, <span class="math inline">\(\operatorname{Aut}(T)\)</span> is contractible.</p>
+<p>Otherwise, suppose <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type for <span class="math inline">\(n\geq-1\)</span>. Since <span class="math inline">\(\mathsf{isEquiv}(f)\)</span> is a proposition for all <span class="math inline">\(f:T\rightarrow T\)</span>, the homotopy level of the dependent pair <span class="math inline">\(\sum_{f:T\rightarrow T}\mathsf{isEquiv}(f)\)</span> is the maximum of <span class="math inline">\(-1\)</span> and the homotopy level of <span class="math inline">\(T\rightarrow T\)</span>, the latter of which is the homotopy level of the codomain <span class="math inline">\(T\)</span>. Since <span class="math inline">\(n\geq-1\)</span>, <span class="math inline">\(\max(-1,n)=n\)</span>, and <span class="math inline">\(\operatorname{Aut}(T)\)</span> is an <span class="math inline">\(n\)</span>-type.</p>
 </div>
 <div class="{thm-baut-hlevel}">
 <p>If <span class="math inline">\(T\)</span> is an <span class="math inline">\(n\)</span>-type, then <span class="math inline">\(\operatorname{BAut}(T)\)</span> is an (<span class="math inline">\(n+1\)</span>)-type.</p>
 </div>
 <div class="proof">
 <p><span class="proof-title"><em>Proof</em>. </span>Let <span class="math inline">\(\langle X,p\rangle,\langle Y,q\rangle:\operatorname{BAut}(T)\)</span>. Then, <span class="math display">\[\begin{equation*}
-    \bigl(\langle X,p\rangle=\langle Y,q\rangle\bigr)\simeq\sum_{\varphi:X=Y}\varphi_\ast(p)=q
-\end{equation*}\]</span> Since <span class="math inline">\(\varphi_\ast(p)\)</span> and <span class="math inline">\(q\)</span> are propositions, their equality is contractible, so the homotopy level of this dependent pair is the level of <span class="math inline">\(X=Y\)</span>.</p>
+    \bigl(\langle X,p\rangle=\langle Y,q\rangle\bigr)\simeq\sum_{P:X=Y}P_\ast(p)=q
+\end{equation*}\]</span> Since <span class="math inline">\(P_\ast(p)\)</span> and <span class="math inline">\(q\)</span> are propositions, their equality is contractible, so the homotopy level of this dependent pair is the level of <span class="math inline">\(X=Y\)</span>.</p>
 <p>Since being an <span class="math inline">\(n\)</span>-type is a proposition, we may assume <span class="math inline">\(X\simeq T\)</span> and <span class="math inline">\(Y\simeq T\)</span>. Since equivalences preserve homotopy level, <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are <span class="math inline">\(n\)</span>-types. Combining the equivalences also yields <span class="math inline">\(X\simeq Y\)</span>. Since <span class="math inline">\(X,Y\)</span> are <span class="math inline">\(n\)</span>-types, <span class="math inline">\(X\simeq Y\)</span> is an <span class="math inline">\(n\)</span>-type, and thus by univalence, <span class="math inline">\((X=Y)\simeq(X\simeq Y)\)</span> is an <span class="math inline">\(n\)</span>-type. Hence <span class="math inline">\(\operatorname{BAut}(T)\)</span> is an (<span class="math inline">\(n+1\)</span>)-type.</p>
 </div>
 <div class="{def-loop}">
