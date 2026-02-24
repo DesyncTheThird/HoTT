@@ -1,4 +1,4 @@
-{-# OPTIONS --cubical --safe --guardedness #-}
+{-# OPTIONS --cubical --guardedness #-}
 
 open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; subst to tpt)
 open import Cubical.Foundations.HLevels
@@ -6,7 +6,7 @@ open import Cubical.Foundations.HLevels
 module FSMG {ℓ} (A : Type ℓ) (is-groupoid : isGroupoid A) where
 
 postulate
-  sorry : ∀ {P} → P
+  sorry : ∀ {ℓ} {P : Type ℓ} → P
 
 data FSMG : Type ℓ where
     𝕀 : FSMG
@@ -80,4 +80,3 @@ data FSMG : Type ℓ where
 --     (β²* : {X Y : FSMG} (X* : P X) (Y* : P Y)
 --         → (β* {X} {Y} X* Y* ∙ᵈ β* {Y} {X} Y* X*) ≡ refl [ (λ p → (X* ⊗* Y*) ≡ (X* ⊗* Y*) [ P ↓ p ]) ↓ β² X Y ])
 --     → (f : (X : FSMG A) → P X)
-
