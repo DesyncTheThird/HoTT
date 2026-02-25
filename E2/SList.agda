@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; subst to tpt)
+open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; congP to apP; subst to tpt)
 open import Cubical.Foundations.Transport
 open import Cubical.Foundations.HLevels
 
@@ -27,17 +27,18 @@ module SListElim {j} (A : Type ℓ) {P : SList A → Type j}
     (_::*_ : (x : A) {xs : SList A} → (xs* : P xs) → P (x :: xs))
 
     (swap* : (x y : A) {xs : SList A} (xs* : P xs)
-           → PathP (λ i → P (swap x y xs i)) (x ::* (y ::* xs*)) (y ::* (x ::* xs*)))
+        → PathP (λ i → P (swap x y xs i)) (x ::* (y ::* xs*)) (y ::* (x ::* xs*)))
 
     (swap²* : (x y z : A) {xs : SList A} (xs* : P xs)
-            → SquareP (λ i j → P (swap² x y xs i j)) (swap* x y xs*) (symP (swap* y x xs*)) refl refl)
+        → SquareP (λ i j → P (swap² x y xs i j)) (swap* x y xs*) (symP (swap* y x xs*)) refl refl)
 
-        -- (swap* x y xs* ∙ᵈ swap* y x xs*) ≡ idp [ (λ p → (x ::* (y ::* xs*)) == (x ::* (y ::* xs*)) [ P ↓ p ]) ↓ swap² x y xs ])
-    -- (⬡* : (x y z : A) {xs : SList A} (xs* : P xs)
-    --     → let p1 = swap* x y (z ::* xs*) ∙ᵈ ($ (y ::*_) (swap* x z xs*) ∙ᵈ swap* y z (x ::* xs*))
-    --        p2 = $ (x ::*_) (swap* y z xs*) ∙ᵈ (swap* x z (y ::* xs*) ∙ᵈ $ (z ::*_) (swap* x y xs*))
-    --        in p1 == p2 [ (λ p → (x ::* (y ::* (z ::* xs*))) == (z ::* (y ::* (x ::* xs*))) [ P ↓ p ]) ↓ ⬡ x y z xs ])
-    -- (trunc* : {xs : SList A} → has-level 1 (P xs))
+    (⬡₌* : (x y z : A) {xs : SList A} (xs* : P xs)
+        → PathP (λ i → P (⬡₌ x y z xs i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*))))
+
+    (⬡₁* : (x y z : A) {xs : SList A} (xs* : P xs)
+        → SquareP (λ i j → P (⬡₁ x y z xs i j)) ((symP (swap* x y (z ::* xs*)))) (swap* y z (x ::* xs*))  {!   !} (⬡₌* x y z xs*))
+
+
     where
 
 -- data Foo : Type ℓ where
