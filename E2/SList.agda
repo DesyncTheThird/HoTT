@@ -29,7 +29,7 @@ module SListElim {j} (A : Type ℓ) {P : SList A → Type j}
     (swap* : (x y : A) {xs : SList A} (xs* : P xs)
         → PathP (λ i → P (swap x y xs i)) (x ::* (y ::* xs*)) (y ::* (x ::* xs*)))
 
-    (swap²* : (x y z : A) {xs : SList A} (xs* : P xs)
+    (swap²* : (x y : A) {xs : SList A} (xs* : P xs)
         → SquareP (λ i j → P (swap² x y xs i j)) (swap* x y xs*) (symP (swap* y x xs*)) refl refl)
 
     (⬡₌* : (x y z : A) {xs : SList A} (xs* : P xs)
@@ -43,7 +43,16 @@ module SListElim {j} (A : Type ℓ) {P : SList A → Type j}
 
     (is-groupoid* : (xs : SList A) → isGroupoid (P xs))
     where
-
+    elim : (xs : SList A) → P xs
+    elim nil = nil*
+    elim (x :: xs) = x ::* elim xs
+    elim (swap x y xs i) = swap* x y (elim xs) i
+    elim (swap² x y xs i j) = swap²* x y (elim xs) i j
+    elim (⬡₌ x y z xs i) = ⬡₌* x y z (elim xs) i
+    elim (⬡₁ x y z xs i j) = ⬡₁* x y z (elim xs) i j
+    elim (⬡₂ x y z xs i j) = ⬡₂* x y z (elim xs) i j
+    elim (is-groupoid xs xs' p q r s i j k) = isGroupoid→CubeP (λ i j k → P (is-groupoid xs xs' p q r s i j k))
+         (λ j k → elim (r j k)) (λ j k → elim (s j k)) (λ i k → elim (p k)) (λ i k → elim (q k)) (λ i j → elim xs) (λ i j → elim xs') (is-groupoid* xs') i j k
 
 
 
