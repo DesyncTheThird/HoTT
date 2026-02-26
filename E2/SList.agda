@@ -36,10 +36,32 @@ module SListElim {j} (A : Type ℓ) {P : SList A → Type j}
         → PathP (λ i → P (⬡₌ x y z xs i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*))))
 
     (⬡₁* : (x y z : A) {xs : SList A} (xs* : P xs)
-        → SquareP (λ i j → P (⬡₁ x y z xs i j)) ((symP (swap* x y (z ::* xs*)))) (swap* y z (x ::* xs*))  {!   !} (⬡₌* x y z xs*))
+        → SquareP (λ i j → P (⬡₁ x y z xs i j)) ((symP (swap* x y (z ::* xs*)))) (swap* y z (x ::* xs*)) (apP (λ i a → y ::* a) (swap* x z xs*)) (⬡₌* x y z xs*))
 
+    (⬡₂* : (x y z : A) {xs : SList A} (xs* : P xs)
+        → SquareP (λ i j → P (⬡₂ x y z xs i j)) (apP (λ i a → x ::* a) (swap* y z xs*)) (symP (apP (λ i a → z ::* a) (swap* x y xs*))) (⬡₌* x y z xs*) (swap* x z (y ::* xs*)))
 
+    (is-groupoid* : (xs : SList A) → isGroupoid (P xs))
     where
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- data Foo : Type ℓ where
 --   pt : Foo
