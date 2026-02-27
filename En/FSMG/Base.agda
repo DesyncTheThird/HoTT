@@ -42,6 +42,8 @@ data FSMG {ℓ} (A : Type ℓ) : Type ℓ where
 
     β² : (X Y : FSMG A) → β X Y ≡ sym (β Y X)
 
+    is-groupoid : isGroupoid (FSMG A)
+
 module FSMG-elim {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
     (𝕀* : P 𝕀)
     (η* : (a : A) → P (η a))
@@ -83,6 +85,8 @@ module FSMG-elim {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
 
     (β²* : {X Y : FSMG A} (X* : P X) (Y* : P Y) → SquareP (λ i j → P (β² X Y i j)) (β* X* Y*) (symP (β* Y* X*)) refl refl)
 
+    (is-groupoid* : (X : FSMG A) → isGroupoid (P X))
+
     where
     elim : (xs : FSMG A) → P xs
     elim 𝕀 = 𝕀*
@@ -100,6 +104,8 @@ module FSMG-elim {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
     elim (⬡₁ X Y Z i j) = ⬡₁* (elim X) (elim Y) (elim Z) i j
     elim (⬡₂ X Y Z i j) = ⬡₂* (elim X) (elim Y) (elim Z) i j
     elim (β² X Y i j) = β²* (elim X) (elim Y) i j
+    elim (is-groupoid X Y p q r s i j k) = isGroupoid→CubeP (λ i j k → P (is-groupoid X Y p q r s i j k))
+         (λ j k → elim (r j k)) (λ j k → elim (s j k)) (λ i k → elim (p k)) (λ i k → elim (q k)) (λ i j → elim X) (λ i j → elim Y) (is-groupoid* Y) i j k
 
 -- ▽-FSMG : {A : Type ℓ} (W X Y Z : FSMG A)
 --     → α (X) (𝕀) (Y) ∙ ap (X ⊗_) (Λ (Y)) ≡ ap (_⊗ Y) (ρ (X))
