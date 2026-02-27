@@ -1,9 +1,6 @@
-{-# OPTIONS --cubical --safe --guardedness #-}
+module En.SMG where
 
-open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; subst to tpt)
-open import Cubical.Foundations.HLevels
-
-module SMG where
+open import En.Prelude
 
 record symmetric-monoidal-groupoid-structure {ℓ} (El : Type ℓ) : Type ℓ where
   constructor smg-struct

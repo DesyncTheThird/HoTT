@@ -1,14 +1,8 @@
-{-# OPTIONS --cubical --guardedness #-}
+module En.FSMG.Base where
 
-open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; congP to apP ; subst to tpt)
-open import Cubical.Foundations.HLevels
+open import En.Prelude
 
-module FSMG {ℓ} where
-
-postulate
-  sorry : ∀ {ℓ} {P : Type ℓ} → P
-
-data FSMG (A : Type ℓ) : Type ℓ where
+data FSMG {ℓ} (A : Type ℓ) : Type ℓ where
     𝕀 : FSMG A
     η : A → FSMG A
     _⊗_ : FSMG A → FSMG A → FSMG A
@@ -31,7 +25,7 @@ data FSMG (A : Type ℓ) : Type ℓ where
 
     ▽ : (X Y : FSMG A)
         → Square (ap (X ⊗_) (Λ Y)) (ap (_⊗ Y) (ρ X)) (sym (α X 𝕀 Y)) refl
-    
+
     -- ▽ : (X Y : FSMG)
     --     → α (X) (𝕀) (Y) ∙ ap (X ⊗_) (Λ (Y)) ≡ ap (_⊗ Y) (ρ (X))
 
@@ -48,11 +42,11 @@ data FSMG (A : Type ℓ) : Type ℓ where
 
     β² : (X Y : FSMG A) → β X Y ≡ sym (β Y X)
 
-module FSMG-elim {ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
+module FSMG-elim {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
     (𝕀* : P 𝕀)
     (η* : (a : A) → P (η a))
     (_⊗*_ : {X Y : FSMG A} (X* : P X) → (Y* : P Y) → (P (X ⊗ Y)))
-    
+
     (α* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
         → PathP (λ i → P (α X Y Z i)) ((X* ⊗* Y*) ⊗* Z*) (X* ⊗* (Y* ⊗* Z*)))
 

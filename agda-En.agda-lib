@@ -1,0 +1,4 @@
+name: agda-En
+depend: cubical
+include: .
+flags: --cubical --exact-split --guardedness --safe

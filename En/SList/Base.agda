@@ -1,12 +1,8 @@
-{-# OPTIONS --cubical --guardedness #-}
+module En.SList.Base where
 
-open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; congP to apP; subst to tpt)
-open import Cubical.Foundations.Transport
-open import Cubical.Foundations.HLevels
+open import En.Prelude
 
-module SList {ℓ} where
-
-data SList (A : Type ℓ) : Type ℓ where
+data SList {ℓ} (A : Type ℓ) : Type ℓ where
     nil : SList A
     _::_ : A → SList A → SList A
 
@@ -22,7 +18,7 @@ data SList (A : Type ℓ) : Type ℓ where
 
     is-groupoid : isGroupoid (SList A)
 
-module SListElim {ℓ'} (A : Type ℓ) {P : SList A → Type ℓ'}
+module SListElim {ℓ ℓ'} (A : Type ℓ) {P : SList A → Type ℓ'}
     (nil* : P nil)
     (_::*_ : (x : A) {xs : SList A} → (xs* : P xs) → P (x :: xs))
 
