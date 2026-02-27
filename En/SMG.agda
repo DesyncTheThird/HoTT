@@ -2,8 +2,8 @@ module En.SMG where
 
 open import En.Prelude
 
-record symmetric-monoidal-groupoid-structure {ℓ} (El : Type ℓ) : Type ℓ where
-  constructor smg-struct
+record SMG*Struct {ℓ} (El : Type ℓ) : Type ℓ where
+  constructor smg*struct
   field
     𝕀 : El
     _⊗_ : El → El → El
@@ -13,7 +13,7 @@ record symmetric-monoidal-groupoid-structure {ℓ} (El : Type ℓ) : Type ℓ wh
     ρ : (X : El) → X ⊗ 𝕀 ≡ X
     β : (X Y : El) → X ⊗ Y ≡ Y ⊗ X
   field
-    ▽ : (X Y Z : El) → ap (_⊗ Z) (sym (ρ X)) ∙ α X 𝕀 Z ≡ ap (X ⊗_) (sym (Λ Z))
+    ▽ : (X Y : El) → sym (α X 𝕀 Y) ∙ ap (_⊗ Y) (ρ X) ≡ ap (X ⊗_) (Λ Y)
     ⬠ : (W X Y Z : El)
       → α (W ⊗ X) Y Z ∙ α W X (Y ⊗ Z)
       ≡ ap (_⊗ Z) (α W X Y) ∙ α W (X ⊗ Y) Z ∙ ap (W ⊗_) (α X Y Z)
@@ -22,14 +22,15 @@ record symmetric-monoidal-groupoid-structure {ℓ} (El : Type ℓ) : Type ℓ wh
       ≡ ap (_⊗ Z) (β X Y) ∙ α Y X Z ∙ ap (Y ⊗_) (β X Z)
     β² : (X Y : El) → β X Y ∙ β Y X ≡ refl
     is-groupoid : isGroupoid El
+open SMG*Struct public
 
-record symmetric-monoidal-functor {ℓ₁ ℓ₂}
-  (A : Type ℓ₁) (SMGA : symmetric-monoidal-groupoid-structure A)
-  (B : Type ℓ₂) (SMGB : symmetric-monoidal-groupoid-structure B) : Type (ℓ-max ℓ₁ ℓ₂) where
-  constructor smg-func
+record SMG⋆Functor {ℓ₁ ℓ₂}
+  (A : Type ℓ₁) (SMGA : SMG*Struct A)
+  (B : Type ℓ₂) (SMGB : SMG*Struct B) : Type (ℓ-max ℓ₁ ℓ₂) where
+  constructor smg*functor
   private
-    module A = symmetric-monoidal-groupoid-structure SMGA
-    module B = symmetric-monoidal-groupoid-structure SMGB
+    module A = SMG*Struct SMGA
+    module B = SMG*Struct SMGB
   field
     f : A → B
   field
@@ -43,6 +44,6 @@ record symmetric-monoidal-functor {ℓ₁ ℓ₂}
     f-ρ : (X : A) → ap f (A.ρ X) ≡ f-⊗ X (A.𝕀) ∙ ap (f X B.⊗_) f-𝕀 ∙ B.ρ (f X)
     f-β : (X Y : A) → ap f (A.β X Y) ∙ f-⊗ Y X ≡ f-⊗ X Y ∙ B.β (f X) (f Y)
 
--- 1. symmetric-monoidal-groupoid-structure (FSMG A)
--- 2. for any A, B, symmetric-monoidal-groupoid-structure B, exists symmetric-monoidal-functor (FSMG A) B
+-- 1. SMG*Struct (FSMG A)
+-- 2. for any A, B, SMG*Struct B, exists symmetric-monoidal-functor (FSMG A) B
 -- 3. (-) ∙ η : symmetric-monoidal-functor (FSMG A) B → (A → B) is an equivalence
