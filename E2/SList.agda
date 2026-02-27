@@ -22,7 +22,7 @@ data SList (A : Type ℓ) : Type ℓ where
 
     is-groupoid : isGroupoid (SList A)
 
-module SListElim {j} (A : Type ℓ) {P : SList A → Type j}
+module SListElim {ℓ'} (A : Type ℓ) {P : SList A → Type ℓ'}
     (nil* : P nil)
     (_::*_ : (x : A) {xs : SList A} → (xs* : P xs) → P (x :: xs))
 

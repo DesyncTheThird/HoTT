@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --guardedness #-}
 
-open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; subst to tpt)
+open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; congP to apP ; subst to tpt)
 open import Cubical.Foundations.HLevels
 
 module FSMG {ℓ} where
@@ -46,21 +46,80 @@ data FSMG (A : Type ℓ) : Type ℓ where
     --     → α (X) (Y) (Z) ∙ β (X) (Y ⊗ Z) ∙ α (Y) (Z) (X)
     --     ≡ ap (_⊗ Z) (β (X) (Y)) ∙ α (Y) (X) (Z) ∙ ap (Y ⊗_) (β (X) (Z))
 
-    β² : (X Y : FSMG A) → β X Y ∙ β Y X ≡ refl {_} {_} {X ⊗ Y}
+    β² : (X Y : FSMG A) → β X Y ≡ sym (β Y X)
 
-▽-FSMG : {A : Type ℓ} (W X Y Z : FSMG A)
-    → α (X) (𝕀) (Y) ∙ ap (X ⊗_) (Λ (Y)) ≡ ap (_⊗ Y) (ρ (X))
-▽-FSMG W X Y Z = sorry
+module FSMG-elim {ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
+    (𝕀* : P 𝕀)
+    (η* : (a : A) → P (η a))
+    (_⊗*_ : {X Y : FSMG A} (X* : P X) → (Y* : P Y) → (P (X ⊗ Y)))
+    
+    (α* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
+        → PathP (λ i → P (α X Y Z i)) ((X* ⊗* Y*) ⊗* Z*) (X* ⊗* (Y* ⊗* Z*)))
 
-⬠-FSMG : {A : Type ℓ} (W X Y Z : FSMG A)
-    → α (W ⊗ X) Y Z ∙ α W X (Y ⊗ Z)
-    ≡ ap (_⊗ Z) (α W X Y) ∙ α W (X ⊗ Y) Z ∙ ap (W ⊗_) (α X Y Z)
-⬠-FSMG W X Y Z = sorry
+    (Λ* : {X : FSMG A} (X* : P X) → PathP (λ i → P (Λ X i)) (𝕀* ⊗* X*) X*)
+    (ρ* : {X : FSMG A} (X* : P X) → PathP (λ i → P (ρ X i)) (X* ⊗* 𝕀*) X*)
+    (β* : {X Y : FSMG A} (X* : P X) (Y* : P Y)
+        → PathP (λ i → P (β X Y i)) (X* ⊗* Y*) (Y* ⊗* X*))
+    (⬠₌* : {W X Y Z : FSMG A} (W* : P W) (X* : P X) (Y* : P Y) (Z* : P Z)
+        → PathP (λ i → P (⬠₌ W X Y Z i)) (((W* ⊗* X*) ⊗* Y*) ⊗* Z*) (W* ⊗* (X* ⊗* (Y* ⊗* Z*))))
+    (⬠₁* : {W X Y Z : FSMG A} (W* : P W) (X* : P X) (Y* : P Y) (Z* : P Z)
+        → SquareP (λ i j → P (⬠₁ W X Y Z i j))
+            (symP (α* (W* ⊗* X*) Y* Z*))
+            (α* W* X* (Y* ⊗* Z*))
+            refl
+            (⬠₌* W* X* Y* Z*))
 
-⬡-FSMG : {A : Type ℓ} (X Y Z : FSMG A)
-        → α (X) (Y) (Z) ∙ β (X) (Y ⊗ Z) ∙ α (Y) (Z) (X)
-        ≡ ap (_⊗ Z) (β (X) (Y)) ∙ α (Y) (X) (Z) ∙ ap (Y ⊗_) (β (X) (Z))
-⬡-FSMG X Y Z = sorry
+    (⬠₂* : {W X Y Z : FSMG A} (W* : P W) (X* : P X) (Y* : P Y) (Z* : P Z)
+        → SquareP (λ i j → P (⬠₂ W X Y Z i j))
+            (apP (λ i a → a ⊗* Z*) (α* W* X* Y*))
+            (symP (apP (λ i a → W* ⊗* a) (α* X* Y* Z*)))
+            (⬠₌* W* X* Y* Z*)
+            (α* W* (X* ⊗* Y*) Z*))
+
+    (▽* : {X Y : FSMG A} (X* : P X) (Y* : P Y)
+        → SquareP (λ i j → P (▽ X Y i j)) (apP (λ i a → X* ⊗* a) (Λ* Y*)) (apP (λ i a → a ⊗* Y*) (ρ* X*)) (symP (α* X* 𝕀* Y*)) refl)
+
+    (⬡₌* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
+        → PathP (λ i → P (⬡₌ X Y Z i)) ((X* ⊗* Y*) ⊗* Z*) (Y* ⊗* (Z* ⊗* X*)))
+
+    (⬡₁* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
+        → SquareP (λ i j → P (⬡₁ X Y Z i j)) (symP (α* X* Y* Z*)) (α* Y* Z* X*) (β* X* (Y* ⊗* Z*)) (⬡₌* X* Y* Z*))
+    (⬡₂* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
+        → SquareP (λ i j → P (⬡₂ X Y Z i j)) (apP (λ i a → a ⊗* Z*) (β* X* Y*)) (apP (λ i a → Y* ⊗* a) (β* Z* X*)) (⬡₌* X* Y* Z*) (α* Y* X* Z*))
+
+    (β²* : {X Y : FSMG A} (X* : P X) (Y* : P Y) → SquareP (λ i j → P (β² X Y i j)) (β* X* Y*) (symP (β* Y* X*)) refl refl)
+
+    where
+    elim : (xs : FSMG A) → P xs
+    elim 𝕀 = 𝕀*
+    elim (η x) = η* x
+    elim (X ⊗ Y) = elim X ⊗* elim Y
+    elim (α X Y Z i) = α* (elim X) (elim Y) (elim Z) i
+    elim (Λ X i) = Λ* (elim X) i
+    elim (ρ X i) = ρ* (elim X) i
+    elim (β X Y i) = β* (elim X) (elim Y) i
+    elim (⬠₌ W X Y Z i) = ⬠₌* (elim W) (elim X) (elim Y) (elim Z) i
+    elim (⬠₁ W X Y Z i j) = ⬠₁* (elim W) (elim X) (elim Y) (elim Z) i j
+    elim (⬠₂ W X Y Z i j) = ⬠₂* (elim W) (elim X) (elim Y) (elim Z) i j
+    elim (▽ X Y i j) = ▽* (elim X) (elim Y) i j
+    elim (⬡₌ X Y Z i) = ⬡₌* (elim X) (elim Y) (elim Z) i
+    elim (⬡₁ X Y Z i j) = ⬡₁* (elim X) (elim Y) (elim Z) i j
+    elim (⬡₂ X Y Z i j) = ⬡₂* (elim X) (elim Y) (elim Z) i j
+    elim (β² X Y i j) = β²* (elim X) (elim Y) i j
+
+-- ▽-FSMG : {A : Type ℓ} (W X Y Z : FSMG A)
+--     → α (X) (𝕀) (Y) ∙ ap (X ⊗_) (Λ (Y)) ≡ ap (_⊗ Y) (ρ (X))
+-- ▽-FSMG W X Y Z = sorry
+
+-- ⬠-FSMG : {A : Type ℓ} (W X Y Z : FSMG A)
+--     → α (W ⊗ X) Y Z ∙ α W X (Y ⊗ Z)
+--     ≡ ap (_⊗ Z) (α W X Y) ∙ α W (X ⊗ Y) Z ∙ ap (W ⊗_) (α X Y Z)
+-- ⬠-FSMG W X Y Z = sorry
+
+-- ⬡-FSMG : {A : Type ℓ} (X Y Z : FSMG A)
+--         → α (X) (Y) (Z) ∙ β (X) (Y ⊗ Z) ∙ α (Y) (Z) (X)
+--         ≡ ap (_⊗ Z) (β (X) (Y)) ∙ α (Y) (X) (Z) ∙ ap (Y ⊗_) (β (X) (Z))
+-- ⬡-FSMG X Y Z = sorry
 
 -- recFSMG : (P : FSMG A → Type ℓ)
 --     (η* : (a : A) → P (η a))
