@@ -34,7 +34,7 @@ data FSMG {ℓ} (A : Type ℓ) : Type ℓ where
     ⬡₁ : (X Y Z : FSMG A)
         → Square (sym (α X Y Z)) (α Y Z X) (β X (Y ⊗ Z)) (⬡₌ X Y Z)
     ⬡₂ : (X Y Z : FSMG A)
-        → Square (ap (_⊗ Z) (β X Y)) (ap (Y ⊗_) (β Z X)) (⬡₌ X Y Z) (α Y X Z)
+        → Square (ap (_⊗ Z) (β X Y)) (ap (Y ⊗_) (sym (β X Z))) (⬡₌ X Y Z) (α Y X Z)
 
     -- ⬡ : (X Y Z : FSMG A)
     --     → α (X) (Y) (Z) ∙ β (X) (Y ⊗ Z) ∙ α (Y) (Z) (X)
@@ -81,7 +81,7 @@ module FSMG-elim {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
     (⬡₁* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
         → SquareP (λ i j → P (⬡₁ X Y Z i j)) (symP (α* X* Y* Z*)) (α* Y* Z* X*) (β* X* (Y* ⊗* Z*)) (⬡₌* X* Y* Z*))
     (⬡₂* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
-        → SquareP (λ i j → P (⬡₂ X Y Z i j)) (apP (λ i a → a ⊗* Z*) (β* X* Y*)) (apP (λ i a → Y* ⊗* a) (β* Z* X*)) (⬡₌* X* Y* Z*) (α* Y* X* Z*))
+        → SquareP (λ i j → P (⬡₂ X Y Z i j)) (apP (λ i a → a ⊗* Z*) (β* X* Y*)) (apP (λ i a → Y* ⊗* a) (symP (β* X* Z*))) (⬡₌* X* Y* Z*) (α* Y* X* Z*))
 
     (β²* : {X Y : FSMG A} (X* : P X) (Y* : P Y) → SquareP (λ i j → P (β² X Y i j)) (β* X* Y*) (symP (β* Y* X*)) refl refl)
 
