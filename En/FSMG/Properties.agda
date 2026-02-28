@@ -16,3 +16,11 @@ FSMG-has-SMG*Struct A .S.⬠ W X Y Z = Pentagon→compPath (⬠₌ W X Y Z) (⬠
 FSMG-has-SMG*Struct A .S.⬡ X Y Z = Hexagon→compPath (⬡₌ X Y Z) (⬡₁ X Y Z) (⬡₂ X Y Z)
 FSMG-has-SMG*Struct A .S.β² X Y = ap (_∙ β Y X) (β² X Y) ∙ lCancel (β Y X)
 FSMG-has-SMG*Struct A .S.is-groupoid = is-groupoid
+
+module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (SMGB : S.SMG*Struct B) where
+
+  _♯ : (f : A → B) → (FSMG A → B)
+  f ♯ = {!!}
+
+  ♯-SMG*Functor : (f : A → B) → S.SMG*Functor (FSMG A) (FSMG-has-SMG*Struct A) B SMGB (f ♯)
+  ♯-SMG*Functor = {!!}

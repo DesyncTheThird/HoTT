@@ -22,17 +22,17 @@ record SMG*Struct {ℓ} (El : Type ℓ) : Type ℓ where
       ≡ ap (_⊗ Z) (β X Y) ∙ α Y X Z ∙ ap (Y ⊗_) (β X Z)
     β² : (X Y : El) → β X Y ∙ β Y X ≡ refl
     is-groupoid : isGroupoid El
+
 open SMG*Struct public
 
-record SMG⋆Functor {ℓ₁ ℓ₂}
+record SMG*Functor {ℓ₁ ℓ₂}
   (A : Type ℓ₁) (SMGA : SMG*Struct A)
-  (B : Type ℓ₂) (SMGB : SMG*Struct B) : Type (ℓ-max ℓ₁ ℓ₂) where
+  (B : Type ℓ₂) (SMGB : SMG*Struct B)
+  (f : A → B) : Type (ℓ-max ℓ₁ ℓ₂) where
   constructor smg*functor
   private
     module A = SMG*Struct SMGA
     module B = SMG*Struct SMGB
-  field
-    f : A → B
   field
     f-𝕀 : f A.𝕀 ≡ B.𝕀
     f-⊗ : (X Y : A) → f (X A.⊗ Y) ≡ f X B.⊗ f Y
@@ -43,6 +43,8 @@ record SMG⋆Functor {ℓ₁ ℓ₂}
     f-Λ : (X : A) → ap f (A.Λ X) ≡ f-⊗ (A.𝕀) X ∙ ap (B._⊗ f X) f-𝕀 ∙ B.Λ (f X)
     f-ρ : (X : A) → ap f (A.ρ X) ≡ f-⊗ X (A.𝕀) ∙ ap (f X B.⊗_) f-𝕀 ∙ B.ρ (f X)
     f-β : (X Y : A) → ap f (A.β X Y) ∙ f-⊗ Y X ≡ f-⊗ X Y ∙ B.β (f X) (f Y)
+
+open SMG*Functor public
 
 -- 1. SMG*Struct (FSMG A)
 -- 2. for any A, B, SMG*Struct B, exists symmetric-monoidal-functor (FSMG A) B
