@@ -7,6 +7,9 @@ open import Cubical.Foundations.Path public
 open import Cubical.Foundations.GroupoidLaws public
 open import Cubical.Foundations.Function public
 
+postulate
+    sorry : ∀ {l} {A : Type l} → A
+
 -- Triangle→compPath : ∀ {ℓ} {A : Type ℓ} {a b c d : A} {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d} → Square r s p q → p ∙ s ≡ r ∙ q
 -- Triangle→compPath = Square→compPath
 

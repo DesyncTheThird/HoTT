@@ -20,7 +20,7 @@ FSMG-has-SMG*Struct A .S.is-groupoid = is-groupoid
 module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (SMGB : S.SMG*Struct B) where
 
   _♯ : (f : A → B) → (FSMG A → B)
-  f ♯ = {!!}
+  f ♯ = {!   !}
 
   ♯-SMG*Functor : (f : A → B) → S.SMG*Functor (FSMG A) (FSMG-has-SMG*Struct A) B SMGB (f ♯)
-  ♯-SMG*Functor = {!!}
+  ♯-SMG*Functor = sorry
