@@ -12,6 +12,12 @@ data FSMG {ℓ} (A : Type ℓ) : Type ℓ where
     ρ : (X : FSMG A) → X ⊗ 𝕀 ≡ X
     β : (X Y : FSMG A) → X ⊗ Y ≡ Y ⊗ X
 
+    ▽ : (X Y : FSMG A)
+        → Square (ap (X ⊗_) (Λ Y)) (ap (_⊗ Y) (ρ X)) (sym (α X 𝕀 Y)) refl
+
+    -- ▽ : (X Y : FSMG)
+    --     → α (X) (𝕀) (Y) ∙ ap (X ⊗_) (Λ (Y)) ≡ ap (_⊗ Y) (ρ (X))
+
     ⬠₌ : (W X Y Z : FSMG A)
         → ((W ⊗ X) ⊗ Y) ⊗ Z ≡ W ⊗ (X ⊗ (Y ⊗ Z))
     ⬠₁ : (W X Y Z : FSMG A)
@@ -23,11 +29,6 @@ data FSMG {ℓ} (A : Type ℓ) : Type ℓ where
     --   → α (W ⊗ X) Y Z ∙ α W X (Y ⊗ Z)
     --   ≡ ap (_⊗ Z) (α W X Y) ∙ α W (X ⊗ Y) Z ∙ ap (W ⊗_) (α X Y Z)
 
-    ▽ : (X Y : FSMG A)
-        → Square (ap (X ⊗_) (Λ Y)) (ap (_⊗ Y) (ρ X)) (sym (α X 𝕀 Y)) refl
-
-    -- ▽ : (X Y : FSMG)
-    --     → α (X) (𝕀) (Y) ∙ ap (X ⊗_) (Λ (Y)) ≡ ap (_⊗ Y) (ρ (X))
 
     ⬡₌ : (X Y Z : FSMG A)
         → (X ⊗ Y) ⊗ Z ≡ Y ⊗ (Z ⊗ X)
@@ -56,6 +57,10 @@ module FSMG*Elim {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
     (ρ* : {X : FSMG A} (X* : P X) → PathP (λ i → P (ρ X i)) (X* ⊗* 𝕀*) X*)
     (β* : {X Y : FSMG A} (X* : P X) (Y* : P Y)
         → PathP (λ i → P (β X Y i)) (X* ⊗* Y*) (Y* ⊗* X*))
+
+    (▽* : {X Y : FSMG A} (X* : P X) (Y* : P Y)
+        → SquareP (λ i j → P (▽ X Y i j)) (apP (λ i a → X* ⊗* a) (Λ* Y*)) (apP (λ i a → a ⊗* Y*) (ρ* X*)) (symP (α* X* 𝕀* Y*)) refl)
+
     (⬠₌* : {W X Y Z : FSMG A} (W* : P W) (X* : P X) (Y* : P Y) (Z* : P Z)
         → PathP (λ i → P (⬠₌ W X Y Z i)) (((W* ⊗* X*) ⊗* Y*) ⊗* Z*) (W* ⊗* (X* ⊗* (Y* ⊗* Z*))))
     (⬠₁* : {W X Y Z : FSMG A} (W* : P W) (X* : P X) (Y* : P Y) (Z* : P Z)
@@ -64,16 +69,12 @@ module FSMG*Elim {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
             (α* W* X* (Y* ⊗* Z*))
             refl
             (⬠₌* W* X* Y* Z*))
-
     (⬠₂* : {W X Y Z : FSMG A} (W* : P W) (X* : P X) (Y* : P Y) (Z* : P Z)
         → SquareP (λ i j → P (⬠₂ W X Y Z i j))
             (apP (λ i a → a ⊗* Z*) (α* W* X* Y*))
             (symP (apP (λ i a → W* ⊗* a) (α* X* Y* Z*)))
             (⬠₌* W* X* Y* Z*)
             (α* W* (X* ⊗* Y*) Z*))
-
-    (▽* : {X Y : FSMG A} (X* : P X) (Y* : P Y)
-        → SquareP (λ i j → P (▽ X Y i j)) (apP (λ i a → X* ⊗* a) (Λ* Y*)) (apP (λ i a → a ⊗* Y*) (ρ* X*)) (symP (α* X* 𝕀* Y*)) refl)
 
     (⬡₌* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
         → PathP (λ i → P (⬡₌ X Y Z i)) ((X* ⊗* Y*) ⊗* Z*) (Y* ⊗* (Z* ⊗* X*)))
@@ -96,10 +97,10 @@ module FSMG*Elim {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
     f (Λ X i) = Λ* (f X) i
     f (ρ X i) = ρ* (f X) i
     f (β X Y i) = β* (f X) (f Y) i
+    f (▽ X Y i j) = ▽* (f X) (f Y) i j
     f (⬠₌ W X Y Z i) = ⬠₌* (f W) (f X) (f Y) (f Z) i
     f (⬠₁ W X Y Z i j) = ⬠₁* (f W) (f X) (f Y) (f Z) i j
     f (⬠₂ W X Y Z i j) = ⬠₂* (f W) (f X) (f Y) (f Z) i j
-    f (▽ X Y i j) = ▽* (f X) (f Y) i j
     f (⬡₌ X Y Z i) = ⬡₌* (f X) (f Y) (f Z) i
     f (⬡₁ X Y Z i j) = ⬡₁* (f X) (f Y) (f Z) i j
     f (⬡₂ X Y Z i j) = ⬡₂* (f X) (f Y) (f Z) i j
@@ -118,15 +119,15 @@ module FSMG*Rec {ℓ ℓ'} (A : Type ℓ) {B : Type ℓ'}
     (ρ* : (X* : B) → X* ⊗* 𝕀* ≡ X*)
     (β* : (X* Y* : B) → X* ⊗* Y* ≡ Y* ⊗* X*)
 
+    (▽* : (X* Y* : B)
+        → Square (ap (X* ⊗*_) (Λ* Y*)) (ap (_⊗* Y*) (ρ* X*)) (sym (α* X* 𝕀* Y*)) refl)
+
     (⬠₌* : (W* X* Y* Z* : B)
         → ((W* ⊗* X*) ⊗* Y*) ⊗* Z* ≡ W* ⊗* (X* ⊗* (Y* ⊗* Z*)))
     (⬠₁* : (W* X* Y* Z* : B)
         → Square (sym (α* (W* ⊗* X*) Y* Z*)) (α* W* X* (Y* ⊗* Z*)) refl (⬠₌* W* X* Y* Z*))
     (⬠₂* : (W* X* Y* Z* : B)
         → Square (ap (_⊗* Z*) (α* W* X* Y*)) (sym (ap (W* ⊗*_) (α* X* Y* Z*))) (⬠₌* W* X* Y* Z*) (α* W* (X* ⊗* Y*) Z*))
-
-    (▽* : (X* Y* : B)
-        → Square (ap (X* ⊗*_) (Λ* Y*)) (ap (_⊗* Y*) (ρ* X*)) (sym (α* X* 𝕀* Y*)) refl)
 
     (⬡₌* : (X* Y* Z* : B)
         → (X* ⊗* Y*) ⊗* Z* ≡ Y* ⊗* (Z* ⊗* X*))
@@ -142,7 +143,7 @@ module FSMG*Rec {ℓ ℓ'} (A : Type ℓ) {B : Type ℓ'}
     where
 
     module F = FSMG*Elim A {P = λ _ → B}
-        η* 𝕀* (λ x y → x ⊗* y) α* Λ* ρ* β* ⬠₌* ⬠₁* ⬠₂* ▽* ⬡₌* ⬡₁* ⬡₂* β²*
+        η* 𝕀* (λ x y → x ⊗* y) α* Λ* ρ* β* ▽* ⬠₌* ⬠₁* ⬠₂* ⬡₌* ⬡₁* ⬡₂* β²*
         (λ _ → is-groupoid*)
 
     f : FSMG A → B
