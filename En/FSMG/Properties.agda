@@ -21,25 +21,27 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (SMGB : S.SMG*St
 
   module B = S.SMG*Struct SMGB
 
-  _♯ : (f : A → B) → (FSMG A → B)
-  f ♯ =
-    let module F = FSMG*Rec A f B.𝕀 B._⊗_ B.α B.Λ B.ρ B.β
-                            (λ W* X* Y* Z* → B.α (W* B.⊗ X*) Y* Z* ∙ B.α W* X* (Y* B.⊗ Z*))
-                            (λ W* X* Y* Z* →
-                              let a = B.α (W* B.⊗ X*) Y* Z*
-                                  b = B.α W* X* (Y* B.⊗ Z*)
-                              in compPath→Square (ap (_∙ b) (sym (lCancel a)) ∙ sym (assoc (sym a) a b)))
-                            (λ W* X* Y* Z* →
-                              let c = ap (B._⊗ Z*) (B.α W* X* Y*)
-                                  d = B.α W* (X* B.⊗ Y*) Z*
-                                  e = ap (W* B.⊗_) (B.α X* Y* Z*)
-                              in compPath→Square (ap (_∙ (sym e)) (B.⬠ W* X* Y* Z*)
-                                                ∙ sym (assoc c (d ∙ e) (sym e))
-                                                ∙ ap (c ∙_) (sym (assoc d e (sym e)))
-                                                ∙ ap (c ∙_) (ap (d ∙_) (rCancel e))
-                                                ∙ ap (c ∙_) (sym (rUnit d))))
-                            {!!}
-     in {!!}
+  module _ (f : A → B) where
 
-  ♯-SMG*Functor : (f : A → B) → S.SMG*Functor (FSMG A) (FSMG-has-SMG*Struct A) B SMGB (f ♯)
-  ♯-SMG*Functor = sorry
+    module F = FSMG*Rec A f B.𝕀 B._⊗_ B.α B.Λ B.ρ B.β
+                            (λ W* X* Y* Z* → B.α (W* B.⊗ X*) Y* Z* ∙ B.α W* X* (Y* B.⊗ Z*))
+                            (λ W* X* Y* Z* → compPath→Pentagon (B.⬠ W* X* Y* Z*) .snd .fst)
+                            (λ W* X* Y* Z* → compPath→Pentagon (B.⬠ W* X* Y* Z*) .snd .snd)
+                            (λ X* Y* → compPath→Triangle₃ (B.▽ X* Y*))
+                            (λ X* Y* Z* → compPath→Hexagon (B.⬡ X* Y* Z*) .fst)
+                            (λ X* Y* Z* → compPath→Hexagon (B.⬡ X* Y* Z*) .snd .fst)
+                            (λ X* Y* Z* → compPath→Hexagon (B.⬡ X* Y* Z*) .snd .snd)
+                            (λ X* Y* → Eq→Square₂₃ (B.β² X* Y*))
+                            B.is-groupoid
+
+
+    _♯ : (FSMG A → B)
+    _♯ = F.f
+
+    ♯-SMG*Functor : S.SMG*Functor (FSMG A) (FSMG-has-SMG*Struct A) B SMGB (_♯)
+    ♯-SMG*Functor .S.f-𝕀 = refl
+    ♯-SMG*Functor .S.f-⊗ X Y = refl
+    ♯-SMG*Functor .S.f-α X Y Z = {!   !}
+    ♯-SMG*Functor .S.f-Λ X = {!   !}
+    ♯-SMG*Functor .S.f-ρ X = {!   !}
+    ♯-SMG*Functor .S.f-β X Y = {!   !}
