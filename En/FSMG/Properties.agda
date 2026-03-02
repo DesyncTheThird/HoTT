@@ -19,8 +19,27 @@ FSMG-has-SMG*Struct A .S.is-groupoid = is-groupoid
 
 module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (SMGB : S.SMG*Struct B) where
 
+  module B = S.SMG*Struct SMGB
+
   _♯ : (f : A → B) → (FSMG A → B)
-  f ♯ = {!   !}
+  f ♯ =
+    let module F = FSMG*Rec A f B.𝕀 B._⊗_ B.α B.Λ B.ρ B.β
+                            (λ W* X* Y* Z* → B.α (W* B.⊗ X*) Y* Z* ∙ B.α W* X* (Y* B.⊗ Z*))
+                            (λ W* X* Y* Z* →
+                              let a = B.α (W* B.⊗ X*) Y* Z*
+                                  b = B.α W* X* (Y* B.⊗ Z*)
+                              in compPath→Square (ap (_∙ b) (sym (lCancel a)) ∙ sym (assoc (sym a) a b)))
+                            (λ W* X* Y* Z* →
+                              let c = ap (B._⊗ Z*) (B.α W* X* Y*)
+                                  d = B.α W* (X* B.⊗ Y*) Z*
+                                  e = ap (W* B.⊗_) (B.α X* Y* Z*)
+                              in compPath→Square (ap (_∙ (sym e)) (B.⬠ W* X* Y* Z*)
+                                                ∙ sym (assoc c (d ∙ e) (sym e))
+                                                ∙ ap (c ∙_) (sym (assoc d e (sym e)))
+                                                ∙ ap (c ∙_) (ap (d ∙_) (rCancel e))
+                                                ∙ ap (c ∙_) (sym (rUnit d))))
+                            {!!}
+     in {!!}
 
   ♯-SMG*Functor : (f : A → B) → S.SMG*Functor (FSMG A) (FSMG-has-SMG*Struct A) B SMGB (f ♯)
   ♯-SMG*Functor = sorry
