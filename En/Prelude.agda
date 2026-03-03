@@ -64,11 +64,11 @@ compPath→Pentagon : ∀ {ℓ} {A : Type ℓ} {a b c d e : A}
     → Σ (a ≡ c) (λ ⬠₌ → (Square (sym p) q refl ⬠₌) × (Square r (sym t) ⬠₌ s))
 compPath→Pentagon {p = p} {q = q} γ .fst = p ∙ q
 compPath→Pentagon {p = p} {q = q} γ .snd .fst = compPath→Square ((ap (_∙ q) (sym (lCancel p)) ∙ sym (assoc (sym p) p q)))
-compPath→Pentagon {r = r} {s = s} {t = t} γ .snd .snd = compPath→Square ((ap (_∙ (sym t)) γ
-                                                ∙ sym (assoc r (s ∙ t) (sym t))
-                                                ∙ ap (r ∙_) (sym (assoc s t (sym t)))
-                                                ∙ ap (r ∙_) (ap (s ∙_) (rCancel t))
-                                                ∙ ap (r ∙_) (sym (rUnit s))))
+compPath→Pentagon {r = r} {s = s} {t = t} γ .snd .snd =
+    compPath→Square ((ap (_∙ (sym t)) γ
+    ∙ sym (assoc r (s ∙ t) (sym t))
+    ∙ ap (r ∙_) (sym (assoc s t (sym t))
+    ∙ ap (s ∙_) (rCancel t) ∙ (sym (rUnit s)))))
 
 --   b c
 -- a     d
