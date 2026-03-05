@@ -142,9 +142,9 @@ module FSMG*Rec {ℓ ℓ'} (A : Type ℓ) {B : Type ℓ'}
 
     where
 
-    module F = FSMG*Elim A {P = λ _ → B}
+    module Elim = FSMG*Elim A {P = λ _ → B}
         η* 𝕀* (λ x y → x ⊗* y) α* Λ* ρ* β* ▽* ⬠₌* ⬠₁* ⬠₂* ⬡₌* ⬡₁* ⬡₂* β²*
         (λ _ → is-groupoid*)
 
     f : FSMG A → B
-    f = F.f
+    f = Elim.f

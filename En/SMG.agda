@@ -89,24 +89,38 @@ record SMG*Functor*Square {ℓ₁ ℓ₂}
     module B = SMG*Struct*Square SMGB
   field
     f-𝕀 : f A.𝕀 ≡ B.𝕀
-    f-⊗ : (X Y : A) → f X B.⊗ f Y ≡ f (X A.⊗ Y)
+    f-⊗ : (X Y : A) → f (X A.⊗ Y) ≡ f X B.⊗ f Y
   field
     f-α₌ : (X Y Z : A)
-        → (f X B.⊗ f Y) B.⊗ f Z ≡ f (X A.⊗ (Y A.⊗ Z))
+        → f (X A.⊗ Y) B.⊗ f Z ≡ f X B.⊗ f (Y A.⊗ Z)
     f-α₁ : (X Y Z : A)
-        → Square (sym (B.α (f X) (f Y) (f Z)))
-            (f-⊗ X (Y A.⊗ Z))
-            (ap (f X B.⊗_) (f-⊗ Y Z))
-            (f-α₌ X Y Z)
-    f-α₂ : (X Y Z : A)
-        → Square (ap (B._⊗ f Z) (f-⊗ X Y))
-            (ap f (sym (A.α X Y Z)))
+        → Square
+            (ap f (A.α X Y Z))
             (f-α₌ X Y Z)
             (f-⊗ (X A.⊗ Y) Z)
+            (f-⊗ X (Y A.⊗ Z))
+    f-α₂ : (X Y Z : A)
+        → Square
+            (f-α₌ X Y Z)
+            (B.α (f X) (f Y) (f Z))
+            (ap (B._⊗ f Z) (f-⊗ X Y))
+            (ap (f X B.⊗_) (f-⊗ Y Z))
 
-    f-Λ : (X : A) → Square (ap (B._⊗ f X) f-𝕀) (ap f (A.Λ X)) (f-⊗ A.𝕀 X) (B.Λ (f X))
-    f-ρ : (X : A) → Square (ap (f X B.⊗_) f-𝕀) (ap f (A.ρ X)) (f-⊗ X A.𝕀) (B.ρ (f X))
-    f-β : (X Y : A) → Square (sym (f-⊗ X Y)) (sym (f-⊗ Y X)) (ap f (A.β X Y)) (B.β (f X) (f Y))
+    f-Λ : (X : A)
+        → Square
+            (f-⊗ A.𝕀 X)
+            (sym (B.Λ (f X)))
+            (ap f (A.Λ X))
+            (ap (B._⊗ f X) f-𝕀)
+    
+    f-ρ : (X : A)
+        → Square
+            (f-⊗ X A.𝕀)
+            (sym (B.ρ (f X)))
+            (ap f (A.ρ X))  
+            (ap (f X B.⊗_) f-𝕀)
+
+    f-β : (X Y : A) → Square (f-⊗ X Y) (f-⊗ Y X) (ap f (A.β X Y)) (B.β (f X) (f Y)) 
 
 open SMG*Functor*Square public
 

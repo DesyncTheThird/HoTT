@@ -71,18 +71,18 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (SMGB : S.SMG*St
 
   module _ (f : A → B) where
 
-    module F = FSMG*Rec A f B.𝕀 B._⊗_ B.α B.Λ B.ρ B.β
+    module Rec = FSMG*Rec A f B.𝕀 B._⊗_ B.α B.Λ B.ρ B.β
         B.▽ B.⬠₌ B.⬠₁ B.⬠₂ B.⬡₌ B.⬡₁ B.⬡₂ B.β² B.is-groupoid
 
-    _♯ : (FSMG A → B)
-    _♯ = F.f
+    _♯ : FSMG A → B
+    _♯ = Rec.f
 
     ♯-SMG*Functor*Square : S.SMG*Functor*Square (FSMG A) (FSMG-has-SMG*Struct*Square A) B SMGB _♯
     ♯-SMG*Functor*Square .S.f-𝕀 = refl
     ♯-SMG*Functor*Square .S.f-⊗ X Y = refl
-    ♯-SMG*Functor*Square .S.f-α₌ X Y Z = {!   !}
-    ♯-SMG*Functor*Square .S.f-α₁ X Y Z = refl
-    ♯-SMG*Functor*Square .S.f-α₂ X Y Z = refl
-    ♯-SMG*Functor*Square .S.f-Λ X = {!   !}
-    ♯-SMG*Functor*Square .S.f-ρ X = {!   !}
-    ♯-SMG*Functor*Square .S.f-β X Y = {!   !}
+    ♯-SMG*Functor*Square .S.f-α₌ X Y Z = ap _♯ (α X Y Z) -- B.α (X ♯) (Y ♯) (Z ♯)
+    ♯-SMG*Functor*Square .S.f-α₁ X Y Z = constⱼSquare (ap _♯ (α X Y Z))
+    ♯-SMG*Functor*Square .S.f-α₂ X Y Z = constⱼSquare (B.α (X ♯) (Y ♯) (Z ♯))
+    ♯-SMG*Functor*Square .S.f-Λ X = Eq→Square₀₃ (lCancel (B.Λ (X ♯)))
+    ♯-SMG*Functor*Square .S.f-ρ X = Eq→Square₀₃ (lCancel (B.ρ (X ♯)))
+    ♯-SMG*Functor*Square .S.f-β X Y = constᵢSquare (B.β (X ♯) (Y ♯))
