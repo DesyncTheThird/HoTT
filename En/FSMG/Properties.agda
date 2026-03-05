@@ -86,3 +86,6 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (SMGB : S.SMG*St
     ♯-SMG*Functor*Square .S.f-Λ X = Eq→Square₀₃ (lCancel (B.Λ (X ♯)))
     ♯-SMG*Functor*Square .S.f-ρ X = Eq→Square₀₃ (lCancel (B.ρ (X ♯)))
     ♯-SMG*Functor*Square .S.f-β X Y = constᵢSquare (B.β (X ♯) (Y ♯))
+
+    _♭ : (g : FSMG A → B) → S.SMG*Functor*Square (FSMG A) (FSMG-has-SMG*Struct*Square A) B SMGB g → (A → B)
+    _♭ g _ = g ∘ η
