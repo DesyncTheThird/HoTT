@@ -183,13 +183,12 @@ module FSMG*Elim*Set {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
 
     private
       ⬠₌* : {W X Y Z : FSMG A} (W* : P W) (X* : P X) (Y* : P Y) (Z* : P Z)
-          → PathP (λ i → P (⬠₌ W X Y Z i)) (((W* ⊗* X*) ⊗* Y*) ⊗* Z*) (W* ⊗* (X* ⊗* (Y* ⊗* Z*)))
-      ⬠₌* {W = W} {X = X} {Y = Y} {Z = Z} W* X* Y* Z* i =
-        {!!}
-        -- compPathP' {B = {!!}}
-        --   {x' = ((W* ⊗* X*) ⊗* Y*) ⊗* Z*} {y' = (W* ⊗* X*) ⊗* (Y* ⊗* Z*)} {z' = W* ⊗* (X* ⊗* (Y* ⊗* Z*))}
-        --   {p = α (W ⊗ X) Y Z} {q = α W X (Y ⊗ Z)}
-        --   (α* (W* ⊗* X*) Y* Z*) (α* W* X* (Y* ⊗* Z*))
+           → PathP (λ i → P ((α (W ⊗ X) Y Z ∙ α W X (Y ⊗ Z)) i)) (((W* ⊗* X*) ⊗* Y*) ⊗* Z*) (W* ⊗* (X* ⊗* (Y* ⊗* Z*)))
+      ⬠₌* {W = W} {X = X} {Y = Y} {Z = Z} W* X* Y* Z* =
+        compPathP' {B = P}
+          {x' = ((W* ⊗* X*) ⊗* Y*) ⊗* Z*} {y' = (W* ⊗* X*) ⊗* (Y* ⊗* Z*)} {z' = W* ⊗* (X* ⊗* (Y* ⊗* Z*))}
+          {p = α (W ⊗ X) Y Z} {q = α W X (Y ⊗ Z)}
+          (α* (W* ⊗* X*) Y* Z*) (α* W* X* (Y* ⊗* Z*))
 
     elim : (xs : FSMG A) → P xs
     elim 𝕀 = 𝕀*
@@ -206,7 +205,7 @@ module FSMG*Elim*Set {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
         (symP (α* (elim X) 𝕀* (elim Y)))
         refl i j
     elim (⬠₌ W X Y Z i) =
-      {!!}
+      ⬠₌* {!!} {!!} {!!} {!!} {!!}
 
     elim (⬠₁ W X Y Z i j) =
       isSet→SquareP (λ i j → is-set* (⬠₁ W X Y Z i j))
@@ -214,7 +213,7 @@ module FSMG*Elim*Set {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
         (α* (elim W) (elim X) (elim Y ⊗* elim Z))
         refl
         {!!} i j -- ⬠₁* (elim W) (elim X) (elim Y) (elim Z) i j
-    elim (⬠₂ W X Y Z i j) = {!!} -- ⬠₂* (elim W) (elim X) (elim Y) (elim Z) i j
+    elim (⬠₂ W X Y Z i j) = isSet→SquareP ? ? ? ? ? ? ? -- ⬠₂* (elim W) (elim X) (elim Y) (elim Z) i j
     elim (⬡₌ X Y Z i) = {!!} -- ⬡₌* (elim X) (elim Y) (elim Z) i
     elim (⬡₁ X Y Z i j) = {!!} -- ⬡₁* (elim X) (elim Y) (elim Z) i j
     elim (⬡₂ X Y Z i j) = {!!} -- ⬡₂* (elim X) (elim Y) (elim Z) i j
@@ -280,12 +279,30 @@ module FSMG*Rec*Set {ℓ ℓ'} (A : Type ℓ) {P : Type ℓ'}
         refl
         (⬠₌* (rec W) (rec X) (rec Y) (rec Z))
         i j
-    rec (⬠₂ W X Y Z i j) = {!!}
-    rec (⬡₌ X Y Z i) = {!!}
-    rec (⬡₁ X Y Z i j) = {!!}
-    rec (⬡₂ X Y Z i j) = {!!}
-    rec (β² X Y i j) = {!!}
-    rec (is-groupoid X Y p q r s i j k) = {!!}
+    rec (⬠₂ W X Y Z i j) = isSet→Square is-set*
+        {!   !}
+        {!   !}
+        {!   !}
+        {!   !}
+        {!   !}
+        {!   !}
+        (⬠₌* (rec W) (rec X) (rec Y) (rec Z))
+        (α* (rec W) {! rec X   !} {!   !})
+        i j
+    rec (⬡₌ X Y Z i) = {!  !}
+    rec (⬡₁ X Y Z i j) = {!  !}
+    rec (⬡₂ X Y Z i j) = {!  !}
+    rec (β² X Y i j) = {!  !}
+    rec (is-groupoid X Y p q r s i j k) = {!  !}
+
+
+-- Goal
+-- P
+-- ———— Boundary (wanted) —————————————————————————————————————
+-- j = i0 ⊢ ⬠₌* (rec W) (rec X) (rec Y) (rec Z) i
+-- j = i1 ⊢ α* (rec W) (rec X ⊗* rec Y) (rec Z) i
+-- i = i0 ⊢ α* (rec W) (rec X) (rec Y) j ⊗* rec Z
+-- i = i1 ⊢ rec W ⊗* α* (rec X) (rec Y) (rec Z) (~ j)
 
 -- (apP (λ i → X* ⊗*_) (Λ* Y*)) (apP (λ i → _⊗* Y*) (ρ* X*)) (symP (α* X* 𝕀* Y*)) refl)
 
