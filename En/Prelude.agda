@@ -1,11 +1,18 @@
 module En.Prelude where
 
-open import Cubical.Foundations.Prelude renaming (congS to ap ; cong to apd ; congP to apP; subst to tpt) public
-open import Cubical.Foundations.Transport public
+open import Cubical.Foundations.Prelude
+  renaming ( congS to ap
+           ; cong₂ to ap₂
+           ; cong to apd
+           ; congP to apP
+           ; subst to tpt
+           ) public
 open import Cubical.Foundations.HLevels public
 open import Cubical.Foundations.Path public
 open import Cubical.Foundations.GroupoidLaws public
 open import Cubical.Foundations.Function public
+open import Cubical.Foundations.Equiv public
+open import Cubical.Foundations.Isomorphism public
 open import Cubical.Data.Sigma public
 
 postulate
@@ -109,3 +116,19 @@ compPath→Hexagon : ∀ {ℓ} {A : Type ℓ} {a b c d e f : A}
 compPath→Hexagon {p = p} {q = q} {r = r} γ .fst = p ∙ q ∙ r
 compPath→Hexagon {p = p} {q = q} {r = r} γ .snd .fst = compPath→Square (lUnit (q ∙ r) ∙ ap (_∙ (q ∙ r)) (sym (lCancel p)) ∙ sym (assoc (sym p) p (q ∙ r)) )
 compPath→Hexagon {s = s} {t = t} {u = u} γ .snd .snd = compPath→Square (ap (_∙ (sym u)) γ ∙ sym (assoc s (t ∙ u) (sym u)) ∙ ap (s ∙_) (sym (assoc t u (sym u))) ∙ ap (s ∙_) (ap (t ∙_) (rCancel u)) ∙ assoc s t refl ∙ sym (rUnit (s ∙ t)))
+
+hcomp3 : ∀ {ℓ} {A : Type ℓ} {a b c d : A} (p : a ≡ b) (q : c ≡ d) (r : a ≡ c) → b ≡ d
+hcomp3 p q r i =
+  hcomp (λ j → λ { (i = i0) → p j ; (i = i1) → q j })
+        (r i)
+
+isSet→Square :
+  ∀ {ℓ}
+  {A : Type ℓ}
+  (isSet : isSet A)
+  (a₀₀ : A) (a₀₁ : A) (a₀₋ : PathP (λ j → A) a₀₀ a₀₁)
+  (a₁₀ : A) (a₁₁ : A) (a₁₋ : PathP (λ j → A) a₁₀ a₁₁)
+  (a₋₀ : PathP (λ i → A) a₀₀ a₁₀) (a₋₁ : PathP (λ i → A) a₀₁ a₁₁)
+  → Square a₀₋ a₁₋ a₋₀ a₋₁
+isSet→Square isset _ _ a₀₋ _ _ a₁₋ a₋₀ a₋₁ =
+  compPath→Square (isset (a₋₀ i0) (a₋₁ i1) ((λ i → a₋₀ i) ∙ a₁₋) (a₀₋ ∙ (λ i → a₋₁ i)))
