@@ -85,27 +85,56 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
     _♯* .S.f-ρ X = Eq→Square₀₃ (lCancel (B.ρ (X ♯)))
     _♯* .S.f-β X Y = constᵢSquare (B.β (X ♯) (Y ♯))
 
-  _♭ : Σ (FSMG A → B) (λ g → S.SMG*Fun*Sq (FSMG* A) B* g) → (A → B)
+  _♭ : Σ (FSMG A → B) (S.SMG*Fun*Sq (FSMG* A) B*) → (A → B)
   _♭ (g , _) = g ∘ η
 
-  -- univ : isEquiv _♭
-  -- univ = isoToIsEquiv (
-  --   iso _♭ (\f → f ♯ , f ♯*)
-  --     (λ _ → refl)
-  --     λ { (g , g*) → let open S in
-  --         ΣPathP (funExt (FSMG*Elim.elim A (λ _ → refl) (sym (g* .f-𝕀)) (λ {X = X} {Y = Y} p q → (ap₂ B._⊗_ p q ∙ sym (g* .f-⊗ X Y)))
-  --           (λ {X = X} {Y = Y} {Z = Z} p q r → {!!})
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}
-  --           {!!}) ,
-  --         {!!} ) }
-  --   )
+  ♯-uniq : (f : A → B) (h : FSMG A → B) (h* : S.SMG*Fun*Sq (FSMG* A) B* h) → (h ∘ η ≡ f) → ∀ xs → h xs ≡ (f ♯) xs
+  ♯-uniq f h h* p = let open S in
+    FSMG*Elim*Set.elim A
+      (λ a → ap (_$ a) p)
+      (h* .f-𝕀)
+      (λ {X = X} {Y = Y} p q → h* .f-⊗ X Y ∙ ap (B._⊗ h Y) p  ∙ ap ((f ♯) X B.⊗_) q)
+      (λ {X = X} {Y = Y} {Z = Z} p q r → {!!})
+      (λ {X = X} p →
+        let R : Square (h* .f-⊗ FSMG.𝕀 X) (sym (B.Λ (h X))) (ap h (FSMG.Λ X)) (ap (B._⊗ h X) (h* .f-𝕀))
+            R = h* .f-Λ X
+            S : Square (ap (B.𝕀 B.⊗_) p) p (B.Λ (h X)) (B.Λ ((f ♯) X))
+            S = compPath→Square (S.Λ-nat*sq B* p)
+            U : Square (sym (B.Λ (h X))) (sym (B.Λ ((f ♯) X))) p (ap (B.𝕀 B.⊗_) p)
+            U = flipSquare (invSquare S)
+            V : Square (h* .f-⊗ FSMG.𝕀 X) (sym (B.Λ ((f ♯) X))) (ap h (FSMG.Λ X) ∙ p) (ap (B._⊗ (h X)) (h* .f-𝕀) ∙ ap (B.𝕀 B.⊗_) p)
+            V = R ∙v U
+            T : Square (h* .f-⊗ FSMG.𝕀 X ∙ (ap (B._⊗ (h X)) (h* .f-𝕀) ∙ ap (B.𝕀 B.⊗_) p)) p (ap h (FSMG.Λ X)) (ap (f ♯) (FSMG.Λ X))
+            T = morphSquare V
+         in T)
+      {!!} {!!} {!!}
+
+  ♭-retract : retract _♭ (λ f → (f ♯) , (f ♯*))
+  ♭-retract (f , f*) = let open S in
+    ΣPathP (funExt (
+      FSMG*Elim*Set.elim A (λ _ → refl)
+        (sym (f* .f-𝕀))
+        (λ {X = X} {Y = Y} p q → ap₂ B._⊗_ p q ∙ sym (f* .f-⊗ X Y))
+        (λ {X = X} {Y = Y} {Z = Z} p q r → {!!})
+        (λ {X = X} p → {!!})
+        {!!} {!!} {!!})
+      ,
+      {!!}
+    )
+
+  univ : isEquiv _♭
+  univ = isoToIsEquiv (
+    iso _♭ (λ f → f ♯ , f ♯*)
+      (λ _ → refl)
+      ♭-retract
+    )
+      -- (λ { (g , g*) → let open S in
+
+    --       ΣPathP (funExt (FSMG*Elim*Set.elim A (λ _ → refl) (sym (g* .f-𝕀))
+    --         (λ {X = X} {Y = Y} p q → (ap₂ B._⊗_ p q ∙ sym (g* .f-⊗ X Y)))
+    --         (λ {X = X} {Y = Y} {Z = Z} p q r → let q = B.α (g X) (g Y) (g Z) ; r = g* .f-α₌ X Y Z in {!!})
+    --         (λ {X = X} p → {!!})
+    --         {!!}
+    --         {!!}
+    --     })
+    -- )

@@ -24,7 +24,8 @@ record SMG* {ℓ} (El : Type ℓ) : Type ℓ where
     β² : (X Y : El) → β X Y ∙ β Y X ≡ refl
     is-groupoid : isGroupoid El
 
-open SMG* public
+  Λ-nat : {X Y : El} (p : X ≡ Y) → Λ X ∙ p ≡ ap (𝕀 ⊗_) p ∙ Λ Y
+  Λ-nat p = homotopyNatural {f = λ X → 𝕀 ⊗ X} {g = λ X → X} Λ p
 
 record SMG*Fun {ℓ₁ ℓ₂}
   {A : Type ℓ₁} (A* : SMG* A)
@@ -48,6 +49,7 @@ record SMG*Fun {ℓ₁ ℓ₂}
 open SMG*Fun public
 
 record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
+  no-eta-equality
   constructor smg*sq
   field
     𝕀 : El
@@ -77,6 +79,11 @@ record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
     β² : (X Y : El) → β X Y ≡ sym (β Y X)
 
     is-groupoid : isGroupoid El
+
+  Λ-nat*sq : {X Y : El} (p : X ≡ Y) → Λ X ∙ p ≡ ap (𝕀 ⊗_) p ∙ Λ Y -- FIXME: BUG BUG BUG Square (Λ X) (Λ Y) (ap (𝕀 ⊗_) p) p
+  Λ-nat*sq p = homotopyNatural {B = El} {f = λ X → 𝕀 ⊗ X} {g = λ X → X} Λ p
+
+ -- (homotopyNatural {f = {!λ X → 𝕀 ⊗ X!}} {g = λ X → X} {!!} {!!}) -- (homotopyNatural {f = λ X → 𝕀 ⊗ X} {g = λ X → X} Λ p)
 
 open SMG*Sq public
 

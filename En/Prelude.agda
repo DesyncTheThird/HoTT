@@ -13,13 +13,11 @@ open import Cubical.Foundations.GroupoidLaws public
 open import Cubical.Foundations.Function public
 open import Cubical.Foundations.Equiv public
 open import Cubical.Foundations.Isomorphism public
+open import Cubical.Foundations.Function public
 open import Cubical.Data.Sigma public
 
 postulate
     sorry : ∀ {l} {A : Type l} → A
-
-
-
 
 constᵢSquare : ∀ {ℓ} {A : Type ℓ} {a b : A} (p : a ≡ b) → Square refl refl p p
 constᵢSquare p = compPath→Square (sym (rUnit p) ∙ lUnit p)
@@ -132,3 +130,106 @@ isSet→Square :
   → Square a₀₋ a₁₋ a₋₀ a₋₁
 isSet→Square isset _ _ a₀₋ _ _ a₁₋ a₋₀ a₋₁ =
   compPath→Square (isset (a₋₀ i0) (a₋₁ i1) ((λ i → a₋₀ i) ∙ a₁₋) (a₀₋ ∙ (λ i → a₋₁ i)))
+
+doubleCompPath-square :
+  ∀ {ℓ}
+  {A : Type ℓ}
+  {x y z w : A}
+  (p : x ≡ y) (q : y ≡ z) (r : z ≡ w)
+  → Square q (p ∙∙ q ∙∙ r) (sym p) r
+doubleCompPath-square p q r j i =
+  hfill (doubleComp-faces p r i) (inS (q i)) j
+
+doubleCompPathP :
+  ∀ {ℓ ℓ'}
+  {A : Type ℓ} {B : A → Type ℓ'}
+  {x y z w : A}
+  {x* : B x} {y* : B y} {z* : B z} {w* : B w}
+  {p : x ≡ y} {q : y ≡ z} {r : z ≡ w}
+  (p* : PathP (λ i → B (p i)) x* y*) (q* : PathP (λ i → B (q i)) y* z*) (r* : PathP (λ i → B (r i)) z* w*)
+  → PathP (λ i → B ((p ∙∙ q ∙∙ r) i)) x* w*
+doubleCompPathP {B = B} {x* = x*} {p = p} {q = q} {r = r} p* q* r* i =
+  comp (λ j → B (doubleCompPath-square p q r j i))
+       (λ j → λ { (i = i0) → p* (~ j)
+                ; (i = i1) → r* j })
+       (q* i)
+
+iterCompPath-square :
+  ∀ {ℓ}
+  {A : Type ℓ}
+  {x y z w : A}
+  (p : x ≡ y) (q : y ≡ z) (r : z ≡ w)
+  → Square q (p ∙ q ∙ r) (sym p) r
+iterCompPath-square p q r =
+  compPath→Square (ap (sym p ∙_) (assoc p q r)
+                  ∙ assoc (sym p) (p ∙ q) r
+                  ∙ ap (_∙ r) (assoc (sym p) p q)
+                  ∙ ap (_∙ r) (ap (_∙ q) (lCancel p)
+                  ∙ sym (lUnit q)))
+
+iterCompPathP :
+  ∀ {ℓ ℓ'}
+  {A : Type ℓ} {B : A → Type ℓ'}
+  {x y z w : A}
+  {x* : B x} {y* : B y} {z* : B z} {w* : B w}
+  {p : x ≡ y} {q : y ≡ z} {r : z ≡ w}
+  (p* : PathP (λ i → B (p i)) x* y*) (q* : PathP (λ i → B (q i)) y* z*) (r* : PathP (λ i → B (r i)) z* w*)
+  → PathP (λ i → B ((p ∙ q ∙ r) i)) x* w*
+iterCompPathP {B = B} {x* = x*} {p = p} {q = q} {r = r} p* q* r* i =
+  comp (λ j → B (iterCompPath-square p q r j i))
+       (λ j → λ { (i = i0) → p* (~ j)
+                ; (i = i1) → r* j })
+       (q* i)
+
+compSquare :
+  ∀ {ℓ}
+  {A : Type ℓ} {a b c d e f : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  {p' : b ≡ e} {q' : d ≡ f} {t : e ≡ f}
+  → Square p q r s → Square p' q' s t
+  → Square (p ∙ p') (q ∙ q') r t
+compSquare {p = p} {q} {r} {s} {p'} {q'} {t} u v =
+  let H1 = Square→compPath u
+      H2 = Square→compPath v
+   in compPath→Square
+     ( assoc r q q'
+     ∙ ap (_∙ q') H1
+     ∙ sym (assoc p s q')
+     ∙ ap (p ∙_) H2
+     ∙ assoc p p' t)
+
+invSquare :
+  ∀ {ℓ}
+  {A : Type ℓ} {a b c d : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  → Square p q r s → Square q p (sym r) (sym s)
+invSquare {p = p} {q} {r} {s} sq =
+  let H = Square→compPath sq
+    in compPath→Square
+      ( rUnit (sym r ∙ p)
+      ∙ ap ((sym r ∙ p) ∙_) (sym (rCancel s))
+      ∙ sym (assoc (sym r) p (s ∙ sym s))
+      ∙ ap (sym r ∙_) (assoc p s (sym s))
+      ∙ ap (λ t → sym r ∙ t ∙ sym s) (sym H)
+      ∙ ap (sym r ∙_) (sym (assoc r q (sym s)))
+      ∙ assoc (sym r) r (q ∙ sym s)
+      ∙ ap (_∙ q ∙ sym s) (lCancel r)
+      ∙ sym (lUnit (q ∙ sym s)) )
+
+morphSquare :
+  ∀ {ℓ}
+  {A : Type ℓ}
+  {a b c d e f : A}
+  {p : a ≡ b} {q : b ≡ d} {r : d ≡ f} {s : a ≡ c} {t : c ≡ e} {u : e ≡ f}
+  → Square p u (s ∙ t) (q ∙ r)
+  → Square (p ∙ q ∙ r) t s (sym u)
+morphSquare
+  {a = a} {b} {c} {d} {e} {f}
+  {p = p} {q} {r} {s} {t} {u} sq i j =
+  hcomp
+    (λ k → (λ { (i = i0) → compPath→Square (sym (lUnit (p ∙ q ∙ r))) k j
+              ; (i = i1) → compPath→Square (lCancel t ∙ sym (rCancel u)) k j
+              ; (j = i0) → compPath→Square (sym (lUnit s) ∙ rUnit s ∙ ap (s ∙_) (sym (rCancel t)) ∙ assoc s t (sym t)) k i
+              ; (j = i1) → compPath→Square (refl {x = (q ∙ r) ∙ sym u}) k i
+              }))
+    (sq i j)
