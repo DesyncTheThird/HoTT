@@ -2,7 +2,6 @@ module En.Prelude where
 
 open import Cubical.Foundations.Prelude
   renaming ( congS to ap
-           ; cong₂ to ap₂
            ; cong to apd
            ; congP to apP
            ; subst to tpt
@@ -32,11 +31,6 @@ Eq→Square₂₃ {p = p} {q = q} γ = compPath→Square (sym ((ap (p ∙_) (sym
 Eq→Square₀₃ : ∀ {ℓ} {A : Type ℓ} {a b : A} {p : a ≡ b} {q : b ≡ a} (γ : p ∙ q ≡ refl)
     → Square refl p q refl
 Eq→Square₀₃ {p = p} {q = q} γ = compPath→Square ((ap (_∙ p) (lUnit q)) ∙ (ap (_∙ p) ((ap (_∙ q) (sym (lCancel p))))) ∙ (ap (_∙ p) (sym (assoc (sym p) p q))) ∙ sym (assoc (sym p) (p ∙ q) p) ∙ ap ((sym p) ∙_) (ap (_∙ p) γ) ∙ sym (ap ((sym p) ∙_) (lUnit p)) ∙ lCancel p ∙ rUnit refl)
-
-
-
--- Triangle→compPath : ∀ {ℓ} {A : Type ℓ} {a b c d : A} {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d} → Square r s p q → p ∙ s ≡ r ∙ q
--- Triangle→compPath = Square→compPath
 
 Triangle→compPath₀ : ∀ {ℓ} {A : Type ℓ} {a b d : A} {p : a ≡ b} {q : a ≡ d} {s : b ≡ d}
     → Square refl s p q → p ∙ s ≡ q
@@ -233,3 +227,217 @@ morphSquare
               ; (j = i1) → compPath→Square (refl {x = (q ∙ r) ∙ sym u}) k i
               }))
     (sq i j)
+
+naiveCompFaces :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c d : A}
+  (p : a ≡ b) (q : c ≡ d) (r : a ≡ c)
+  (i j : I) → Partial (i ∨ ~ i) A
+naiveCompFaces p q r i j =
+  λ { (i = i0) → p j
+    ; (i = i1) → q j }
+
+naiveComp :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c d : A}
+  (p : a ≡ b) (q : c ≡ d) (r : a ≡ c)
+  → b ≡ d
+naiveComp p q r i =
+  hcomp (naiveCompFaces p q r i)
+        (r i)
+
+naiveCompFiller :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c d : A}
+  (p : a ≡ b) (q : c ≡ d) (r : a ≡ c)
+  → Square p q r (naiveComp p q r)
+naiveCompFiller p q r i j =
+  hfill (naiveCompFaces p q r i)
+        (inS (r i))
+        j
+
+andSquare :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b : A}
+  (p : a ≡ b)
+  → Square refl p refl p
+andSquare p i j = p (i ∧ j)
+
+orSquare :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b : A}
+  (p : a ≡ b)
+  → Square p refl p refl
+orSquare p i j = p (i ∨ j)
+
+nandSquare1 :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b : A}
+  (p : a ≡ b)
+  → Square p refl refl (sym p)
+nandSquare1 p i j = p (~ i ∧ j)
+
+nandSquare2 :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b : A}
+  (p : a ≡ b)
+  → Square refl (sym p) p refl
+nandSquare2 p i j = p (i ∧ ~ j)
+
+norSquare1 :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b : A}
+  (p : a ≡ b)
+  → Square refl p (sym p) refl
+norSquare1 p i j = p (~ i ∨ j)
+
+norSquare2 :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b : A}
+  (p : a ≡ b)
+  → Square (sym p) refl refl p
+norSquare2 p i j = p (i ∨ ~ j)
+
+constSquare1 :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b : A}
+  (p : a ≡ b)
+  → Square refl refl p p
+constSquare1 p i j = p i
+
+constSquare2 :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b : A}
+  (p : a ≡ b)
+  → Square p p refl refl
+constSquare2 p i j = p j
+
+naiveSquare :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c d : A}
+  (p : a ≡ b) (q : c ≡ d) (r : a ≡ c)
+  -- → PathP (λ i → r i ≡ naiveComp p q r i) p q
+  → Square p q r (naiveComp p q r)
+naiveSquare p q r i j =
+  hfill (λ k → λ { (i = i0) → p (k)
+                 ; (i = i1) → q (k)
+                 })
+        (inS (r i))
+        j
+
+naiveCompFiller' :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c d : A}
+  (p : a ≡ b) (q : c ≡ d) (r : a ≡ c)
+  → Square p q r (naiveComp p q r)
+naiveCompFiller' p q r i j =
+  hfill (naiveCompFaces p q r i)
+        (inS (r i))
+        j
+
+crewSquare :
+  ∀ {ℓ} {A : Type ℓ}
+  {a : A}
+  (p : a ≡ a)
+  → Square p p p (naiveComp p p p)
+crewSquare p i j =
+  hcomp (λ k → λ { (i = i0) → p (j ∧ k)
+                 ; (i = i1) → p (j ∧ k)
+                 ; (j = i0) → p i
+                 })
+        (p i)
+
+susSquare :
+  ∀ {ℓ} {A : Type ℓ}
+  {a : A}
+  (p : a ≡ a)
+  → Square p p p p
+susSquare {a = a} p i j =
+  hcomp (λ k → λ { (i = i0) → p (j ∨ ~ k)
+                 ; (i = i1) → p (j ∧ k)
+                 ; (j = i0) → p (i ∨ ~ k)
+                 ; (j = i1) → p (i ∧ k)
+                 })
+        a
+
+ap₂ : ∀ {ℓ₁ ℓ₂ ℓ₃} {A : Type ℓ₁} {B : Type ℓ₂} {C : Type ℓ₃}
+  (f : A → B → C) {x x' : A} {y y' : B}
+  (p : x ≡ x') (q : y ≡ y')
+  → f x y ≡ f x' y'
+ap₂ f p q i =
+  f (p i) (q i)
+
+ap₂-coh₁ : ∀ {ℓ₁ ℓ₂ ℓ₃} {A : Type ℓ₁} {B : Type ℓ₂} {C : Type ℓ₃}
+  (f : A → B → C) {x x' : A} {y y' : B}
+  (p : x ≡ x') (q : y ≡ y')
+  → Square (ap (λ x → f x y) p) refl (ap₂ f p q) (ap (λ b → f x' b) q)
+ap₂-coh₁ f {x = x} {x'} {y} {y'} p q i j = f (p (i ∨ j)) (q i)
+
+ap₂-coh₂ : ∀ {ℓ₁ ℓ₂ ℓ₃} {A : Type ℓ₁} {B : Type ℓ₂} {C : Type ℓ₃}
+  (f : A → B → C) {x x' : A} {y y' : B}
+  (p : x ≡ x') (q : y ≡ y')
+  → Square (ap (λ b → f x b) q) (ap₂ f p q) refl (ap (λ x → f x y') p)
+ap₂-coh₂ f p q i j = f (p (i ∧ j)) (q j)
+
+ap₃ : ∀ {ℓ₁ ℓ₂ ℓ₃ ℓ₄} {A : Type ℓ₁} {B : Type ℓ₂} {C : Type ℓ₃} {D : Type ℓ₄}
+  (f : A → B → C → D) {x x' : A} {y y' : B} {z z' : C}
+  (p : x ≡ x') (q : y ≡ y') (r : z ≡ z')
+  → f x y z ≡ f x' y' z'
+ap₃ f p q r i =
+  f (p i) (q i) (r i)
+
+ap₃-coh₁ : ∀ {ℓ₁ ℓ₂ ℓ₃ ℓ₄} {A : Type ℓ₁} {B : Type ℓ₂} {C : Type ℓ₃} {D : Type ℓ₄}
+  (f : A → B → C → D) {x x' : A} {y y' : B} {z z' : C}
+  (p : x ≡ x') (q : y ≡ y') (r : z ≡ z')
+  → Square (ap (λ x → f x y z) p) (sym (ap (λ z → f x' y' z) r)) (ap₃ f p q r) (ap (λ y → f x' y z) q)
+ap₃-coh₁ f p q r i j = f (p (i ∨ j)) (q i) (r (i ∧ ~ j))
+
+ap₃-coh₂ : ∀ {ℓ₁ ℓ₂ ℓ₃ ℓ₄} {A : Type ℓ₁} {B : Type ℓ₂} {C : Type ℓ₃} {D : Type ℓ₄}
+  (f : A → B → C → D) {x x' : A} {y y' : B} {z z' : C}
+  (p : x ≡ x') (q : y ≡ y') (r : z ≡ z')
+  → Square (ap (λ z → f x y z) r) (sym (ap (λ x → f x y' z') p)) (ap₃ f p q r) (ap (λ y → f x y z') q)
+ap₃-coh₂ f p q r i j = f (p (i ∧ ~ j)) (q i) (r (i ∨ j))
+
+∙∙lCancel-fill' : ∀ {ℓ} {A : Type ℓ} {x y : A}
+         → (p : x ≡ y)
+         → I → I → I → A
+∙∙lCancel-fill' p i j k =
+  hfill (λ k → λ { (i = i1) → p k
+                  ; (j = i0) → p k
+                  ; (j = i1) → p k})
+        (inS (p i0)) k
+
+∙∙lCancel'' : ∀ {ℓ} {A : Type ℓ} {x y : A}
+         → (p : x ≡ y)
+         → Square (sym p ∙∙ refl ∙∙ p) (refl) refl refl
+∙∙lCancel'' {x = x} {y} p i j =
+  hfill {φ = i ∨ ~ j ∨ j}
+        (λ k → λ { (i = i1) → constSquare2 p j k
+                 ; (j = i0) → constSquare2 p i k
+                 ; (j = i1) → constSquare2 p i k
+                 })
+        (inS x)
+        i1
+
+∙∙lCancel''' : ∀ {ℓ} {A : Type ℓ} {x y : A}
+             → (p : x ≡ y)
+             → PathP (λ i → refl {x = y} i ≡ refl {x = y} i) (sym p ∙∙ refl ∙∙ p) (refl)
+∙∙lCancel''' p = ∙∙lCancel'' p
+
+lUnit'
+  : ∀ {ℓ} {A : Type ℓ} {x y : A}
+  → (p : x ≡ y)
+  → Square (refl ∙∙ refl ∙∙ p) p refl refl
+lUnit' {x = x} {y = y} p i j =
+  hcomp
+    (λ k → λ { (i = i1) → norSquare1 p k j
+             ; (j = i0) → nandSquare2 p i k
+             ; (j = i1) → orSquare p i k
+             })
+    (constSquare2 p j i)
+
+lUnit''
+  : ∀ {ℓ} {A : Type ℓ} {x y : A}
+  → (p : x ≡ y)
+  → (refl ∙∙ refl ∙∙ p) ≡ p
+lUnit'' p = lUnit' p
