@@ -539,3 +539,26 @@ lUnit''
   → (p : x ≡ y)
   → (refl ∙∙ refl ∙∙ p) ≡ p
 lUnit'' p = lUnit' p
+
+
+private
+  variable
+    ℓ : Level
+    A B C D E F G H : Type ℓ
+
+pain∙jpeg₁ : {_⊗A_ : A → A → A} {_⊗B_ : B → B → B} {h : A → B} {X Y Z : A} {X' Y' Z' : B}
+  {p : h X ≡ X'}
+  {q : h Y ≡ Y'}
+  {r : h Z ≡ Z'}
+  (f : ∀ x y → h (x ⊗A y) ≡ h x ⊗B h y)
+  → Square (ap₂ _⊗B_ (f X Y) r) (ap₃ (λ x y z → (x ⊗B y) ⊗B z) p q r) (ap₂ _⊗B_ (f X Y) refl) (ap₂ _⊗B_ (ap₂ _⊗B_ p q) refl)
+pain∙jpeg₁ {_⊗B_ = _⊗B_} {X = X} {Y} {p = p} {q} {r} f i j = pqpq (f X Y) (ap₂ _⊗B_ p q) i j ⊗B r j
+
+
+pain∙jpeg₂ : {_⊗A_ : A → A → A} {_⊗B_ : B → B → B} {h : A → B} {X Y Z : A} {X' Y' Z' : B}
+  {p : h X ≡ X'}
+  {q : h Y ≡ Y'}
+  {r : h Z ≡ Z'}
+  (f : ∀ x y → h (x ⊗A y) ≡ h x ⊗B h y)
+  → Square (ap₂ _⊗B_ p (f Y Z)) (ap₃ (λ x y z → x ⊗B (y ⊗B z)) p q r) (ap₂ _⊗B_ refl (f Y Z)) (ap₂ _⊗B_ refl (ap₂ _⊗B_ q r))
+pain∙jpeg₂ {_⊗B_ = _⊗B_} {Y = Y} {Z} {p = p} {q} {r} f i j = (p j) ⊗B pqpq (f Y Z) (ap₂ _⊗B_ q r) i j
