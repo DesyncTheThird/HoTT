@@ -3,8 +3,8 @@ module En.FSMG.Base where
 open import En.Prelude
 
 data FSMG {ℓ} (A : Type ℓ) : Type ℓ where
-    𝕀 : FSMG A
     η : A → FSMG A
+    𝕀 : FSMG A
     _⊗_ : FSMG A → FSMG A → FSMG A
 
     α : (X Y Z : FSMG A) → (X ⊗ Y) ⊗ Z ≡ X ⊗ (Y ⊗ Z)
@@ -200,8 +200,8 @@ module FSMG*Elim*Set {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
           (α* X* Y* Z*) (β* X* (Y* ⊗* Z*)) (α* Y* Z* X*))
 
     elim : (xs : FSMG A) → P xs
-    elim 𝕀 = 𝕀*
     elim (η x) = η* x
+    elim 𝕀 = 𝕀*
     elim (X ⊗ Y) = elim X ⊗* elim Y
     elim (α X Y Z i) = α* (elim X) (elim Y) (elim Z) i
     elim (Λ X i) = Λ* (elim X) i

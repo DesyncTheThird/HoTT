@@ -256,6 +256,7 @@ naiveCompFiller p q r i j =
         (inS (r i))
         j
 
+
 andSquare :
   ∀ {ℓ} {A : Type ℓ}
   {a b : A}
@@ -311,6 +312,92 @@ constSquare2 :
   (p : a ≡ b)
   → Square p p refl refl
 constSquare2 p i j = p j
+
+pqpq :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c : A}
+  (p : a ≡ b) (q : b ≡ c)
+  → Square p q p q
+pqpq p q i j = hcomp
+    (λ k →
+       λ { (i = i0) → p j
+         ; (i = i1) → q (j ∧ k)
+         ; (j = i0) → p i
+         ; (j = i1) → q (i ∧ k)
+       })
+    (p (i ∨ j))
+
+bleh :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c : A}
+  (p : a ≡ b) (q : b ≡ c)
+  → Square refl q p (p ∙ q)
+bleh {a = a} p q i j = hfill (λ k → λ
+  { (i = i0) → a
+  ; (i = i1) → q k }
+  ) (inS (p i)) j
+
+
+AAAA :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c : A}
+  (p : a ≡ b) (q : b ≡ c)
+  → Square p (p ∙ q) refl q
+-- AAAA p q = flipSquare (bleh p q)
+AAAA {a = a} p q i j = hfill (λ k → λ
+  { (j = i0) → a
+  ; (j = i1) → q k }
+  ) (inS (p j)) i
+
+BBBB :
+  ∀ {ℓ} {A : Type ℓ}
+  {a b c : A}
+  (p : a ≡ b) (q : b ≡ c)
+  → Square (sym p) refl q (p ∙ q)
+BBBB p q i j = hcomp
+    (λ k →
+    λ { (i = i0) → p (k ∧ ~ j)
+      ; (i = i1) → q k
+      ; (j = i0) → pqpq p q i k
+      ; (j = i1) → bleh p q i k
+      }) (p i)
+
+squishSquare :
+  ∀ {ℓ} {A : Type ℓ} {a b c d : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  → Square p q r s → Square refl refl (r ∙ q) (p ∙ s)
+squishSquare {a = a} {b} {c} {d} {p} {q} {r} {s} P i j = hcomp
+    (λ k →
+    λ { (i = i0) → nandSquare2 p j k
+      ; (i = i1) → orSquare q j k
+      ; (j = i0) → hfill (λ l → λ
+            { (i = i0) → a
+            ; (i = i1) → q l })
+        (inS (r i)) k -- compPath→Square (ap (_∙ q) (lUnit r) ∙ sym (assoc refl r q)) i k
+      ; (j = i1) → BBBB p s i k
+      -- compPath→Square (sym (rUnit s) ∙ lUnit s ∙ ap (_∙ s) (sym (lCancel p)) ∙ sym (assoc (sym p) p s)) i k
+      })
+    (P i j)
+
+
+cornerComp :
+  ∀ {ℓ}
+  {A : Type ℓ} {a b c d e f g : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  {t : e ≡ f} {u : c ≡ e} {v : d ≡ f}
+  {w : b ≡ g} {x : g ≡ f}
+  → Square p q r s → Square q t u v → Square w v s x
+  → Square p t (r ∙ u) (w ∙ x)
+cornerComp {p = p} {q} {r} {s} {t} {u} P Q R i j =
+   hcomp (λ k → λ
+  { (i = i0) → p j
+  ; (i = i1) → t j
+  ; (j = i0) → (r ∙ u) i
+  ; (j = i1) → squishSquare R i k
+  }) ((P ∙v Q) i j)
+
+
+
 
 naiveSquare :
   ∀ {ℓ} {A : Type ℓ}
@@ -397,6 +484,17 @@ ap₃-coh₂ : ∀ {ℓ₁ ℓ₂ ℓ₃ ℓ₄} {A : Type ℓ₁} {B : Type ℓ
   (p : x ≡ x') (q : y ≡ y') (r : z ≡ z')
   → Square (ap (λ z → f x y z) r) (sym (ap (λ x → f x y' z') p)) (ap₃ f p q r) (ap (λ y → f x y z') q)
 ap₃-coh₂ f p q r i j = f (p (i ∧ ~ j)) (q i) (r (i ∨ j))
+
+-- ap₃-coh₃ : ∀ {ℓ₁ ℓ₂ ℓ₃ ℓ₄} {A : Type ℓ₁} {B : Type ℓ₂} {C : Type ℓ₃} {D : Type ℓ₄}
+--   (f : A → B → C → D) {x x' : A} {y y' : B} {z z' : C}
+--   (p : x ≡ x') (q : y ≡ y') (r : z ≡ z')
+--   → Square (ap (λ y → f x y z) q) (sym (ap (λ y → f x' y z') q)) (ap₃ f p q r) {! !}
+-- ap₃-coh₃ f p q r i j = {!!} {!!} {!!} {!!}
+
+
+
+
+
 
 ∙∙lCancel-fill' : ∀ {ℓ} {A : Type ℓ} {x y : A}
          → (p : x ≡ y)
