@@ -1,5 +1,6 @@
 module En.Prelude where
 
+
 open import Cubical.Foundations.Prelude
   renaming ( congS to ap
            ; cong to apd
@@ -562,3 +563,21 @@ pain∙jpeg₂ : {_⊗A_ : A → A → A} {_⊗B_ : B → B → B} {h : A → B}
   (f : ∀ x y → h (x ⊗A y) ≡ h x ⊗B h y)
   → Square (ap₂ _⊗B_ p (f Y Z)) (ap₃ (λ x y z → x ⊗B (y ⊗B z)) p q r) (ap₂ _⊗B_ refl (f Y Z)) (ap₂ _⊗B_ refl (ap₂ _⊗B_ q r))
 pain∙jpeg₂ {_⊗B_ = _⊗B_} {Y = Y} {Z} {p = p} {q} {r} f i j = (p j) ⊗B pqpq (f Y Z) (ap₂ _⊗B_ q r) i j
+
+
+ap₂-∙ : {X X' X'' : A} {Y Y' Y'' : B}
+  {p : X ≡ X'}
+  {q : X' ≡ X''}
+  {r : Y ≡ Y'}
+  {s : Y' ≡ Y''}
+  {f : A → B → C}
+  → ap₂ f (p ∙ q) (r ∙ s) ≡ (ap₂ f p r) ∙ (ap₂ f q s)
+ap₂-∙ {X = X} {X'} {X''} {Y} {Y'} {Y''} {p} {q} {r} {s} {f} =
+  ap₂ f (p ∙ q) (r ∙ s) ≡⟨ rUnit (ap₂ f (p ∙ q) (r ∙ s)) ⟩
+  ap₂ f (p ∙ q) (r ∙ s) ∙ refl ≡⟨ Square→compPath (ap₂-coh₁ f (p ∙ q) (r ∙ s)) ⟩
+  ap (λ X → f X Y) (p ∙ q) ∙ ap (f X'') (r ∙ s) ≡⟨ ap₂ (_∙_) (cong-∙ (λ X → f X Y) p q) (cong-∙ (f X'') r s) ⟩
+  (ap (λ X → f X Y) p ∙ ap (λ X → f X Y) q) ∙ ap (f X'') r ∙ ap (f X'') s ≡⟨ {!!} ⟩
+  {!!} ≡⟨ {!!} ⟩
+  (ap (λ X → f X Y) p ∙ ap (f X') r) ∙ (ap (λ X'' → f X'' Y') q ∙ ap (f X'') s) ≡⟨ sym (ap₂ (_∙_) {!!} {!!} ) ⟩
+  ap₂ f p r ∙ ap₂ f q s ≡⟨ {!!} ⟩
+  ap₂ f p r ∙ ap₂ f q s ∎
