@@ -1,6 +1,6 @@
 {-# OPTIONS --cubical --safe --guardedness -WnoUnsupportedIndexedMatch #-}
 
-module Cubes where
+module Talks.Cubes where
 
 ------------------------------------------------------------------------------
 --
@@ -121,6 +121,8 @@ module Circle where
     base : S¹
     loop : base ≡ base
 
+  ΩS¹ = base ≡ base
+
   module S¹Elim where
 
     module _ (P : S¹ → Type ℓ')
@@ -188,6 +190,19 @@ module Circle where
 
   encode : (x : S¹) → (base ≡ x) → code x
   encode x p = tpt code p (pos 0)
+
+  encodeDecode : (x : S¹) → (p : base ≡ x) → {!!}
+  encodeDecode = {!!}
+
+  decodeEncode : (n : ℤ) → encode base (cover n) ≡ n
+  decodeEncode (pos 0) = refl
+  decodeEncode (pos (suc n)) = {!!}
+  decodeEncode (neg 0) = {!!}
+  decodeEncode (neg (suc n)) = {!!}
+  decodeEncode (zero i) = {!!}
+
+  pi1 : ΩS¹ ≃ ℤ
+  pi1 = isoToEquiv (iso (encode base) cover decodeEncode {!encodeDecode!})
 
 
 
