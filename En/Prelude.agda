@@ -601,7 +601,7 @@ ap₂-∙ {X = X} {X'} {X''} {Y} {Y'} {Y''} {p} {q} {r} {s} {f} =
   ap₂ f (p ∙ q) (r ∙ s) ∙ refl ≡⟨ Square→compPath (ap₂-coh₁ f (p ∙ q) (r ∙ s)) ⟩
   ap (λ X → f X Y) (p ∙ q) ∙ ap (f X'') (r ∙ s) ≡⟨ ap₂ (_∙_) (cong-∙ (λ X → f X Y) p q) (cong-∙ (f X'') r s) ⟩
   (ap (λ X → f X Y) p ∙ ap (λ X → f X Y) q) ∙ ap (f X'') r ∙ ap (f X'') s ≡⟨ assoc (ap (λ X → f X Y) p ∙ ap (λ X → f X Y) q) (ap (f X'') r) (ap (f X'') s) ∙ ap (_∙ ap (f X'') s) (sym (assoc (ap (λ X → f X Y) p) (ap (λ X → f X Y) q) (ap (λ Y → f X'' Y) r))) ⟩
-  (ap (λ X → f X Y) p ∙ (ap (λ X → f X Y) q) ∙ ap (f X'') r) ∙ ap (f X'') s ≡⟨ ap (λ Z → ((λ i → f (p i) Y) ∙ Z) ∙ (λ i → f X'' (s i))) (Square→compPath {!!}) ⟩
-  (ap (λ X → f X Y) p ∙ (ap (f X') r) ∙ (ap (λ X'' → f X'' Y') q)) ∙ ap (f X'') s ≡⟨ {!λ x → (ap (λ X → f X Y) p ∙ x) ∙ ap (f X'') s!} ⟩
+  (ap (λ X → f X Y) p ∙ (ap (λ X → f X Y) q) ∙ ap (f X'') r) ∙ ap (f X'') s ≡⟨ ap (λ Z → ((λ i → f (p i) Y) ∙ Z) ∙ (λ i → f X'' (s i))) {!ree!} ⟩
+  (ap (λ X → f X Y) p ∙ (ap (f X') r) ∙ (ap (λ X'' → f X'' Y') q)) ∙ ap (f X'') s ≡⟨ ap (_∙ ap (f X'') s) (assoc (ap (λ X → f X Y) p) (ap (f X') r)  ((ap (λ X'' → f X'' Y') q))) ∙ sym (assoc (ap (λ X → f X Y) p ∙ (ap (f X') r)) (ap (λ X'' → f X'' Y') q) (ap (λ Y → f X'' Y) s)) ⟩
   (ap (λ X → f X Y) p ∙ ap (f X') r) ∙ ap (λ X'' → f X'' Y') q ∙ ap (f X'') s ≡⟨ sym (ap₂ (_∙_) (rUnit (ap₂ f p r) ∙ Square→compPath (ap₂-coh₁ f p r)) (rUnit (ap₂ f q s) ∙ Square→compPath (ap₂-coh₁ f q s)) ) ⟩
   ap₂ f p r ∙ ap₂ f q s ∎
