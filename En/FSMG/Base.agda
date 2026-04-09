@@ -274,7 +274,7 @@ module FSMG*Rec*Set {ℓ ℓ'} (A : Type ℓ) {P : Type ℓ'}
       ⬠₌* : (W* X* Y* Z* : P)
           → ((W* ⊗* X*) ⊗* Y*) ⊗* Z* ≡ W* ⊗* (X* ⊗* (Y* ⊗* Z*))
       ⬠₌* W* X* Y* Z* i = hcomp (λ j → λ { (i = i0) → α* (W* ⊗* X*) (Y*) (Z*) (~ j)
-                                         ; (i = i1) → α* (W*) (X*) (Y* ⊗* Z*) j })
+                                        ; (i = i1) → α* (W*) (X*) (Y* ⊗* Z*) j })
                             ((W* ⊗* X*) ⊗* (Y* ⊗* Z*))
 
     rec : FSMG A → P
