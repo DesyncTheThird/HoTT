@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://desyncthethird.github.io/HoTT/notes/sandbox.html</loc>
-    <lastmod>2026-04-05T05:07:28.794Z</lastmod>
-  </url>
-  <url>
-    <loc>https://desyncthethird.github.io/HoTT/notes/induction.html</loc>
-    <lastmod>2026-04-05T05:07:28.794Z</lastmod>
-  </url>
-  <url>
-    <loc>https://desyncthethird.github.io/HoTT/notes/transport.html</loc>
-    <lastmod>2026-04-05T05:07:28.794Z</lastmod>
-  </url>
-  <url>
     <loc>https://desyncthethird.github.io/HoTT/index.html</loc>
-    <lastmod>2026-04-05T05:07:28.793Z</lastmod>
-  </url>
-  <url>
-    <loc>https://desyncthethird.github.io/HoTT/about.html</loc>
-    <lastmod>2026-04-05T05:07:28.793Z</lastmod>
+    <lastmod>2026-04-09T20:08:43.845Z</lastmod>
   </url>
   <url>
     <loc>https://desyncthethird.github.io/HoTT/notes/h-level.html</loc>
-    <lastmod>2026-04-05T05:07:28.794Z</lastmod>
+    <lastmod>2026-04-09T20:08:43.847Z</lastmod>
   </url>
   <url>
     <loc>https://desyncthethird.github.io/HoTT/notes/yoneda.html</loc>
-    <lastmod>2026-04-05T05:07:28.794Z</lastmod>
+    <lastmod>2026-04-09T20:08:43.847Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/notes/induction.html</loc>
+    <lastmod>2026-04-09T20:08:43.847Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/notes/sandbox.html</loc>
+    <lastmod>2026-04-09T20:08:43.847Z</lastmod>
   </url>
   <url>
     <loc>https://desyncthethird.github.io/HoTT/notes/prelude.html</loc>
-    <lastmod>2026-04-05T05:07:28.794Z</lastmod>
+    <lastmod>2026-04-09T20:08:43.847Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/notes/transport.html</loc>
+    <lastmod>2026-04-09T20:08:43.847Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/about.html</loc>
+    <lastmod>2026-04-09T20:08:43.845Z</lastmod>
   </url>
 </urlset>
