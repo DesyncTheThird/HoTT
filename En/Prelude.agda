@@ -6,6 +6,7 @@ open import Cubical.Foundations.Prelude
            ; cong to apd
            ; congP to apP
            ; subst to tpt
+           ; _∙₂_ to _∙h_
            ) public
 open import Cubical.Foundations.HLevels public
 open import Cubical.Foundations.Path public
@@ -193,23 +194,46 @@ compSquare {p = p} {q} {r} {s} {p'} {q'} {t} u v =
      ∙ ap (p ∙_) H2
      ∙ assoc p p' t)
 
-invSquare :
+invSquareh :
   ∀ {ℓ}
   {A : Type ℓ} {a b c d : A}
   {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
   → Square p q r s → Square q p (sym r) (sym s)
-invSquare {p = p} {q} {r} {s} sq =
-  let H = Square→compPath sq
-    in compPath→Square
-      ( rUnit (sym r ∙ p)
-      ∙ ap ((sym r ∙ p) ∙_) (sym (rCancel s))
-      ∙ sym (assoc (sym r) p (s ∙ sym s))
-      ∙ ap (sym r ∙_) (assoc p s (sym s))
-      ∙ ap (λ t → sym r ∙ t ∙ sym s) (sym H)
-      ∙ ap (sym r ∙_) (sym (assoc r q (sym s)))
-      ∙ assoc (sym r) r (q ∙ sym s)
-      ∙ ap (_∙ q ∙ sym s) (lCancel r)
-      ∙ sym (lUnit (q ∙ sym s)) )
+invSquareh {p = p} {q} {r} {s} sq i j = sq (~ i) j
+-- invSquareh {p = p} {q} {r} {s} sq =
+--   let H = Square→compPath sq
+--     in compPath→Square
+--       ( rUnit (sym r ∙ p)
+--       ∙ ap ((sym r ∙ p) ∙_) (sym (rCancel s))
+--       ∙ sym (assoc (sym r) p (s ∙ sym s))
+--       ∙ ap (sym r ∙_) (assoc p s (sym s))
+--       ∙ ap (λ t → sym r ∙ t ∙ sym s) (sym H)
+--       ∙ ap (sym r ∙_) (sym (assoc r q (sym s)))
+--       ∙ assoc (sym r) r (q ∙ sym s)
+--       ∙ ap (_∙ q ∙ sym s) (lCancel r)
+--       ∙ sym (lUnit (q ∙ sym s)) )
+
+invSquarev :
+  ∀ {ℓ}
+  {A : Type ℓ} {a b c d : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  → Square p q r s → Square (sym p) (sym q) s r
+invSquarev {p = p} {q} {r} {s} sq i j = sq i (~ j)
+
+shiftSquare :
+  ∀ {ℓ}
+  {A : Type ℓ} {a b c d : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  → Square p refl (r ∙ q) s → Square p q r s
+shiftSquare {p = p} {q} {r} {s} sq i j =
+  hcomp
+    (λ k → (λ { (i = i0) → p j
+              ; (i = i1) → {!q (j ∨ k)!}
+              ; (j = i0) → {!!}
+              ; (j = i1) → s i
+             }))
+    (sq i j)
+
 
 morphSquare :
   ∀ {ℓ}

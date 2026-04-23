@@ -89,7 +89,7 @@ record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
 
     is-groupoid : isGroupoid El
 
-  Λ-nat*sq : {X Y : El} (p : X ≡ Y) → Λ X ∙ p ≡ ap (𝕀 ⊗_) p ∙ Λ Y -- FIXME: BUG BUG BUG Square (Λ X) (Λ Y) (ap (𝕀 ⊗_) p) p
+  Λ-nat*sq : {X Y : El} (p : X ≡ Y) → Λ X ∙ p ≡ ap (𝕀 ⊗_) p ∙ Λ Y -- FIXME: BUG BUG BUG comSquare (Λ X) (Λ Y) (ap (𝕀 ⊗_) p) p
   Λ-nat*sq p = homotopyNatural {B = El} {f = λ X → 𝕀 ⊗ X} {g = λ X → X} Λ p
 
   ⊗-bi : {X X' Y Y' : El} (p : X ≡ X') (q : Y ≡ Y')

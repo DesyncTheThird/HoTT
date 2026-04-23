@@ -117,46 +117,25 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
                                                                                                                 (λ i → (f ♯) (FSMG.α X Y Z i)) ⟩
       (h* .f-⊗ (X FSMG.⊗ Y) Z ∙ ap₂ B._⊗_ (h* .f-⊗ X Y ∙ ap₂ B._⊗_ p q) r) ∙ (λ i → (f ♯) (FSMG.α X Y Z i)) ∎
       ))
-        -- let T = h* .f-α₁ X Y Z
-        --     P : Square (f-α₌ h* X Y Z)
-        --                (B.α (h X) (h Y) (h Z))
-        --                (ap (B._⊗ h Z) (f-⊗ h* X Y))
-        --                (ap (h X B.⊗_) (f-⊗ h* Y Z))
-        --     P = h* .f-α₂ X Y Z
-
-        --     R : Square (ap (B._⊗ h (Y FSMG.⊗ Z)) p)
-        --                (ap (B._⊗ (h Y B.⊗ h Z)) p)
-        --                (ap (h X B.⊗_) (h* .f-⊗ Y Z))
-        --                (ap (((f ♯) X) B.⊗_) (h* .f-⊗ Y Z))
-        --     R = B.⊗-bi p (f-⊗ h* Y Z)
-
-        --     Q : Square (B.α (h X) (h Y) (h Z))
-        --                (B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z))
-        --                (ap₃ (λ X Y → B._⊗_ (X B.⊗ Y)) p q r)
-        --                (ap₃ (λ X Y Z → X B.⊗ (Y B.⊗ Z)) p q r)
-        --     Q = B.α-nat p q r
-
-        --     -- U : Square (ap (B._⊗ h Z) (h* .f-⊗ X Y) ∙ ap (B._⊗ h Z) (ap (B._⊗ h Y) p) ∙ ap (B._⊗ h Z) (ap ((f ♯) X B.⊗_) q) ∙ ap ((((f ♯) X) B.⊗ ((f ♯) Y)) B.⊗_) r)
-        --     --   (ap (B._⊗ h (Y FSMG.⊗ Z)) p ∙ ap ((f ♯) X B.⊗_) (h* .f-⊗ Y Z) ∙ ap (((f ♯) X) B.⊗_) (ap (B._⊗ h Z) q) ∙ ap (((f ♯) X) B.⊗_) (ap (((f ♯) Y) B.⊗_) r))
-        --     --   (h* . f-α₌ X Y Z)
-        --     --   (B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z))
-        --     U = flipSquare (cornerComp P {!!} R)
-
-        -- in {!!})
-        {!!}
-      -- (λ {X = X} p →
-      --   let R : Square (h* .f-⊗ FSMG.𝕀 X) (sym (B.Λ (h X))) (ap h (FSMG.Λ X)) (ap (B._⊗ h X) (h* .f-𝕀))
-      --       R = h* .f-Λ X
-      --       S : Square (ap (B.𝕀 B.⊗_) p) p (B.Λ (h X)) (B.Λ ((f ♯) X))
-      --       S = compPath→Square (S.Λ-nat*sq B* p)
-      --       U : Square (sym (B.Λ (h X))) (sym (B.Λ ((f ♯) X))) p (ap (B.𝕀 B.⊗_) p)
-      --       U = flipSquare (invSquare S)
-      --       V : Square (h* .f-⊗ FSMG.𝕀 X) (sym (B.Λ ((f ♯) X))) (ap h (FSMG.Λ X) ∙ p) (ap (B._⊗ (h X)) (h* .f-𝕀) ∙ ap (B.𝕀 B.⊗_) p)
-      --       V = R ∙v U
-      --       T : Square (h* .f-⊗ FSMG.𝕀 X ∙ (ap (B._⊗ (h X)) (h* .f-𝕀) ∙ ap (B.𝕀 B.⊗_) p)) p (ap h (FSMG.Λ X)) (ap (f ♯) (FSMG.Λ X))
-      --       T = morphSquare V
-      --    in T)
-      {!!} {!!} λ X → B.is-groupoid (h X) ((f ♯) X)
+      (λ {X = X} p →
+        let R : Square (h* .f-⊗ FSMG.𝕀 X) (sym (B.Λ (h X))) (ap h (FSMG.Λ X)) (ap (B._⊗ h X) (h* .f-𝕀))
+            R = h* .f-Λ X
+            S : Square (ap (B.𝕀 B.⊗_) p) p (B.Λ (h X)) (B.Λ ((f ♯) X))
+            S = compPath→Square (S.Λ-nat*sq B* p)
+            V : Square (h* .f-⊗ FSMG.𝕀 X) (sym (B.Λ ((f ♯) X))) (ap h (FSMG.Λ X) ∙ p) (ap (B._⊗ (h X)) (h* .f-𝕀) ∙ ap (B.𝕀 B.⊗_) p)
+            V = R ∙v (flipSquare (invSquareh S))
+            in tpt (λ x → Square (f-⊗ h* FSMG.𝕀 X ∙ x) p (ap h (FSMG.Λ X)) (ap (f ♯) (FSMG.Λ X)))
+               (sym (Square→compPath (ap₂-coh₁ B._⊗_ (h* .f-𝕀) p)) ∙ sym (rUnit _)) (morphSquare V))
+      (λ {X = X} q i j → hcomp
+        (λ k →
+           λ { (i = i0) → {!!}
+             ; (i = i1) → {!constSquare1 q (~ j) k!}
+             ; (j = i0) → {!invSquarev (h* .f-ρ X) i k!}
+             ; (j = i1) → {!!}
+           })
+        {!!})
+      {!!}
+      λ X → B.is-groupoid (h X) ((f ♯) X)
 
   ♭-retract : retract _♭ (λ f → (f ♯) , (f ♯*))
   ♭-retract (f , f*) = let open S in
