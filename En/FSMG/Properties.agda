@@ -81,11 +81,11 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
     _♯* .S.f-𝕀 = refl
     _♯* .S.f-⊗ X Y = refl
     _♯* .S.f-α₌ X Y Z = ap _♯ (α X Y Z) -- B.α (X ♯) (Y ♯) (Z ♯)
-    _♯* .S.f-α₁ X Y Z = constⱼSquare (ap _♯ (α X Y Z))
-    _♯* .S.f-α₂ X Y Z = constⱼSquare (B.α (X ♯) (Y ♯) (Z ♯))
+    _♯* .S.f-α₁ X Y Z i j = (ap _♯ (α X Y Z)) j
+    _♯* .S.f-α₂ X Y Z i j = (B.α (X ♯) (Y ♯) (Z ♯)) j
     _♯* .S.f-Λ X = Eq→Square₀₃ (lCancel (B.Λ (X ♯)))
     _♯* .S.f-ρ X = Eq→Square₀₃ (lCancel (B.ρ (X ♯)))
-    _♯* .S.f-β X Y = constᵢSquare (B.β (X ♯) (Y ♯))
+    _♯* .S.f-β X Y i j = (B.β (X ♯) (Y ♯)) i
 
   _♭ : Σ (FSMG A → B) (S.SMG*Fun*Sq (FSMG* A) B*) → (A → B)
   _♭ (g , _) = g ∘ η
@@ -110,7 +110,7 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
       h* .f-⊗ (X FSMG.⊗ Y) Z ∙ ap (B._⊗ h Z) (f-⊗ h* X Y) ∙ ap₃ (λ x y z → (x B.⊗ y) B.⊗ z) p q r ∙ B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z) ≡⟨ ap (h* .f-⊗ (X FSMG.⊗ Y) Z ∙_) (assoc (ap (B._⊗ h Z) (f-⊗ h* X Y)) (ap₃ (λ x y z → (x B.⊗ y) B.⊗ z) p q r) (B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z))) ⟩
       h* .f-⊗ (X FSMG.⊗ Y) Z ∙ (ap (B._⊗ h Z) (f-⊗ h* X Y) ∙ ap₃ (λ x y z → (x B.⊗ y) B.⊗ z) p q r) ∙ B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z) ≡⟨ ap (λ z → h* .f-⊗ (X FSMG.⊗ Y) Z ∙ z ∙ B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z)) (Square→compPath (λ i j → pqpq (f-⊗ h* X Y) (ap₂ B._⊗_ p q) i j B.⊗ r j)) ⟩
       h* .f-⊗ (X FSMG.⊗ Y) Z ∙ (ap₂ B._⊗_ (h* .f-⊗ X Y) r ∙ ap₂ (B._⊗_) (ap₂ (B._⊗_) p q) refl) ∙ B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z) ≡⟨ ap (h* .f-⊗ (X FSMG.⊗ Y) Z ∙_) (sym (assoc (ap₂ B._⊗_ (h* .f-⊗ X Y) r) (ap₂ (B._⊗_) (ap₂ (B._⊗_) p q) refl) (B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z)))) ⟩
-      h* .f-⊗ (X FSMG.⊗ Y) Z ∙ ap₂ B._⊗_ (h* .f-⊗ X Y) r ∙ ap₂ (B._⊗_) (ap₂ (B._⊗_) p q) refl ∙ B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z) ≡⟨  ap (h* .f-⊗ (X FSMG.⊗ Y) Z ∙_) (assoc (ap₂ B._⊗_ (h* .f-⊗ X Y) r) (ap₂ (B._⊗_) (ap₂ (B._⊗_) p q) refl) (B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z)))⟩
+      h* .f-⊗ (X FSMG.⊗ Y) Z ∙ ap₂ B._⊗_ (h* .f-⊗ X Y) r ∙ ap₂ (B._⊗_) (ap₂ (B._⊗_) p q) refl ∙ B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z) ≡⟨ ap (h* .f-⊗ (X FSMG.⊗ Y) Z ∙_) (assoc (ap₂ B._⊗_ (h* .f-⊗ X Y) r) (ap₂ (B._⊗_) (ap₂ (B._⊗_) p q) refl) (B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z)))⟩
       h* .f-⊗ (X FSMG.⊗ Y) Z ∙ (ap₂ B._⊗_ (h* .f-⊗ X Y) r ∙ ap₂ (B._⊗_) (ap₂ (B._⊗_) p q) refl) ∙ B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z) ≡⟨  ap (λ x → (f-⊗ h* (X FSMG.⊗ Y) Z ∙ x ∙ B.α ((f ♯) X) ((f ♯) Y) ((f ♯) Z))) (ap-lemma B._⊗_ p q r (h* .f-⊗ X Y)) ⟩
       h* .f-⊗ (X FSMG.⊗ Y) Z ∙ (ap₂ B._⊗_ (h* .f-⊗ X Y ∙ ap₂ B._⊗_ p q) r) ∙ (λ i → (f ♯) (FSMG.α X Y Z i)) ≡⟨ assoc (f-⊗ h* (X FSMG.⊗ Y) Z)
                                                                                                                 (ap₂ B._⊗_ (f-⊗ h* X Y ∙ ap₂ B._⊗_ p q) r)
