@@ -127,29 +127,58 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
             in tpt (λ x → Square (h* .-⊗ FSMG.𝕀 X ∙ x) p (ap h (FSMG.Λ X)) (ap (f ♯) (FSMG.Λ X)))
                (sym (Square→compPath (ap₂-coh₁ B._⊗_ (h* .-𝕀) p)) ∙ sym (rUnit _)) (morphSquare V))
       (λ {X = X} q i j →
-        let left : Square (sym (ap (B._⊗ h (FSMG.𝕀)) (sym q)))
-                          (h* .-⊗ X FSMG.𝕀)
-                          (sym (h*. -⊗ X FSMG.𝕀))
-                          (ap (B._⊗ h FSMG.𝕀) (sym q))
+        let left : Square (ap (B._⊗ h FSMG.𝕀) q)
+                          (h* .-⊗ X FSMG.𝕀 ∙ ap₂ B._⊗_ q (h* .-𝕀))
+                          (sym (h* .-⊗ X FSMG.𝕀))
+                          (ap ((f ♯) X B.⊗_) (h* .-𝕀))
             left i j = {!!}
-            right : Square q q refl refl
-            right i j = {!q j!}
-            up : {!!}
+            right : Square refl refl q q
+            right i j = q i
+            up' : Square (ap ((f ♯) X B.⊗_) (h* .-𝕀))
+                         (B.ρ ((f ♯) X))
+                         (ap ((f ♯) X B.⊗_) (h* .-𝕀))
+                         (B.ρ ((f ♯) X))
+            up' i j = {!!}
+            up : Square (ap ((f ♯) X B.⊗_) (h* .-𝕀))
+                        (refl {x = (f ♯) X})
+                        (ap ((f ♯) X B.⊗_) (h* .-𝕀) ∙ B.ρ ((f ♯) X))
+                        (B.ρ ((f ♯) X))
             up = {!!}
-            down : {!!}
-            down = {!!}
-            base : {!!}
-            base = {!!}
+            down' : Square (sym (h* .-⊗ X FSMG.𝕀))
+                          (B.ρ (h X))
+                          (ap (h X B.⊗_) (h* .-𝕀))
+                          (ap h (FSMG.ρ X))
+            down' i j = h* .-ρ X i (~ j)
+            down : Square (sym (h* .-⊗ X FSMG.𝕀))
+                          (refl {x = h X})
+                          (ap (h X B.⊗_) (h* .-𝕀) ∙ B.ρ (h X))
+                          (ap h (FSMG.ρ X))
+            down i j = {!!}
+            base1 : Square (ap (B._⊗ h FSMG.𝕀) q)
+                           (ap (B._⊗ B.𝕀) q)
+                           (ap ((h X) B.⊗_) (h* .-𝕀))
+                           (ap ((f ♯) X B.⊗_) (h* .-𝕀))
+            base1 i j = {!!}
+            base2 : Square (ap (B._⊗ B.𝕀) q)
+                           q
+                           (B.ρ (h X))
+                           (B.ρ ((f ♯) X))
+            base2 i j = {!!}
+            base : Square (ap (B._⊗ (h FSMG.𝕀)) q)
+                          q
+                          (ap (h X B.⊗_) (h* .-𝕀) ∙ B.ρ (h X))
+                          (ap ((f ♯) X B.⊗_) (h* .-𝕀) ∙ B.ρ ((f ♯) X))
+            base = base1 ∙v base2
             in
-            {!!}
-            -- hcomp
-            -- (λ k →
-            --    λ { (i = i0) → {!!}
-            --      ; (i = i1) → {!constSquare1 q (~ j) k!}
-            --      ; (j = i0) → {!invSquarev (h* .-ρ X) i k!}
-            --      ; (j = i1) → {!!}
-            --    })
             -- {!!}
+            hcomp
+            (λ k →
+               λ { (i = i0) → left j k
+                 ; (i = i1) → right j k
+                 ; (j = i0) → up i k
+                 ; (j = i1) → down i k
+               })
+            (base i j)
             )
           {!!}
       λ X → B.is-groupoid (h X) ((f ♯) X)
