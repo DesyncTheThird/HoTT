@@ -96,14 +96,24 @@ invSquarev {p = p} {q} {r} {s} sq i j = sq i (~ j)
 --   {A : Type ℓ} {a b c d : A}
 --   {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
 --   → Square p refl (r ∙ q) s → Square p q r s
+-- shiftSquare {q = q} {r} sq = compPath→Square (rUnit (r ∙ q) ∙ Square→compPath sq)
+
 -- shiftSquare {p = p} {q} {r} {s} sq i j =
 --   hcomp
 --     (λ k → (λ { (i = i0) → p j
---               ; (i = i1) → {!q (j ∨ k)!}
+--               ; (i = i1) → q (j ∨ ~ k)
 --               ; (j = i0) → {!!}
---               ; (j = i1) → {!s i!}
+--               ; (j = i1) → s i
 --              }))
 --     (sq i j)
+
+shiftSquare :
+  ∀ {ℓ}
+  {A : Type ℓ} {a b c d : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  → Square p q r s → Square p refl (r ∙ q) s
+shiftSquare {q = q} {r} sq = compPath→Square (sym (rUnit (r ∙ q)) ∙ Square→compPath sq)
+
 
 morphSquare :
   ∀ {ℓ}

@@ -131,19 +131,19 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
                           (h* .-⊗ X FSMG.𝕀 ∙ ap₂ B._⊗_ q (h* .-𝕀))
                           (sym (h* .-⊗ X FSMG.𝕀))
                           (ap ((f ♯) X B.⊗_) (h* .-𝕀))
-            left i j = {!!}
+            left = compPath→Square (assoc (sym (h* .-⊗ X FSMG.𝕀)) (h* .-⊗ X FSMG.𝕀) (ap₂ B._⊗_ q (h* .-𝕀)) ∙ ap (_∙ (ap₂ B._⊗_ q (h* .-𝕀))) (lCancel (h* .-⊗ X FSMG.𝕀)) ∙ Square→compPath (ap₂-coh₂ (flip B._⊗_) (h* .-𝕀) q))
             right : Square refl refl q q
             right i j = q i
             up' : Square (ap ((f ♯) X B.⊗_) (h* .-𝕀))
                          (B.ρ ((f ♯) X))
                          (ap ((f ♯) X B.⊗_) (h* .-𝕀))
                          (B.ρ ((f ♯) X))
-            up' i j = {!!}
+            up' i j = pqpq (ap ((f ♯) X B.⊗_) (h* .-𝕀)) (B.ρ ((f ♯) X)) i j
             up : Square (ap ((f ♯) X B.⊗_) (h* .-𝕀))
                         (refl {x = (f ♯) X})
                         (ap ((f ♯) X B.⊗_) (h* .-𝕀) ∙ B.ρ ((f ♯) X))
                         (B.ρ ((f ♯) X))
-            up = {!!}
+            up = shiftSquare up'
             down' : Square (sym (h* .-⊗ X FSMG.𝕀))
                           (B.ρ (h X))
                           (ap (h X B.⊗_) (h* .-𝕀))
@@ -153,17 +153,17 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
                           (refl {x = h X})
                           (ap (h X B.⊗_) (h* .-𝕀) ∙ B.ρ (h X))
                           (ap h (FSMG.ρ X))
-            down i j = {!!}
+            down = shiftSquare down'
             base1 : Square (ap (B._⊗ h FSMG.𝕀) q)
                            (ap (B._⊗ B.𝕀) q)
                            (ap ((h X) B.⊗_) (h* .-𝕀))
                            (ap ((f ♯) X B.⊗_) (h* .-𝕀))
-            base1 i j = {!!}
+            base1 = ⊗-bi B* q (h* .-𝕀)
             base2 : Square (ap (B._⊗ B.𝕀) q)
                            q
                            (B.ρ (h X))
                            (B.ρ ((f ♯) X))
-            base2 i j = {!!}
+            base2 = compPath→Square (ρ-nat*sq B* q)
             base : Square (ap (B._⊗ (h FSMG.𝕀)) q)
                           q
                           (ap (h X B.⊗_) (h* .-𝕀) ∙ B.ρ (h X))
@@ -173,10 +173,10 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
             -- {!!}
             hcomp
             (λ k →
-               λ { (i = i0) → left j k
+               λ { (i = i0) → {!left j k!}
                  ; (i = i1) → right j k
-                 ; (j = i0) → up i k
-                 ; (j = i1) → down i k
+                 ; (j = i0) → down i k
+                 ; (j = i1) → up i k
                })
             (base i j)
             )

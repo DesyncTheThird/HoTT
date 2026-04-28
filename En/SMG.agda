@@ -31,6 +31,9 @@ record SMG* {ℓ} (El : Type ℓ) : Type ℓ where
   Λ-nat : {X Y : El} (p : X ≡ Y) → Λ X ∙ p ≡ ap (𝕀 ⊗_) p ∙ Λ Y
   Λ-nat p = homotopyNatural {f = λ X → 𝕀 ⊗ X} {g = λ X → X} Λ p
 
+  ρ-nat : {X Y : El} (p : X ≡ Y) → ρ X ∙ p ≡ ap (_⊗ 𝕀) p ∙ ρ Y
+  ρ-nat p = homotopyNatural ρ p
+
   α-nat : {X X' Y Y' Z Z' : El}
     (p : X ≡ X') (q : Y ≡ Y') (r : Z ≡ Z')
     → Square (α X Y Z) (α X' Y' Z') (ap₃ (λ X Y Z → (X ⊗ Y) ⊗ Z) p q r) (ap₃ (λ X Y Z → X ⊗ (Y ⊗ Z)) p q r)
@@ -91,6 +94,10 @@ record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
 
   Λ-nat*sq : {X Y : El} (p : X ≡ Y) → Λ X ∙ p ≡ ap (𝕀 ⊗_) p ∙ Λ Y -- FIXME: BUG BUG BUG comSquare (Λ X) (Λ Y) (ap (𝕀 ⊗_) p) p
   Λ-nat*sq p = homotopyNatural {B = El} {f = λ X → 𝕀 ⊗ X} {g = λ X → X} Λ p
+
+  ρ-nat*sq : {X Y : El} (p : X ≡ Y) → ρ X ∙ p ≡ ap (_⊗ 𝕀) p ∙ ρ Y
+  ρ-nat*sq p = homotopyNatural ρ p
+
 
   ⊗-bi : {X X' Y Y' : El} (p : X ≡ X') (q : Y ≡ Y')
     → Square (ap (_⊗ Y) p) (ap (_⊗ Y') p) (ap (X ⊗_) q) ( ap (X' ⊗_) q)
