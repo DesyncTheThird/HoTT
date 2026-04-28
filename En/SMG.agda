@@ -45,15 +45,15 @@ record SMG*Fun {ℓ₁ ℓ₂}
     module A = SMG* A*
     module B = SMG* B*
   field
-    f-𝕀 : f A.𝕀 ≡ B.𝕀
-    f-⊗ : (X Y : A) → f (X A.⊗ Y) ≡ f X B.⊗ f Y
+    -𝕀 : f A.𝕀 ≡ B.𝕀
+    -⊗ : (X Y : A) → f (X A.⊗ Y) ≡ f X B.⊗ f Y
   field
-    f-α : (X Y Z : A)
-        → ap f (A.α X Y Z) ∙ f-⊗ X (Y A.⊗ Z) ∙ ap (f X B.⊗_) (f-⊗ Y Z)
-        ≡ f-⊗ (X A.⊗ Y) Z ∙ ap (B._⊗ f Z) (f-⊗ X Y) ∙ B.α (f X) (f Y) (f Z)
-    f-Λ : (X : A) → ap f (A.Λ X) ≡ f-⊗ (A.𝕀) X ∙ ap (B._⊗ f X) f-𝕀 ∙ B.Λ (f X)
-    f-ρ : (X : A) → ap f (A.ρ X) ≡ f-⊗ X (A.𝕀) ∙ ap (f X B.⊗_) f-𝕀 ∙ B.ρ (f X)
-    f-β : (X Y : A) → ap f (A.β X Y) ∙ f-⊗ Y X ≡ f-⊗ X Y ∙ B.β (f X) (f Y)
+    -α : (X Y Z : A)
+        → ap f (A.α X Y Z) ∙ -⊗ X (Y A.⊗ Z) ∙ ap (f X B.⊗_) (-⊗ Y Z)
+        ≡ -⊗ (X A.⊗ Y) Z ∙ ap (B._⊗ f Z) (-⊗ X Y) ∙ B.α (f X) (f Y) (f Z)
+    -Λ : (X : A) → ap f (A.Λ X) ≡ -⊗ (A.𝕀) X ∙ ap (B._⊗ f X) -𝕀 ∙ B.Λ (f X)
+    -ρ : (X : A) → ap f (A.ρ X) ≡ -⊗ X (A.𝕀) ∙ ap (f X B.⊗_) -𝕀 ∙ B.ρ (f X)
+    -β : (X Y : A) → ap f (A.β X Y) ∙ -⊗ Y X ≡ -⊗ X Y ∙ B.β (f X) (f Y)
 
 open SMG*Fun public
 
@@ -116,39 +116,39 @@ record SMG*Fun*Sq {ℓ₁ ℓ₂}
     module A = SMG*Sq A*
     module B = SMG*Sq B*
   field
-    f-𝕀 : f A.𝕀 ≡ B.𝕀
-    f-⊗ : (X Y : A) → f (X A.⊗ Y) ≡ f X B.⊗ f Y
+    -𝕀 : f A.𝕀 ≡ B.𝕀
+    -⊗ : (X Y : A) → f (X A.⊗ Y) ≡ f X B.⊗ f Y
   field
-    f-α₌ : (X Y Z : A)
+    -α₌ : (X Y Z : A)
         → f (X A.⊗ Y) B.⊗ f Z ≡ f X B.⊗ f (Y A.⊗ Z)
-    f-α₁ : (X Y Z : A)
+    -α₁ : (X Y Z : A)
         → Square
             (ap f (A.α X Y Z))
-            (f-α₌ X Y Z)
-            (f-⊗ (X A.⊗ Y) Z)
-            (f-⊗ X (Y A.⊗ Z))
-    f-α₂ : (X Y Z : A)
+            (-α₌ X Y Z)
+            (-⊗ (X A.⊗ Y) Z)
+            (-⊗ X (Y A.⊗ Z))
+    -α₂ : (X Y Z : A)
         → Square
-            (f-α₌ X Y Z)
+            (-α₌ X Y Z)
             (B.α (f X) (f Y) (f Z))
-            (ap (B._⊗ f Z) (f-⊗ X Y))
-            (ap (f X B.⊗_) (f-⊗ Y Z))
+            (ap (B._⊗ f Z) (-⊗ X Y))
+            (ap (f X B.⊗_) (-⊗ Y Z))
 
-    f-Λ : (X : A)
+    -Λ : (X : A)
         → Square
-            (f-⊗ A.𝕀 X)
+            (-⊗ A.𝕀 X)
             (sym (B.Λ (f X)))
             (ap f (A.Λ X))
-            (ap (B._⊗ f X) f-𝕀)
+            (ap (B._⊗ f X) -𝕀)
 
-    f-ρ : (X : A)
+    -ρ : (X : A)
         → Square
-            (f-⊗ X A.𝕀)
+            (-⊗ X A.𝕀)
             (sym (B.ρ (f X)))
             (ap f (A.ρ X))
-            (ap (f X B.⊗_) f-𝕀)
+            (ap (f X B.⊗_) -𝕀)
 
-    f-β : (X Y : A) → Square (f-⊗ X Y) (f-⊗ Y X) (ap f (A.β X Y)) (B.β (f X) (f Y))
+    -β : (X Y : A) → Square (-⊗ X Y) (-⊗ Y X) (ap f (A.β X Y)) (B.β (f X) (f Y))
 
 open SMG*Fun*Sq public
 
@@ -195,8 +195,8 @@ record SMG*Nat*Sq {ℓ}
     module g* = SMG*Fun*Sq g*
   field
     nat : (X : A) → f X ≡ g X
-    nat-𝕀 : Square (f* .f-𝕀) (g* .f-𝕀) (nat A.𝕀) refl
-    nat-⊗ : (X Y : A) → Square (f* .f-⊗ X Y) (g* .f-⊗ X Y) (nat (X A.⊗ Y)) (ap₂ B._⊗_ (nat X) (nat Y))
+    nat-𝕀 : Square (f* .-𝕀) (g* .-𝕀) (nat A.𝕀) refl
+    nat-⊗ : (X Y : A) → Square (f* .-⊗ X Y) (g* .-⊗ X Y) (nat (X A.⊗ Y)) (ap₂ B._⊗_ (nat X) (nat Y))
 
 module _ {ℓ}
   {A : Type ℓ} {A* : SMG*Sq A}
@@ -207,14 +207,14 @@ module _ {ℓ}
   where
 
   -- lemma : (s : SMG*Nat*Sq f* g*) → PathP (λ i → SMG*Fun*Sq A* B* (λ x → SMG*Nat*Sq.nat s x i)) f* g*
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .f-𝕀 = nat-𝕀 i
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .f-⊗ X Y = nat-⊗ X Y i
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .f-α₌ X Y Z = {!!}
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .f-α₁ = {!!}
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .f-α₂ = {!!}
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .f-Λ X = isSet→SquareP {!!} {!!} {!!} {!!} {!!} i
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .f-ρ = {!!}
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .f-β = {!!}
+  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-𝕀 = nat-𝕀 i
+  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-⊗ X Y = nat-⊗ X Y i
+  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₌ X Y Z = {!!}
+  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₁ = {!!}
+  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₂ = {!!}
+  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-Λ X = isSet→SquareP {!!} {!!} {!!} {!!} {!!} i
+  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-ρ = {!!}
+  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-β = {!!}
 
   -- SMG*Fun*Sq≡ : SMG*Nat*Sq f* g* → (f , f*) ≡ (g , g*)
   -- SMG*Fun*Sq≡ (smg*nat*sq nat nat-𝕀 nat-⊗) =
@@ -229,15 +229,15 @@ module _ {ℓ}
 --       (ap (λ x → nat x i) (Λ A* X))
 --       (ap (λ section₁ → (B* ⊗ section₁) (nat X i)) (nat-𝕀 i))
 -- ———— Boundary (wanted) —————————————————————————————————————
--- i = i0 ⊢ f-Λ f* X
--- i = i1 ⊢ f-Λ g* X
+-- i = i0 ⊢ -Λ f* X
+-- i = i1 ⊢ -Λ g* X
 -- ————————————————————————————————————————————————————————————
 -- X     : A
 -- i     : I
 -- nat-⊗ : (X₁ Y : A) →
---         Square (f-⊗ f* X₁ Y) (f-⊗ g* X₁ Y) (nat ((A* ⊗ X₁) Y))
+--         Square (-⊗ f* X₁ Y) (-⊗ g* X₁ Y) (nat ((A* ⊗ X₁) Y))
 --         (ap₂ (_⊗_ B*) (nat X₁) (nat Y))
--- nat-𝕀 : Square (f-𝕀 f*) (f-𝕀 g*) (nat (𝕀 A*)) refl
+-- nat-𝕀 : Square (-𝕀 f*) (-𝕀 g*) (nat (𝕀 A*)) refl
 -- nat   : (X₁ : A) → f X₁ ≡ g X₁
 -- g*    : SMG*Fun*Sq A* B* g
 -- f*    : SMG*Fun*Sq A* B* f
