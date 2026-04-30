@@ -161,6 +161,7 @@ record SMG*Fun*Sq {ℓ₁ ℓ₂}
 
     -β : (X Y : A) → Square (-⊗ X Y) (-⊗ Y X) (ap f (A.β X Y)) (B.β (f X) (f Y))
 
+
 open SMG*Fun*Sq public
 
 unquoteDecl SMG*Fun*SqIsoΣ = declareRecordIsoΣ SMG*Fun*SqIsoΣ (quote SMG*Fun*Sq)
@@ -217,24 +218,31 @@ module _ {ℓ}
   (g* : SMG*Fun*Sq A* B* g)
   where
 
-  -- lemma : (s : SMG*Nat*Sq f* g*) → PathP (λ i → SMG*Fun*Sq A* B* (λ x → SMG*Nat*Sq.nat s x i)) f* g*
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-𝕀 = nat-𝕀 i
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-⊗ X Y = nat-⊗ X Y i
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₌ X Y Z = {!!}
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₁ = {!!}
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₂ = {!!}
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-Λ X = isSet→SquareP {!!} {!!} {!!} {!!} {!!} i
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-ρ = {!!}
-  -- lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-β = {!!}
+  private
+    module A = SMG*Sq A*
+    module B = SMG*Sq B*
 
-  -- SMG*Fun*Sq≡ : SMG*Nat*Sq f* g* → (f , f*) ≡ (g , g*)
-  -- SMG*Fun*Sq≡ (smg*nat*sq nat nat-𝕀 nat-⊗) =
-  --   ΣPathP (
-  --     funExt nat ,
-  --     {!!}
-  --     -- λ i → smg*fun*sq (nat-𝕀 i) (λ X Y → nat-⊗ X Y i)
-  --     -- (λ X Y Z → {!!}) {!!} {!!} {!!} {!!} {!!}
-  --   )
+  -- _⊗A_ = SMG*Sq._⊗_
+  -- _⊗B_ = B*._⊗_
+
+  lemma : (s : SMG*Nat*Sq f* g*) → PathP (λ i → SMG*Fun*Sq A* B* (λ x → SMG*Nat*Sq.nat s x i)) f* g*
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-𝕀 = nat-𝕀 i
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-⊗ X Y = nat-⊗ X Y i
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₌ X Y Z = {!!}
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₁ = {!!}
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₂ = {!!}
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-Λ X = isSet→SquareP (λ i j → {!SMG*Fun*Sq-isSet f!}) {!!} {!!} {!!} {!!} i
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-ρ = {!!}
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-β = {!!}
+
+  SMG*Fun*Sq≡ : SMG*Nat*Sq f* g* → (f , f*) ≡ (g , g*)
+  SMG*Fun*Sq≡ (smg*nat*sq nat nat-𝕀 nat-⊗) =
+    ΣPathP (
+      funExt nat ,
+      {!!}
+      -- λ i → smg*fun*sq (nat-𝕀 i) (λ X Y → nat-⊗ X Y i)
+      -- (λ X Y Z → {!!}) {!!} {!!} {!!} {!!} {!!}
+    )
 
 -- Goal: Square (nat-⊗ (𝕀 A*) X i) (sym (Λ B* (nat X i)))
 --       (ap (λ x → nat x i) (Λ A* X))

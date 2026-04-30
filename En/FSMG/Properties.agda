@@ -221,18 +221,8 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
               in (P ∙h Q))
       λ X → B.is-groupoid (h X) ((f ♯) X)
 
-  ♭-retract : retract _♭ (λ f → (f ♯) , (f ♯*))
-  ♭-retract (f , f*) = let open S in
-    ΣPathP (funExt (
-      FSMG*Elim*Set.elim A (λ _ → refl)
-        (sym (f* .-𝕀))
-        (λ {X = X} {Y = Y} p q → ap₂ B._⊗_ p q ∙ sym (f* .-⊗ X Y))
-        (λ {X = X} {Y = Y} {Z = Z} p q r → {!!})
-        (λ {X = X} p → {!!})
-        {!!} {!!} λ X → B.is-groupoid ((((f , f*) ♭) ♯) X) (f X))
-      ,
-      {!!}
-    )
+  ♭-retract : retract _♭ (λ g → (g ♯) , (g ♯*))
+  ♭-retract (g , g*) = ΣPathP ((funExt (λ x → sym (♯-uniq ((g , g*) ♭) g g* refl x)) , {!!}))
 
   univ : isEquiv _♭
   univ = isoToIsEquiv (
