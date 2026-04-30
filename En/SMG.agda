@@ -108,6 +108,10 @@ record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
     → Square (α X Y Z) (α X' Y' Z') (ap₃ (λ X Y Z → (X ⊗ Y) ⊗ Z) p q r) (ap₃ (λ X Y Z → X ⊗ (Y ⊗ Z)) p q r)
   α-nat p q r i j = α (p i) (q i) (r i) j
 
+  β-nat : {X X' Y Y' : El} (p : X ≡ X') (q : Y ≡ Y')
+    → Square (β X Y) (β X' Y') (ap₂ _⊗_ p q) (ap₂ _⊗_ q p)
+  β-nat p q i j = β (p i) (q i) j
+
 
 
  -- (homotopyNatural {f = {!λ X → 𝕀 ⊗ X!}} {g = λ X → X} {!!} {!!}) -- (homotopyNatural {f = λ X → 𝕀 ⊗ X} {g = λ X → X} Λ p)
