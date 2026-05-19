@@ -1,3 +1,4 @@
+-- {-# OPTIONS --show-implicit #-}
 module En.SMG where
 
 open import En.Prelude
@@ -61,7 +62,6 @@ record SMG*Fun {ℓ₁ ℓ₂}
 open SMG*Fun public
 
 record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
-  no-eta-equality
   constructor smg*sq
   field
     𝕀 : El
@@ -92,15 +92,14 @@ record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
 
     is-groupoid : isGroupoid El
 
-  Λ-nat*sq : {X Y : El} (p : X ≡ Y) → Λ X ∙ p ≡ ap (𝕀 ⊗_) p ∙ Λ Y -- FIXME: BUG BUG BUG comSquare (Λ X) (Λ Y) (ap (𝕀 ⊗_) p) p
-  Λ-nat*sq p = homotopyNatural {B = El} {f = λ X → 𝕀 ⊗ X} {g = λ X → X} Λ p
+  Λ-nat*sq : {X Y : El} (p : X ≡ Y) → Square (Λ X) (Λ Y) (ap (𝕀 ⊗_) p) p
+  Λ-nat*sq p = flipSquare (compPath→Square (homotopyNatural Λ p))
 
-  ρ-nat*sq : {X Y : El} (p : X ≡ Y) → ρ X ∙ p ≡ ap (_⊗ 𝕀) p ∙ ρ Y
-  ρ-nat*sq p = homotopyNatural ρ p
-
+  ρ-nat*sq : {X Y : El} (p : X ≡ Y) → Square (ρ X) (ρ Y) (ap (_⊗ 𝕀) p) p
+  ρ-nat*sq p = flipSquare (compPath→Square (homotopyNatural ρ p))
 
   ⊗-bi : {X X' Y Y' : El} (p : X ≡ X') (q : Y ≡ Y')
-    → Square (ap (_⊗ Y) p) (ap (_⊗ Y') p) (ap (X ⊗_) q) ( ap (X' ⊗_) q)
+    → Square (ap (_⊗ Y) p) (ap (_⊗ Y') p) (ap (X ⊗_) q) (ap (X' ⊗_) q)
   ⊗-bi p q i j = p j ⊗ q i
 
   α-nat : {X X' Y Y' Z Z' : El}
@@ -222,27 +221,69 @@ module _ {ℓ}
     module A = SMG*Sq A*
     module B = SMG*Sq B*
 
+  open SMG*Nat*Sq
+
   -- _⊗A_ = SMG*Sq._⊗_
   -- _⊗B_ = B*._⊗_
 
+  -- lemma2 : (s : SMG*Nat*Sq f* g*) (i : I) (X : A) → Square (s .nat-⊗ A.𝕀 X i) (sym (B.Λ (nat s X i)))
+  --        (ap (λ x → nat s x i) (A.Λ X)) (ap (B._⊗ nat s X i) (s .nat-𝕀 i))
+  -- lemma2 s i X = {!!}
+  --   -- isGroupoid→Cube
+  --   -- {c₀₀₀ = f (A.𝕀 A.⊗ X)} {c₀₀₁ = g (A.𝕀 A.⊗ X)} {c₀₁₀ = f A.𝕀 B.⊗ f X} {c₀₁₁ = g A.𝕀 B.⊗ g X}
+  --   --   {c₁₀₀ = f X} {c₁₀₁ = g X} {c₁₁₀ = B.𝕀 B.⊗ f X} {c₁₁₁ = B.𝕀 B.⊗ g X}
+  --   -- {c₀₀₋ = s .nat (A.𝕀 A.⊗ X)} {c₀₁₋ = ap₂ B._⊗_ (s .nat A.𝕀) (s .nat X)}
+  --   -- {c₀₋₀ = s .nat-⊗ A.𝕀 X i0} {c₀₋₁ = s .nat-⊗ A.𝕀 X i1}
+  --   -- {c₁₀₋ = s .nat X} {c₁₁₋ = ap (B.𝕀 B.⊗_) (s .nat X)}
+  --   -- {c₁₋₀ = sym (B.Λ (f X))} {c₁₋₁ = sym (B.Λ (g X))}
+  --   -- {c₋₀₀ = ap f (A.Λ X)} {c₋₀₁ = ap g (A.Λ X)}
+  --   -- {c₋₁₀ = ap (B._⊗ f X) (f* .-𝕀)} {c₋₁₁ = ap (B._⊗ g X) (g* .-𝕀)}
+  --   --   (flipSquare (s .nat-⊗ A.𝕀 X)) {!!} {!!} {!!} {!!} {!!} B.is-groupoid i j k
+
   lemma : (s : SMG*Nat*Sq f* g*) → PathP (λ i → SMG*Fun*Sq A* B* (λ x → SMG*Nat*Sq.nat s x i)) f* g*
+  -- lemma s i =
+  --   smg*fun*sq (s .nat-𝕀 i) (λ X Y → s .nat-⊗ X Y i) {!!} {!!} {!!} {!!} {!!} {!!}
+
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-𝕀 = nat-𝕀 i
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-⊗ X Y = nat-⊗ X Y i
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₌ X Y Z = {!!}
-  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₁ = {!!}
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₁ X Y Z = {!!}
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₂ = {!!}
-  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-Λ X = isSet→SquareP (λ i j → {!SMG*Fun*Sq-isSet f!}) {!!} {!!} {!!} {!!} i
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) k .-Λ X i j =
+    isGroupoid→Cube
+      {c₀₀₀ = f (A.𝕀 A.⊗ X)} {c₀₀₁ = g (A.𝕀 A.⊗ X)} {c₀₁₀ = f A.𝕀 B.⊗ f X} {c₀₁₁ = g A.𝕀 B.⊗ g X}
+      {c₁₀₀ = f X} {c₁₀₁ = g X} {c₁₁₀ = B.𝕀 B.⊗ f X} {c₁₁₁ = B.𝕀 B.⊗ g X}
+    {c₀₀₋ = nat (A.𝕀 A.⊗ X)} {c₀₁₋ = ap₂ B._⊗_ (nat A.𝕀) (nat X)}
+    {c₀₋₀ = nat-⊗ A.𝕀 X i0} {c₀₋₁ = nat-⊗ A.𝕀 X i1}
+    {c₁₀₋ = nat X} {c₁₁₋ = ap (B.𝕀 B.⊗_) (nat X)}
+    {c₁₋₀ = sym (B.Λ (f X))} {c₁₋₁ = sym (B.Λ (g X))}
+    {c₋₀₀ = ap f (A.Λ X)} {c₋₀₁ = ap g (A.Λ X)}
+    {c₋₁₀ = ap (B._⊗ f X) (f* .-𝕀)} {c₋₁₁ = ap (B._⊗ g X) (g* .-𝕀)}
+      (flipSquare (nat-⊗ A.𝕀 X))
+      {!!} -- (let q = B.Λ-nat*sq (nat X) in flipSquare (invSquarev {!q!}))
+      {!!}
+      {!!}
+      (f* .-Λ X)
+      (g* .-Λ X)
+      (B* .is-groupoid) i j k
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-ρ = {!!}
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-β = {!!}
 
-  SMG*Fun*Sq≡ : SMG*Nat*Sq f* g* → (f , f*) ≡ (g , g*)
-  SMG*Fun*Sq≡ (smg*nat*sq nat nat-𝕀 nat-⊗) =
-    ΣPathP (
-      funExt nat ,
-      {!!}
-      -- λ i → smg*fun*sq (nat-𝕀 i) (λ X Y → nat-⊗ X Y i)
-      -- (λ X Y Z → {!!}) {!!} {!!} {!!} {!!} {!!}
-    )
+  -- (c₀₋₋ : Square c₀₀₋ c₀₁₋ c₀₋₀ c₀₋₁)
+  -- (c₁₋₋ : Square c₁₀₋ c₁₁₋ c₁₋₀ c₁₋₁)
+  -- (c₋₀₋ : Square c₀₀₋ c₁₀₋ c₋₀₀ c₋₀₁)
+  -- (c₋₁₋ : Square c₀₁₋ c₁₁₋ c₋₁₀ c₋₁₁)
+  -- (c₋₋₀ : Square c₀₋₀ c₁₋₀ c₋₀₀ c₋₁₀)
+  -- (c₋₋₁ : Square c₀₋₁ c₁₋₁ c₋₀₁ c₋₁₁)
+
+  -- SMG*Fun*Sq≡ : SMG*Nat*Sq f* g* → (f , f*) ≡ (g , g*)
+  -- SMG*Fun*Sq≡ (smg*nat*sq nat nat-𝕀 nat-⊗) =
+  --   ΣPathP (
+  --     funExt nat ,
+  --     {!!}
+  --     -- λ i → smg*fun*sq (nat-𝕀 i) (λ X Y → nat-⊗ X Y i)
+  --     -- (λ X Y Z → {!!}) {!!} {!!} {!!} {!!} {!!}
+  --   )
 
 -- Goal: Square (nat-⊗ (𝕀 A*) X i) (sym (Λ B* (nat X i)))
 --       (ap (λ x → nat x i) (Λ A* X))
