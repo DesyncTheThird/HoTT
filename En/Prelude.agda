@@ -27,6 +27,38 @@ isSet→Square :
 isSet→Square isset _ _ a₀₋ _ _ a₁₋ a₋₀ a₋₁ =
   compPath→Square (isset (a₋₀ i0) (a₋₁ i1) ((λ i → a₋₀ i) ∙ a₁₋) (a₀₋ ∙ (λ i → a₋₁ i)))
 
+isGroupoid→Cube :
+  ∀ {ℓ}
+  {B : Type ℓ}
+  {c₀₀₀ : B} {c₀₀₁ : B} {c₀₁₀ : B} {c₀₁₁ : B}
+  {c₁₀₀ : B} {c₁₀₁ : B} {c₁₁₀ : B} {c₁₁₁ : B}
+  {c₀₀₋ : Path B c₀₀₀ c₀₀₁} {c₀₁₋ : Path B c₀₁₀ c₀₁₁}
+  {c₀₋₀ : Path B c₀₀₀ c₀₁₀} {c₀₋₁ : Path B c₀₀₁ c₀₁₁}
+  {c₁₀₋ : Path B c₁₀₀ c₁₀₁} {c₁₁₋ : Path B c₁₁₀ c₁₁₁}
+  {c₁₋₀ : Path B c₁₀₀ c₁₁₀} {c₁₋₁ : Path B c₁₀₁ c₁₁₁}
+  {c₋₀₀ : Path B c₀₀₀ c₁₀₀} {c₋₀₁ : Path B c₀₀₁ c₁₀₁}
+  {c₋₁₀ : Path B c₀₁₀ c₁₁₀} {c₋₁₁ : Path B c₀₁₁ c₁₁₁}
+  (c₀₋₋ : Square c₀₀₋ c₀₁₋ c₀₋₀ c₀₋₁)
+  (c₁₋₋ : Square c₁₀₋ c₁₁₋ c₁₋₀ c₁₋₁)
+  (c₋₀₋ : Square c₀₀₋ c₁₀₋ c₋₀₀ c₋₀₁)
+  (c₋₁₋ : Square c₀₁₋ c₁₁₋ c₋₁₀ c₋₁₁)
+  (c₋₋₀ : Square c₀₋₀ c₁₋₀ c₋₀₀ c₋₁₀)
+  (c₋₋₁ : Square c₀₋₁ c₁₋₁ c₋₀₁ c₋₁₁)
+  → isGroupoid B → Cube c₀₋₋ c₁₋₋ c₋₀₋ c₋₁₋ c₋₋₀ c₋₋₁
+isGroupoid→Cube {B = B} = isGroupoid→CubeP (λ _ _ _ → B)
+
+
+  -- CubeP : Type ℓ
+  -- CubeP = PathP (λ i → SquareP (λ j k → B i j k)
+  --                     (c₋₀₋ i) (c₋₁₋ i)
+  --                     (c₋₋₀ i) (c₋₋₁ i))
+  --                c₀₋₋ c₁₋₋
+
+  -- isGroupoid→CubeP : isGroupoid (B i1 i1 i1) → CubeP
+  -- isGroupoid→CubeP grpd =
+  --   isOfHLevelPathP' 0 (isOfHLevelPathP' 1 (isOfHLevelPathP' 2 grpd _ _) _ _) _ _ .fst
+
+
 doubleCompPath-square :
   ∀ {ℓ}
   {A : Type ℓ}
@@ -227,4 +259,3 @@ triple-⊗-rightHom : (_⊗A_ : A → A → A) (_⊗B_ : B → B → B) {h : A �
   (f : ∀ x y → h (x ⊗A y) ≡ h x ⊗B h y)
   → Square (ap₂ _⊗B_ p (f Y Z)) (ap₃ (λ x y z → x ⊗B (y ⊗B z)) p q r) (ap₂ _⊗B_ refl (f Y Z)) (ap₂ _⊗B_ refl (ap₂ _⊗B_ q r))
 triple-⊗-rightHom _⊗A_ _⊗B_ {Y = Y} {Z} {p = p} {q} {r} f i j = (p j) ⊗B pqpq (f Y Z) (ap₂ _⊗B_ q r) i j
-
