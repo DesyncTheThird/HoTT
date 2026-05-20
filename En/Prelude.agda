@@ -1,11 +1,9 @@
 module En.Prelude where
 
+open import En.Prelude.Base public
 open import En.Prelude.Ap public
 open import En.Prelude.Squares public
 open import En.Prelude.Coherence public
-
--- postulate
---     sorry : ∀ {l} {A : Type l} → A
 
 Eq→Square₂₃ : ∀ {ℓ} {A : Type ℓ} {a b : A} {p q : a ≡ b} (γ : p ∙ (sym q) ≡ refl)
     → Square p q refl refl
@@ -13,7 +11,9 @@ Eq→Square₂₃ {p = p} {q = q} γ = compPath→Square (sym ((ap (p ∙_) (sym
 
 Eq→Square₀₃ : ∀ {ℓ} {A : Type ℓ} {a b : A} {p : a ≡ b} {q : b ≡ a} (γ : p ∙ q ≡ refl)
     → Square refl p q refl
-Eq→Square₀₃ {p = p} {q = q} γ = compPath→Square ((ap (_∙ p) (lUnit q)) ∙ (ap (_∙ p) ((ap (_∙ q) (sym (lCancel p))))) ∙ (ap (_∙ p) (sym (assoc (sym p) p q))) ∙ sym (assoc (sym p) (p ∙ q) p) ∙ ap ((sym p) ∙_) (ap (_∙ p) γ) ∙ sym (ap ((sym p) ∙_) (lUnit p)) ∙ lCancel p ∙ rUnit refl)
+Eq→Square₀₃ {p = p} {q = q} γ =
+    compPath→Square ((ap (_∙ p) (lUnit q)) ∙ ap (λ x → ((x ∙ q) ∙ p)) (sym (lCancel p)) ∙ ap (_∙ p) (sym (assoc (sym p) p q)) ∙  ap (λ x → ((sym p) ∙ x) ∙ p ) γ ∙ ap (_∙ p) (sym (rUnit (sym p))) ∙ lCancel p ∙ rUnit _)
+                 -- ((ap (_∙ p) (lUnit q)) ∙ (ap (_∙ p) ((ap (_∙ q) (sym (lCancel p))))) ∙ (ap (_∙ p) (sym (assoc (sym p) p q))) ∙ sym (assoc (sym p) (p ∙ q) p) ∙ ap ((sym p) ∙_) (ap (_∙ p) γ) ∙ sym (ap ((sym p) ∙_) (lUnit p)) ∙ lCancel p ∙ rUnit refl)
 
 
 isSet→Square :
@@ -259,3 +259,44 @@ triple-⊗-rightHom : (_⊗A_ : A → A → A) (_⊗B_ : B → B → B) {h : A �
   (f : ∀ x y → h (x ⊗A y) ≡ h x ⊗B h y)
   → Square (ap₂ _⊗B_ p (f Y Z)) (ap₃ (λ x y z → x ⊗B (y ⊗B z)) p q r) (ap₂ _⊗B_ refl (f Y Z)) (ap₂ _⊗B_ refl (ap₂ _⊗B_ q r))
 triple-⊗-rightHom _⊗A_ _⊗B_ {Y = Y} {Z} {p = p} {q} {r} f i j = (p j) ⊗B pqpq (f Y Z) (ap₂ _⊗B_ q r) i j
+
+
+
+
+
+
+foo :
+  ∀ {ℓ} {A : Type ℓ} {a b c : A}
+  (p : a ≡ b) (q : c ≡ a)
+  → Square p q (q ⁻¹) (p ⁻¹)
+foo p q = compPath→Square (lCancel q ∙ sym (rCancel p))
+
+-- bar :
+--   ∀ {ℓ} {A : Type ℓ} {a b c : A}
+--   {s : a ≡ b} {t : b ≡ c}
+--   → (s ∙ t) ⁻¹ ≡ (t ⁻¹) ∙ (s ⁻¹)
+-- bar {s = s} {t} = {!!}
+
+forceSquare :
+  ∀ {ℓ} {A : Type ℓ} {a b c : A}
+  {p : a ≡ b} {q : c ≡ a}
+  → Square p q (q ⁻¹) (p ⁻¹) → Square refl q ((q ∙ p) ⁻¹) (p ⁻¹)
+forceSquare {p = p} {q} sq = (invSquareh (compPath→Square (sym (rUnit (q ∙ p)))))
+
+-- homotopyNatural2 :
+--   ∀ {ℓ ℓ₁ ℓ₂ ℓ₃ ℓ₃}
+--   {A : Type ℓ} {B : Type ℓ'} {C : Type ℓ''}
+--   {_⊗_ : A → B → C}
+--   {f g : A → B → C}
+--   (H : ∀ a b → f a b ≡ g a b)
+--   {x x' y y' : A}
+--   (p : x ≡ x')
+--   (q : y ≡ y')
+--   → H x y ∙ ap₂ g p q ≡ ap₂ f p ∙ H x' y'
+-- homotopyNatural2 = {!!}
+-- -- homotopyNatural2 {f = f} {g = g} H {x} {y} p i j =
+-- --     hcomp (λ k → λ { (i = i0) → compPath-filler (H x) (cong g p) k j
+-- --                    ; (i = i1) → compPath-filler' (cong f p) (H y) k j
+-- --                    ; (j = i0) → cong f p (i ∧ ~ k)
+-- --                    ; (j = i1) → cong g p (i ∨ k) })
+-- --           (H (p i) j)

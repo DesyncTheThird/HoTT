@@ -191,13 +191,13 @@ SMG*Fun*Sq-isSet {B* = B*} f =
     isSetΣ (isSetΠ λ _ → isSetSquareFromGroupoid B.is-groupoid _ _ _ _) λ _ →
     isSetΠ2 λ _ _ → isSetSquareFromGroupoid B.is-groupoid _ _ _ _)
 
-record SMG*Nat*Sq {ℓ}
-  {A : Type ℓ} {A* : SMG*Sq A}
-  {B : Type ℓ} {B* : SMG*Sq B}
+record SMG*Nat*Sq {ℓ ℓ'}
+  {A : Type ℓ } {A* : SMG*Sq A}
+  {B : Type ℓ'} {B* : SMG*Sq B}
   {f g : A → B}
   (f* : SMG*Fun*Sq A* B* f)
   (g* : SMG*Fun*Sq A* B* g)
-  : Type ℓ where
+  : Type (ℓ-max ℓ ℓ') where
   constructor smg*nat*sq
   private
     module A = SMG*Sq A*
@@ -209,9 +209,9 @@ record SMG*Nat*Sq {ℓ}
     nat-𝕀 : Square (f* .-𝕀) (g* .-𝕀) (nat A.𝕀) refl
     nat-⊗ : (X Y : A) → Square (f* .-⊗ X Y) (g* .-⊗ X Y) (nat (X A.⊗ Y)) (ap₂ B._⊗_ (nat X) (nat Y))
 
-module _ {ℓ}
-  {A : Type ℓ} {A* : SMG*Sq A}
-  {B : Type ℓ} {B* : SMG*Sq B}
+module _ {ℓ ℓ'}
+  {A : Type ℓ } {A* : SMG*Sq A}
+  {B : Type ℓ'} {B* : SMG*Sq B}
   {f g : A → B}
   (f* : SMG*Fun*Sq A* B* f)
   (g* : SMG*Fun*Sq A* B* g)

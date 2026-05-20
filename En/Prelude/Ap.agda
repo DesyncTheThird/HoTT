@@ -87,7 +87,7 @@ ap₂-∙ {X = X} {X'} {X''} {Y} {Y'} {Y''} f p q r s =
   (ap (λ X → f X Y) p ∙ ap (f X') r) ∙ ap (λ X'' → f X'' Y') q ∙ ap (f X'') s ≡⟨ sym (ap₂ (_∙_) (rUnit (ap₂ f p r) ∙ Square→compPath (ap₂-coh₁ f p r)) (rUnit (ap₂ f q s) ∙ Square→compPath (ap₂-coh₁ f q s)) ) ⟩
   ap₂ f p r ∙ ap₂ f q s ∎
 
-ap-lemma : {X Y Z W X' Y' Z' W' : B}
+ap-lemma : {X Y Z W X' Y' Z' : B}
   (_⊗_ : B → B → B)
   (p : X ≡ X')
   (q : Y ≡ Y')

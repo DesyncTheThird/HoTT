@@ -49,11 +49,12 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
   _♭ (g , _) = g ∘ η
 
   ♯-uniq : (f : A → B) (h : FSMG A → B) (h* : S.SMG*Fun*Sq (FSMG* A) B* h) → (h ∘ η ≡ f) → ∀ xs → h xs ≡ (f ♯) xs
+
   ♯-uniq f h h* p = let open S in
     FSMG*Elim*Set.elim A
       (λ a → ap (_$ a) p)
       (h* .-𝕀)
-      (λ {X = X} {Y = Y} p q → h* .-⊗ X Y ∙ ap₂ B._⊗_ p q ) -- h* .-⊗ X Y ∙ ap (B._⊗ h Y) p  ∙ ap ((f ♯) X B.⊗_) q)
+      (λ {X = X} {Y = Y} p q → h* .-⊗ X Y ∙ ap₂ B._⊗_ p q) -- h* .-⊗ X Y ∙ ap (B._⊗ h Y) p  ∙ ap ((f ♯) X B.⊗_) q)
       (λ {X = X} {Y = Y} {Z = Z} p q r → compPath→Square (
           (ap h (FSMG.α X Y Z)) ∙ -⊗ h* X (Y FSMG.⊗ Z) ∙ ap₂ B._⊗_ p (-⊗ h* Y Z ∙ ap₂ B._⊗_ q r)
         ≡⟨ ap (λ x → (ap h (FSMG.α X Y Z)) ∙ -⊗ h* X (Y FSMG.⊗ Z) ∙ ap₂ B._⊗_ x (-⊗ h* Y Z ∙ ap₂ B._⊗_ q r)) (rUnit p) ⟩
@@ -179,8 +180,30 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
               in (P ∙h Q))
       λ X → B.is-groupoid (h X) ((f ♯) X)
 
+
+  ♯-uniq-⊗ : (f : A → B)
+             (h : FSMG A → B)
+             (h* : S.SMG*Fun*Sq (FSMG* A) B* h)
+             (p : h ∘ η ≡ f)
+             (X Y : FSMG A)
+             → ♯-uniq f h h* p (X ⊗ Y) ≡ let open S in
+              (h* .-⊗ X Y ∙ ap₂ B._⊗_ (♯-uniq f h h* p X) (♯-uniq f h h* p Y))
+  ♯-uniq-⊗ f h h* p X Y = refl
+
+
   ♭-retract : retract _♭ (λ g → (g ♯) , (g ♯*))
-  ♭-retract (g , g*) = ΣPathP ((funExt (λ x → sym (♯-uniq ((g , g*) ♭) g g* refl x)) , {!!}))
+  ♭-retract (g , g*) =
+    let open S
+        nat = (λ x → sym (♯-uniq ((g , g*) ♭) g g* refl x))
+        g♭ = (g , g*) ♭
+        in
+        S.SMG*Fun*Sq≡ {f = g♭ ♯} {g = g}
+        (g♭ ♯*) g* (smg*nat*sq nat
+          (λ i j → (g* .-𝕀) (~ i ∨ j))
+          λ X Y → forceSquare (foo (sym (ap₂ B._⊗_ (nat X) (nat Y))) (g* .-⊗ X Y))
+          -- S.-⊗ g* X Y (~ i ∨ j)
+        )
+    -- ΣPathP ((funExt (λ x → sym (♯-uniq ((g , g*) ♭) g g* refl x)) , {! !}))
 
   univ : isEquiv _♭
   univ = isoToIsEquiv (
