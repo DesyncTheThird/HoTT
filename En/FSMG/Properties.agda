@@ -6,48 +6,6 @@ open import En.Prelude
 open import En.FSMG.Base
 import En.SMG as S hiding (SMG* ; SMG*Fun)
 
--- FSMG-has-SMG*Struct : ∀ {ℓ} (A : Type ℓ) → S.SMG*Struct (FSMG A)
--- FSMG-has-SMG*Struct A .S.𝕀 = 𝕀
--- FSMG-has-SMG*Struct A .S._⊗_ = _⊗_
--- FSMG-has-SMG*Struct A .S.α = α
--- FSMG-has-SMG*Struct A .S.Λ = Λ
--- FSMG-has-SMG*Struct A .S.ρ = ρ
--- FSMG-has-SMG*Struct A .S.β = β
--- FSMG-has-SMG*Struct A .S.▽ X Y = Triangle→compPath₃ (▽ X Y)
--- FSMG-has-SMG*Struct A .S.⬠ W X Y Z = Pentagon→compPath (⬠₌ W X Y Z) (⬠₁ W X Y Z) (⬠₂ W X Y Z)
--- FSMG-has-SMG*Struct A .S.⬡ X Y Z = Hexagon→compPath (⬡₌ X Y Z) (⬡₁ X Y Z) (⬡₂ X Y Z)
--- FSMG-has-SMG*Struct A .S.β² X Y = ap (_∙ β Y X) (β² X Y) ∙ lCancel (β Y X)
--- FSMG-has-SMG*Struct A .S.is-groupoid = is-groupoid
-
--- module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (SMGB : S.SMG*Struct B) where
-
---   module B = S.SMG*Struct SMGB
-
---   module _ (f : A → B) where
-
---     module F = FSMG*Rec A f B.𝕀 B._⊗_ B.α B.Λ B.ρ B.β
---         (λ X* Y* → compPath→Triangle₃ (B.▽ X* Y*))
---         (λ W* X* Y* Z* → B.α (W* B.⊗ X*) Y* Z* ∙ B.α W* X* (Y* B.⊗ Z*))
---         (λ W* X* Y* Z* → compPath→Pentagon (B.⬠ W* X* Y* Z*) .snd .fst)
---         (λ W* X* Y* Z* → compPath→Pentagon (B.⬠ W* X* Y* Z*) .snd .snd)
---         (λ X* Y* Z* → compPath→Hexagon (B.⬡ X* Y* Z*) .fst)
---         (λ X* Y* Z* → compPath→Hexagon (B.⬡ X* Y* Z*) .snd .fst)
---         (λ X* Y* Z* → compPath→Hexagon (B.⬡ X* Y* Z*) .snd .snd)
---         (λ X* Y* → Eq→Square₂₃ (B.β² X* Y*))
---         B.is-groupoid
-
-
---     _♯ : (FSMG A → B)
---     _♯ = F.f
-
---     ♯-SMG*Functor : S.SMG*Functor (FSMG A) (FSMG-has-SMG*Struct A) B SMGB (_♯)
---     ♯-SMG*Functor .S.hom-𝕀 = refl
---     ♯-SMG*Functor .S.-⊗ X Y = refl
---     ♯-SMG*Functor .S.-α X Y Z = sorry
---     ♯-SMG*Functor .S.-Λ X = sorry
---     ♯-SMG*Functor .S.-ρ X = sorry
---     ♯-SMG*Functor .S.-β X Y = sorry
-
 FSMG* : ∀ {ℓ} (A : Type ℓ) → S.SMG*Sq (FSMG A)
 FSMG* A .S.𝕀 = 𝕀
 FSMG* A .S._⊗_ = _⊗_
@@ -132,7 +90,7 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
         let R : Square (h* .-⊗ FSMG.𝕀 X) (sym (B.Λ (h X))) (ap h (FSMG.Λ X)) (ap (B._⊗ h X) (h* .-𝕀))
             R = h* .-Λ X
             S : Square (ap (B.𝕀 B.⊗_) p) p (B.Λ (h X)) (B.Λ ((f ♯) X))
-            S = compPath→Square (S.Λ-nat*sq B* p)
+            S = flipSquare (S.Λ-nat*sq B* p)
             V : Square (h* .-⊗ FSMG.𝕀 X) (sym (B.Λ ((f ♯) X))) (ap h (FSMG.Λ X) ∙ p) (ap (B._⊗ (h X)) (h* .-𝕀) ∙ ap (B.𝕀 B.⊗_) p)
             V = R ∙v (flipSquare (invSquareh S))
             in tpt (λ x → Square (h* .-⊗ FSMG.𝕀 X ∙ x) p (ap h (FSMG.Λ X)) (ap (f ♯) (FSMG.Λ X)))
@@ -191,7 +149,7 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
                            q
                            (B.ρ (h X))
                            (B.ρ ((f ♯) X))
-            base2 = compPath→Square (ρ-nat*sq B* q)
+            base2 = flipSquare (ρ-nat*sq B* q)
             base : Square (ap (B._⊗ (h FSMG.𝕀)) q)
                           q
                           (ap (h X B.⊗_) (h* .-𝕀) ∙ B.ρ (h X))
