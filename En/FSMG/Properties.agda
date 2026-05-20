@@ -217,7 +217,7 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
                              (ap₂ B._⊗_ q' q)
                              (B.β (h X) (h Y))
                              (B.β ((f ♯) X) ((f ♯) Y))
-                  Q = flipSquare (β-nat B* q q') 
+                  Q = flipSquare (β-nat B* q q')
               in (P ∙h Q))
       λ X → B.is-groupoid (h X) ((f ♯) X)
 
@@ -230,13 +230,3 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
       (λ _ → refl)
       ♭-retract
     )
-      -- (λ { (g , g*) → let open S in
-
-    --       ΣPathP (funExt (FSMG*Elim*Set.elim A (λ _ → refl) (sym (g* .hom-𝕀))
-    --         (λ {X = X} {Y = Y} p q → (ap₂ B._⊗_ p q ∙ sym (g* .-⊗ X Y)))
-    --         (λ {X = X} {Y = Y} {Z = Z} p q r → let q = B.α (g X) (g Y) (g Z) ; r = g* .-α₌ X Y Z in {!!})
-    --         (λ {X = X} p → {!!})
-    --         {!!}
-    --         {!!}
-    --     })
-    -- )

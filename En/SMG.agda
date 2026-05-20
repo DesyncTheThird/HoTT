@@ -246,65 +246,77 @@ module _ {ℓ}
 
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-𝕀 = nat-𝕀 i
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-⊗ X Y = nat-⊗ X Y i
-  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₌ X Y Z = {!!}
-  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₁ X Y Z = {!!}
-  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₂ = {!!}
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-α₌ X Y Z j =
+    hcomp
+      (λ k → λ { (i = i0) → f* .-α₁ X Y Z k j
+               ; (i = i1) → g* .-α₁ X Y Z k j
+               ; (j = i0) → nat-⊗ (X A.⊗ Y) Z i k
+               ; (j = i1) → nat-⊗ X (Y A.⊗ Z) i k
+               } )
+      (compPath→Square (homotopyNatural nat (A.α X Y Z)) i j)
+
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) k .-α₁ X Y Z i j =
+    isGroupoid→Cube
+      (λ j k → nat (A.α X Y Z j) k)
+      (λ j k → hcomp
+          (λ { k₁ (k = i0) → -α₁ f* X Y Z k₁ j
+             ; k₁ (k = i1) → -α₁ g* X Y Z k₁ j
+             ; k₁ (j = i0) → nat-⊗ (X A.⊗ Y) Z k k₁
+             ; k₁ (j = i1) → nat-⊗ X (Y A.⊗ Z) k k₁
+             })
+          (compPath→Square (homotopyNatural nat (A.α X Y Z)) k j))
+      (λ i k → nat-⊗ (X A.⊗ Y) Z k i)
+      (λ i k → nat-⊗ X (Y A.⊗ Z) k i)
+      (f* .-α₁ X Y Z) (g* .-α₁ X Y Z) B.is-groupoid i j k
+
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) k .-α₂ X Y Z i j =
+    isGroupoid→Cube
+      (λ j k → hcomp
+          (λ { k₁ (k = i0) → -α₁ f* X Y Z k₁ j
+             ; k₁ (k = i1) → -α₁ g* X Y Z k₁ j
+             ; k₁ (j = i0) → nat-⊗ (X A.⊗ Y) Z k k₁
+             ; k₁ (j = i1) → nat-⊗ X (Y A.⊗ Z) k k₁
+             })
+          (compPath→Square (homotopyNatural nat (A.α X Y Z)) k j))
+      (λ j k → B.α (nat X k) (nat Y k) (nat Z k) j)
+      (λ i k → nat-⊗ X Y k i B.⊗ nat Z k)
+      (λ i k → nat X k B.⊗ nat-⊗ Y Z k i)
+      (f* .-α₂ X Y Z ) (g* .-α₂ X Y Z) B.is-groupoid i j k
+
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) k .-Λ X i j =
     isGroupoid→Cube
-      {c₀₀₀ = f (A.𝕀 A.⊗ X)} {c₀₀₁ = g (A.𝕀 A.⊗ X)} {c₀₁₀ = f A.𝕀 B.⊗ f X} {c₀₁₁ = g A.𝕀 B.⊗ g X}
-      {c₁₀₀ = f X} {c₁₀₁ = g X} {c₁₁₀ = B.𝕀 B.⊗ f X} {c₁₁₁ = B.𝕀 B.⊗ g X}
-    {c₀₀₋ = nat (A.𝕀 A.⊗ X)} {c₀₁₋ = ap₂ B._⊗_ (nat A.𝕀) (nat X)}
-    {c₀₋₀ = nat-⊗ A.𝕀 X i0} {c₀₋₁ = nat-⊗ A.𝕀 X i1}
-    {c₁₀₋ = nat X} {c₁₁₋ = ap (B.𝕀 B.⊗_) (nat X)}
-    {c₁₋₀ = sym (B.Λ (f X))} {c₁₋₁ = sym (B.Λ (g X))}
-    {c₋₀₀ = ap f (A.Λ X)} {c₋₀₁ = ap g (A.Λ X)}
-    {c₋₁₀ = ap (B._⊗ f X) (f* .-𝕀)} {c₋₁₁ = ap (B._⊗ g X) (g* .-𝕀)}
-      (flipSquare (nat-⊗ A.𝕀 X))
-      {!!} -- (let q = B.Λ-nat*sq (nat X) in flipSquare (invSquarev {!q!}))
-      {!!}
-      {!!}
+      (λ j k → nat-⊗ A.𝕀 X k j)
+      (λ j k → B.Λ (nat X k) (~ j))
+      (λ i k → nat (A.Λ X i) k)
+      (λ i k → nat-𝕀 k i B.⊗ nat X k)
       (f* .-Λ X)
       (g* .-Λ X)
       (B* .is-groupoid) i j k
-  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-ρ = {!!}
-  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) i .-β = {!!}
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) k .-ρ X i j =
+    isGroupoid→Cube
+      (λ j k → nat-⊗ X A.𝕀 k j)
+      (λ j k →  B.ρ (nat X k) (~ j))
+      (λ i k → nat (A.ρ X i) k)
+      (λ i k → nat X k B.⊗ nat-𝕀 k i)
+      (f* .-ρ X)
+      (g* .-ρ X)
+      (B.is-groupoid)
+      i
+      j
+      k
+  lemma (smg*nat*sq nat nat-𝕀 nat-⊗) k .-β X Y i j =
+    isGroupoid→Cube
+      (λ j k → nat-⊗ X Y k j)
+      (λ j k → nat-⊗ Y X k j)
+      (λ i k → nat (A.β X Y i) k)
+      (λ i k → B.β (nat X k) (nat Y k) i)
+      (f* .-β X Y)
+      (g* .-β X Y)
+      (B.is-groupoid)
+      i
+      j
+      k
 
-  -- (c₀₋₋ : Square c₀₀₋ c₀₁₋ c₀₋₀ c₀₋₁)
-  -- (c₁₋₋ : Square c₁₀₋ c₁₁₋ c₁₋₀ c₁₋₁)
-  -- (c₋₀₋ : Square c₀₀₋ c₁₀₋ c₋₀₀ c₋₀₁)
-  -- (c₋₁₋ : Square c₀₁₋ c₁₁₋ c₋₁₀ c₋₁₁)
-  -- (c₋₋₀ : Square c₀₋₀ c₁₋₀ c₋₀₀ c₋₁₀)
-  -- (c₋₋₁ : Square c₀₋₁ c₁₋₁ c₋₀₁ c₋₁₁)
-
-  -- SMG*Fun*Sq≡ : SMG*Nat*Sq f* g* → (f , f*) ≡ (g , g*)
-  -- SMG*Fun*Sq≡ (smg*nat*sq nat nat-𝕀 nat-⊗) =
-  --   ΣPathP (
-  --     funExt nat ,
-  --     {!!}
-  --     -- λ i → smg*fun*sq (nat-𝕀 i) (λ X Y → nat-⊗ X Y i)
-  --     -- (λ X Y Z → {!!}) {!!} {!!} {!!} {!!} {!!}
-  --   )
-
--- Goal: Square (nat-⊗ (𝕀 A*) X i) (sym (Λ B* (nat X i)))
---       (ap (λ x → nat x i) (Λ A* X))
---       (ap (λ section₁ → (B* ⊗ section₁) (nat X i)) (nat-𝕀 i))
--- ———— Boundary (wanted) —————————————————————————————————————
--- i = i0 ⊢ -Λ f* X
--- i = i1 ⊢ -Λ g* X
--- ————————————————————————————————————————————————————————————
--- X     : A
--- i     : I
--- nat-⊗ : (X₁ Y : A) →
---         Square (-⊗ f* X₁ Y) (-⊗ g* X₁ Y) (nat ((A* ⊗ X₁) Y))
---         (ap₂ (_⊗_ B*) (nat X₁) (nat Y))
--- nat-𝕀 : Square (-𝕀 f*) (-𝕀 g*) (nat (𝕀 A*)) refl
--- nat   : (X₁ : A) → f X₁ ≡ g X₁
--- g*    : SMG*Fun*Sq A* B* g
--- f*    : SMG*Fun*Sq A* B* f
--- g     : A → B
--- f     : A → B
--- B*    : SMG*Sq B
--- B     : Type ℓ
--- A*    : SMG*Sq A
--- A     : Type ℓ
--- ℓ     : Level
+  SMG*Fun*Sq≡ : SMG*Nat*Sq f* g* → (f , f*) ≡ (g , g*)
+  SMG*Fun*Sq≡ s@(smg*nat*sq nat nat-𝕀 nat-⊗) =
+    ΣPathP (funExt nat , lemma s)
