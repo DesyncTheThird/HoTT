@@ -1,0 +1,117 @@
+name: agda
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "_extensions/**"
+      - "notes/**"
+      - "theme/**"
+      - "README.md"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "_extensions/**"
+      - "notes/**"
+      - "theme/**"
+      - "README.md"
+  workflow_dispatch:
+
+env:
+  AGDA_BRANCH: v2.8.0
+  CUBICAL_BRANCH: v0.9
+
+permissions:
+  pages: write
+  id-token: write
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cache Agda artifacts
+        uses: actions/cache@v5
+        with:
+          key: ${{ env.AGDA_BRANCH }}-${{ env.CUBICAL_BRANCH }}
+          path: |
+            /tmp/cubical/_build
+            /tmp/symmetries/_build
+
+      ########################################################################
+      ## INSTALLATION STEPS
+      ########################################################################
+
+      - name: Set up cache folders
+        run: |
+          mkdir -p /tmp/cubical/
+          mkdir -p /tmp/En/
+
+      - name: Download and install Agda from github
+        run: |
+          mkdir /tmp/agda/
+          cd /tmp/agda/
+          wget -O Agda.tar.xz https://github.com/agda/agda/releases/download/${{ env.AGDA_BRANCH }}/Agda-${{ env.AGDA_BRANCH }}-linux.tar.xz
+          tar -xf Agda.tar.xz
+          chmod +x ./agda
+          ./agda --version
+          pwd >> $GITHUB_PATH
+
+      - name: Download and install the cubical library from github
+        run: |
+          git clone https://github.com/agda/cubical --branch ${{ env.CUBICAL_BRANCH }} --depth=1
+          cd cubical
+          [ -d /tmp/cubical/_build ] && cp -r /tmp/cubical/_build .
+          agda --build-library
+          cp -r _build /tmp/cubical/
+          mkdir -p ~/.agda
+          echo "$GITHUB_WORKSPACE/cubical/cubical.agda-lib" >> ~/.agda/libraries
+
+      ########################################################################
+      ## CHECKOUT
+      ########################################################################
+
+      # By default github actions do not pull the repo
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          path: En
+
+      ########################################################################
+      ## TESTING
+      ########################################################################
+
+      - name: Generate everything.agda
+        run: |
+          cd En
+          chmod +x create-everything.sh
+          ./create-everything.sh
+
+      - name: Build library
+        run: |
+          cd En
+          [ -d /tmp/En/_build ] && cp -r /tmp/En/_build .
+          agda --build-library
+          cp -r _build /tmp/En/
+
+      ########################################################################
+      ## HTML PAGE
+      ########################################################################
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Build html
+        run: |
+          cd En
+          agda --html --html-dir=public --highlight-occurrences En/index.agda
+          cp Agda.css public/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: 'En/public'
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v5
