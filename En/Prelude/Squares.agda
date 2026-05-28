@@ -7,8 +7,8 @@ private
     ℓ : Level
     A B C D E F G H : Type ℓ
 
--- postulate
---     sorry : ∀ {l} {A : Type l} → A
+postulate
+    sorry : ∀ {l} {A : Type l} → A
 
 -- foo : {a b c d : A}
 --       (p : a ≡ b)

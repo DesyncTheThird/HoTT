@@ -2,6 +2,8 @@ module En.SList.Base where
 
 open import En.Prelude
 
+infixr 30 _::_
+
 data SList {ℓ} (A : Type ℓ) : Type ℓ where
     nil : SList A
     _::_ : A → SList A → SList A
@@ -17,6 +19,9 @@ data SList {ℓ} (A : Type ℓ) : Type ℓ where
         → Square (ap (x ::_) (swap y z xs)) (sym (ap (z ::_) (swap x y xs))) (⬡₌ x y z xs) (swap x z (y :: xs))
 
     is-groupoid : isGroupoid (SList A)
+
+pattern [] = nil
+pattern [_] x = x :: nil
 
 module SListElim {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
     (nil* : P nil)
@@ -49,3 +54,25 @@ module SListElim {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
     elim (⬡₂ x y z xs i j) = ⬡₂* x y z (elim xs) i j
     elim (is-groupoid xs xs' p q r s i j k) = isGroupoid→CubeP (λ i j k → P (is-groupoid xs xs' p q r s i j k))
          (λ j k → elim (r j k)) (λ j k → elim (s j k)) (λ i k → elim (p k)) (λ i k → elim (q k)) (λ i j → elim xs) (λ i j → elim xs') (is-groupoid* xs') i j k
+
+
+module SListElimSet {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
+    (nil* : P nil)
+    (_::*_ : (x : A) {xs : SList A} → (xs* : P xs) → P (x :: xs))
+
+    (swap* : (x y : A) {xs : SList A} (xs* : P xs)
+        → PathP (λ i → P (swap x y xs i)) (x ::* (y ::* xs*)) (y ::* (x ::* xs*)))
+
+    (is-set* : (xs : SList A) → isSet (P xs))
+    where
+    elim : (xs : SList A) → P xs
+    elim =
+      SListElim.elim P nil* _::*_ swap*
+        (λ x y {xs} xs* → isSet→SquareP (λ i j → is-set* (swap² x y xs i j)) (swap* x y xs*) (symP (swap* y x xs*)) refl refl)
+        (λ x y z {xs} xs* → sorry -- compPathP (swap* x y (z ::* xs*)) (compPathP (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*))) {!!}
+        )
+        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₁ x y z xs i j)) (symP (swap* x y (z ::* xs*))) (swap* y z (x ::* xs*)) (apP (λ i₁ → y ::*_) (swap* x z xs*)) sorry)
+        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₂ x y z xs i j)) (apP (λ i → _::*_ x) (swap* y z xs*)) (symP (apP (λ i → _::*_ z) (swap* x y xs*))) sorry λ i → swap* x z (y ::* xs*) i)
+        (λ xs → isSet→isGroupoid (is-set* xs))
+
+-- PathP (λ i → P (⬡₌ x y z xs i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*)))
