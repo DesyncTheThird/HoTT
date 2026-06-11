@@ -68,13 +68,13 @@ _++_ {A = A} xs ys =
 ++-β-aux : (x y : A) (xs ys : SList A)
          → (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
          ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
-++-β-aux x y xs ys = {!!}
+++-β-aux x y xs ys = sorry
 
 ++-β : (xs ys : SList A) → xs ++ ys ≡ ys ++ xs
 ++-β xs ys =
   SListElimPaths.elim (λ _ → SList _) (_++ ys) (ys ++_)
     (sym (++-ρ ys))
     (λ x {xs} p → ap (x ::_) p ∙ ++-:: x ys xs)
-    (λ x y {xs} p → {!!})
+    (λ x y {xs} p → sorry)
     (λ _ → is-groupoid)
     xs
