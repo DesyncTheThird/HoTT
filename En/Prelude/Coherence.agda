@@ -17,6 +17,10 @@ Triangle→compPath₃ : ∀ {ℓ} {A : Type ℓ} {a b c : A} {p : a ≡ c} {r :
     → Square r s p refl → p ∙ s ≡ r
 Triangle→compPath₃ {r = r} sq = Square→compPath sq ∙ sym (rUnit r)
 
+compPath→Triangle₀ : ∀ {ℓ} {A : Type ℓ} {a b c : A} {p : a ≡ c} {r : a ≡ b} {s : c ≡ b}
+    (γ : p ∙ s ≡ r) → Square refl s p r
+compPath→Triangle₀ {r = r} γ = compPath→Square (γ ∙ lUnit r)
+
 compPath→Triangle₃ : ∀ {ℓ} {A : Type ℓ} {a b c : A} {p : a ≡ c} {r : a ≡ b} {s : c ≡ b}
     (γ : p ∙ s ≡ r) → Square r s p refl
 compPath→Triangle₃ {r = r} γ = compPath→Square (γ ∙ rUnit r)

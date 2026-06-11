@@ -76,3 +76,51 @@ module SListElimSet {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
         (λ xs → isSet→isGroupoid (is-set* xs))
 
 -- PathP (λ i → P (⬡₌ x y z xs i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*)))
+
+module SListElimProp {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
+    (nil* : P nil)
+    (_::*_ : (x : A) {xs : SList A} → (xs* : P xs) → P (x :: xs))
+    (is-prop* : (xs : SList A) → isProp (P xs))
+    where
+    elim : (xs : SList A) → P xs
+    elim =
+      SListElimSet.elim P nil* _::*_
+        (λ x y {xs} xs* → isProp→PathP (λ i → is-prop* (swap x y xs i)) (x ::* (y ::* xs*)) (y ::* (x ::* xs*)))
+        (λ xs → isProp→isSet (is-prop* xs))
+
+module SListElimPaths {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ') (f g : (xs : SList A) → P xs)
+    (nil* : f nil ≡ g nil)
+    (_::*_ : (x : A) {xs : SList A} → (H : f xs ≡ g xs) → f (x :: xs) ≡ g (x :: xs))
+    (swap* : (x y : A) {xs : SList A} (xs* : f xs ≡ g xs)
+        → PathP (λ i → f (swap x y xs i) ≡ g (swap x y xs i)) (x ::* (y ::* xs*)) (y ::* (x ::* xs*)))
+    (is-groupoid* : (xs : SList A) → isGroupoid (P xs))
+    where
+
+    elim : (xs : SList A) → f xs ≡ g xs
+    elim =
+      SListElimSet.elim (λ xs → f xs ≡ g xs) nil* _::*_ swap*
+        (λ xs → is-groupoid* xs (f xs) (g xs))
+
+module SListElimPathsSet {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ') (f g : (xs : SList A) → P xs)
+    (nil* : f nil ≡ g nil)
+    (_::*_ : (x : A) {xs : SList A} → (H : f xs ≡ g xs) → f (x :: xs) ≡ g (x :: xs))
+    (is-set* : (xs : SList A) → isSet (P xs))
+    where
+
+    elim : (xs : SList A) → f xs ≡ g xs
+    elim =
+      SListElimProp.elim (λ xs → f xs ≡ g xs) nil* _::*_ (λ xs → is-set* xs (f xs) (g xs))
+
+
+module SListElim2Paths {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
+    (f g : (xs : SList A) → P xs)
+    (p q : (xs : SList A) → f xs ≡ g xs)
+    (nil* : p nil ≡ q nil)
+    (_::*_ : (x : A) {xs : SList A} → (H : p xs ≡ q xs) → p (x :: xs) ≡ q (x :: xs))
+    (is-groupoid* : (xs : SList A) → isGroupoid (P xs))
+    where
+
+    elim : (xs : SList A) → p xs ≡ q xs
+    elim =
+      SListElimProp.elim (λ xs → p xs ≡ q xs) nil* _::*_
+        (λ xs → is-groupoid* xs (f xs) (g xs) (p xs) (q xs))

@@ -300,3 +300,62 @@ forceSquare {p = p} {q} sq = (invSquareh (compPath→Square (sym (rUnit (q ∙ p
 -- --                    ; (j = i0) → cong f p (i ∧ ~ k)
 -- --                    ; (j = i1) → cong g p (i ∨ k) })
 -- --           (H (p i) j)
+
+aMorphSquare :
+  ∀ {ℓ}
+  {A : Type ℓ}
+  {a b c d : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  → Square p q r s
+  → Square p refl (r ∙ q) s
+aMorphSquare
+  {a = a} {b} {c} {d}
+  {p = p} {q} {r} {s} sq i j =
+  hcomp
+    (λ k → (λ { (i = i0) → p j
+              ; (i = i1) → q (k ∨ j)
+              ; (j = i0) → compPath-filler r q k i
+              ; (j = i1) → s i
+              }))
+    (sq i j)
+
+yaMorphSquare :
+  ∀ {ℓ}
+  {A : Type ℓ}
+  {a b c d : A}
+  {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+  → Square p q r s
+  → Square refl q (sym p ∙ r) s
+yaMorphSquare
+  {a = a} {b} {c} {d}
+  {p = p} {q} {r} {s} sq i j =
+  hcomp
+    (λ k → (λ { (i = i0) → p (j ∨ k)
+              ; (i = i1) → q j
+              ; (j = i0) → compPath→Square ((assoc p (sym p) r) ∙ ap (_∙ r) (rCancel p) ∙ sym (lUnit r) ∙ rUnit r) k i
+              ; (j = i1) → s i
+              }))
+    (sq i j)
+
+yaaMorphSquare :
+  ∀ {ℓ}
+  {A : Type ℓ}
+  {a b c d e f : A}
+  {p : a ≡ c} {q : b ≡ d} {r : c ≡ e} {s : d ≡ f} {t : a ≡ b} {u : e ≡ f}
+  → Square (p ∙ r) (q ∙ s) t u
+  → Square r q (sym p ∙ t) (u ∙ sym s)
+yaaMorphSquare
+  {a = a} {b} {c} {d} {e} {f}
+  {p = p} {q} {r} {s} {t} {u} sq i j =
+  hcomp
+    (λ k → (λ { (i = i0) → compPath→Square (rUnit (p ∙ r)) k j
+              ; (i = i1) → compPath→Square (sym (lUnit q) ∙ rUnit q ∙ ap (q ∙_) (sym (rCancel s)) ∙ assoc q s (sym s)) k j
+              ; (j = i0) → compPath→Square ((assoc p (sym p) t) ∙ ap (_∙ t) (rCancel p) ∙ sym (lUnit t) ∙ rUnit t) k i
+              ; (j = i1) → compPath-filler u (sym s) k i
+              }))
+    (sq i j)
+
+
+tpt3 : ∀ {ℓ' ℓ'' ℓ'''} {B : Type ℓ'} {C : Type ℓ''} {x y : A} {z w : B} {s t : C} (D : A → B → C → Type ℓ''')
+        (p : x ≡ y) (q : z ≡ w) (r : s ≡ t) → D x z s → D y w t
+tpt3 B p q r b = transport (λ i → B (p i) (q i) (r i)) b
