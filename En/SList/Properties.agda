@@ -68,7 +68,40 @@ _++_ {A = A} xs ys =
 ++-β-aux : (x y : A) (xs ys : SList A)
          → (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
          ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
-++-β-aux x y xs ys = sorry
+++-β-aux {A = A} x y xs ys = SListElim2Paths.elim (λ _ → SList A)
+        (λ ys → x :: y :: ys ++ xs)
+        (λ ys → ys ++ y :: x :: xs)
+        (λ ys → (ap (_::_ x) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙
+             ap (_++_ ys) (swap x y xs)))
+        (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
+             ++-:: y ys (x :: xs)))
+        (refl ∙ (swap x y ([] ++ xs))
+          ≡⟨ sym (lUnit (swap x y ([] ++ xs))) ⟩
+        (swap x y ([] ++ xs))
+          ≡⟨ (rUnit _ ∙ rUnit _)⟩
+        (swap x y ([] ++ xs) ∙ refl) ∙ refl
+          ≡⟨ sym (assoc (swap x y ([] ++ xs)) refl refl) ⟩
+        (swap x y ([] ++ xs) ∙ refl ∙ refl)
+          ≡⟨ sym (doubleCompPath≡compPath (swap x y ([] ++ xs)) refl refl) ⟩
+        (swap x y ([] ++ xs) ∙∙ refl ∙∙ refl)
+          ∎
+        )
+
+        (λ z {zs} p →
+            let S = sorry
+                T = sorry
+                U = sorry
+                V = sorry
+            in sorry -- {!doubleCompPath≡compPath (ap (x ::_) (++-:: y (z :: zs) xs)) _ _ ∙ sym!}
+            )
+        -- ((ap (x ::_) (++-:: y (z :: zs) xs)) ∙∙ swap x z (zs ++ y :: xs) ∙ ap (z ::_) (++-:: x zs (y :: xs)) ∙∙ (ap (z ::_) (ap (zs ++_) (swap x y xs))))
+        --     ≡⟨ {!!} ⟩
+        -- (swap x y (z :: zs ++ xs) ∙∙ (ap (y ::_) (++-:: x (z :: zs) xs)) ∙∙ ++-:: y (z :: zs) (x :: xs))
+        -- ∎)
+
+        (λ _ → is-groupoid)
+        ys
+        
 
 ++-β : (xs ys : SList A) → xs ++ ys ≡ ys ++ xs
 ++-β xs ys =
