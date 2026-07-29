@@ -87,18 +87,61 @@ _++_ {A = A} xs ys =
           ∎
         )
 
-        (λ z {zs} p →
-            let S = sorry
-                T = sorry
-                U = sorry
-                V = sorry
-            in sorry -- {!doubleCompPath≡compPath (ap (x ::_) (++-:: y (z :: zs) xs)) _ _ ∙ sym!}
+        (λ z {zs} p i j → let
+            S : Square
+                (swap z x (zs ++ y :: xs))
+                refl
+                (ap (z ::_) (++-:: x zs (y :: xs)))
+                (++-:: x (z :: zs) (y :: xs))
+            S i = refl j
+            T : Square
+                (swap z x (y :: zs ++ xs))
+                (swap z x (zs ++ y :: xs))
+                (ap (λ a → z :: x :: a) (++-:: y zs xs))
+                (ap (λ a → x :: z :: a) (++-:: y zs xs))
+            T = flipSquare (compPath→Square (homotopyNatural (swap z x) (++-:: y zs xs)))
+            U : Square
+                (ap (x ::_) (swap z y (zs ++ xs)))
+                refl
+                (ap (λ a → x :: z :: a) (++-:: y zs xs))
+                (ap (x ::_) (++-:: y (z :: zs) xs))
+            U i = refl j
+            S' : Square
+                (swap z y (zs ++ x :: ys))
+                refl
+                (ap (z ::_) (++-:: y zs (x :: ys)))
+                (++-:: y (z :: zs) (x :: ys))
+            S' i = refl j
+            T' : Square
+                (swap z y (x :: zs ++ ys))
+                (swap z y (zs ++ x :: ys))
+                (ap (λ a → z :: y :: a) (++-:: x zs ys))
+                (ap (λ a → y :: z :: a) (++-:: x zs ys))
+            T' = flipSquare (compPath→Square (homotopyNatural (swap z y) (++-:: x zs ys)))
+            U' : Square
+                (ap (y ::_) (swap z x (zs ++ ys)))
+                refl --
+                (ap (λ a → y :: z :: a) (++-:: x zs ys)) -- (ap (y ::_) (++-:: x (z :: zs) ys))
+                (ap (y ::_) (++-:: x (z :: zs) ys))
+            U' i = refl j
+            V = HexagonRotate⁻ (⬡₌ z x y (zs ++ xs)) (⬡₁ z x y (zs ++ xs)) (⬡₂ z x y (zs ++ xs))
+            down : Square
+                   (swap z x (y :: zs ++ xs) ∙ ap (x ::_) (swap z y (zs ++ xs)))
+                   (swap z y (x :: zs ++ xs) ∙ ap (y ::_) (swap z x (zs ++ xs)))
+                   (ap (z ::_) (swap x y (zs ++ xs)))
+                   (swap x y (z :: zs ++ xs))
+            down = flipSquare (HexagonAssoc⁻ (V .Hexagon.⬡₁ ∙h V .Hexagon.⬡₂))
+            -- left : {!!}
+            -- left = {!!}
+            -- right : {!!}
+            -- rigft = {!!}
+            in hcomp (λ k → (λ
+                { (i = i0) → down j k
+                ; (i = i1) → ap (z :: zs ++_) (swap x y xs) k
+                ; (j = i0) → {!!}
+                ; (j = i1) → {!!}
+                })) ((z ::_) p i j)
             )
-        -- ((ap (x ::_) (++-:: y (z :: zs) xs)) ∙∙ swap x z (zs ++ y :: xs) ∙ ap (z ::_) (++-:: x zs (y :: xs)) ∙∙ (ap (z ::_) (ap (zs ++_) (swap x y xs))))
-        --     ≡⟨ {!!} ⟩
-        -- (swap x y (z :: zs ++ xs) ∙∙ (ap (y ::_) (++-:: x (z :: zs) xs)) ∙∙ ++-:: y (z :: zs) (x :: xs))
-        -- ∎)
-
         (λ _ → is-groupoid)
         ys
         
