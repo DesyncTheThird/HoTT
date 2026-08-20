@@ -1,0 +1,32 @@
+module En.Prelude.Dec where
+
+open import En.Prelude.Base
+open import Cubical.Data.Empty as ⊥
+
+private
+  variable
+    ℓ ℓ' : Level
+    A : Type ℓ
+    P : Type ℓ
+
+module _ {ℓ ℓ'} {P : Type ℓ} {A : Dec P → Type ℓ'} where
+
+  decElim : ((p : P) → A (yes p)) → ((¬p : ¬ P) → A (no ¬p))
+          → (p : Dec P) → A p
+  decElim y n (yes p) = y p
+  decElim y n (no ¬p) = n ¬p
+
+module _ {ℓ} {P : Type ℓ} (isPropP : isProp P) where
+
+  private
+    isPropDec : isProp (Dec P)
+    isPropDec (yes p) (yes q) = ap yes (isPropP p q)
+    isPropDec (yes p) (no ¬q) = ⊥.rec (¬q p)
+    isPropDec (no ¬p) (yes q) = ⊥.rec (¬p q)
+    isPropDec (no ¬p) (no ¬q) = ap no (isProp→ ⊥.isProp⊥ ¬p ¬q)
+
+  decRecYes : {A : Type ℓ} {y : P -> A} {n : ¬ P -> A} (p : P) (d : Dec P) -> decRec y n d ≡ y p
+  decRecYes {A = A} {y = y} {n = n} p = decElim (λ q -> ap y (isPropP q p)) λ ¬p -> ⊥.rec (¬p p)
+
+  decRecNo : {A : Type ℓ} {y : P -> A} {n : ¬ P -> A} (¬p : ¬ P) (d : Dec P) -> decRec y n d ≡ n ¬p
+  decRecNo {A = A} {y = y} {n = n} ¬p = decElim (λ p -> ⊥.rec (¬p p)) (λ ¬q -> ap n (isProp→ ⊥.isProp⊥ ¬q ¬p))
