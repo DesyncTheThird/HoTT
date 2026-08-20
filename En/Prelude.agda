@@ -4,6 +4,7 @@ open import En.Prelude.Base public
 open import En.Prelude.Ap public
 open import En.Prelude.Squares public
 open import En.Prelude.Coherence public
+open import En.Prelude.Dec public
 
 Eq→Square₂₃ : ∀ {ℓ} {A : Type ℓ} {a b : A} {p q : a ≡ b} (γ : p ∙ (sym q) ≡ refl)
     → Square p q refl refl
