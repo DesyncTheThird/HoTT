@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://desyncthethird.github.io/HoTT/notes/prelude.html</loc>
-    <lastmod>2026-08-20T12:38:29.992Z</lastmod>
-  </url>
-  <url>
-    <loc>https://desyncthethird.github.io/HoTT/index.html</loc>
-    <lastmod>2026-08-20T12:38:29.990Z</lastmod>
-  </url>
-  <url>
     <loc>https://desyncthethird.github.io/HoTT/about.html</loc>
-    <lastmod>2026-08-20T12:38:29.990Z</lastmod>
+    <lastmod>2026-09-24T13:07:41.191Z</lastmod>
   </url>
   <url>
     <loc>https://desyncthethird.github.io/HoTT/notes/sandbox.html</loc>
-    <lastmod>2026-08-20T12:38:29.992Z</lastmod>
+    <lastmod>2026-09-24T13:07:41.193Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/index.html</loc>
+    <lastmod>2026-09-24T13:07:41.191Z</lastmod>
+  </url>
+  <url>
+    <loc>https://desyncthethird.github.io/HoTT/notes/prelude.html</loc>
+    <lastmod>2026-09-24T13:07:41.193Z</lastmod>
   </url>
 </urlset>
