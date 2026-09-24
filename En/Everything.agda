@@ -8,3 +8,6 @@ open import En.FSMG
 
 -- spicy lists
 open import En.SList
+
+-- spicier lists
+open import En.Sn

@@ -79,25 +79,25 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
         ∙ sym (assoc (swap z y (zs ++ xs)) (swap y z (zs ++ xs)) (ap (z ::_) (++-:: y zs xs))))
         ∙ ap-∙ (x ::_) (swap z y (zs ++ xs)) (++-:: y (z :: zs) xs))
     S' : Square
-        (swap z y (zs ++ x :: ys))
+        (swap z y (zs ++ x :: xs))
         refl
-        (ap (z ::_) (++-:: y zs (x :: ys)))
-        (++-:: y (z :: zs) (x :: ys))
-    S' = compPath→Square ((sym (rUnit (ap (z ::_) (++-:: y zs (x :: ys))))) ∙ lUnit (ap (z ::_) (++-:: y zs (x :: ys))) ∙ (ap ( _∙ (ap (z ::_) (++-:: y zs (x :: ys)))) (sym (swap²-++-:: z y zs (x :: ys)))) ∙ sym (assoc (swap z y (zs ++ x :: ys)) (swap y z (zs ++ x :: ys)) (ap (z ::_) (++-:: y zs (x :: ys)))))
+        (ap (z ::_) (++-:: y zs (x :: xs)))
+        (++-:: y (z :: zs) (x :: xs))
+    S' = compPath→Square ((sym (rUnit (ap (z ::_) (++-:: y zs (x :: xs))))) ∙ lUnit (ap (z ::_) (++-:: y zs (x :: xs))) ∙ (ap ( _∙ (ap (z ::_) (++-:: y zs (x :: xs)))) (sym (swap²-++-:: z y zs (x :: xs)))) ∙ sym (assoc (swap z y (zs ++ x :: xs)) (swap y z (zs ++ x :: xs)) (ap (z ::_) (++-:: y zs (x :: xs)))))
     T' : Square
-        (swap z y (x :: zs ++ ys))
-        (swap z y (zs ++ x :: ys))
-        (ap (λ a → z :: y :: a) (++-:: x zs ys))
-        (ap (λ a → y :: z :: a) (++-:: x zs ys))
-    T' = flipSquare (compPath→Square (homotopyNatural (swap z y) (++-:: x zs ys)))
+        (swap z y (x :: zs ++ xs))
+        (swap z y (zs ++ x :: xs))
+        (ap (λ a → z :: y :: a) (++-:: x zs xs))
+        (ap (λ a → y :: z :: a) (++-:: x zs xs))
+    T' = flipSquare (compPath→Square (homotopyNatural (swap z y) (++-:: x zs xs)))
     U' : Square
-        (ap (y ::_) (swap z x (zs ++ ys)))
+        (ap (y ::_) (swap z x (zs ++ xs)))
         refl
-        (ap (λ a → y :: z :: a) (++-:: x zs ys))
-        (ap (y ::_) (++-:: x (z :: zs) ys))
-    U' = compPath→Square (sym (rUnit (ap (λ a → y :: z :: a) (++-:: x zs ys)))
-         ∙ ap (ap (y ::_)) (lUnit _ ∙ ap (_∙ (ap (z ::_) (++-:: x zs ys))) (sym (swap²-++-:: z x zs ys)) ∙ sym (assoc (swap z x (zs ++ ys)) (swap x z (zs ++ ys)) (ap (z ::_) (++-:: x zs ys))))
-         ∙ ap-∙ (y ::_) (swap z x (zs ++ ys)) (++-:: x (z :: zs) ys))
+        (ap (λ a → y :: z :: a) (++-:: x zs xs))
+        (ap (y ::_) (++-:: x (z :: zs) xs))
+    U' = compPath→Square (sym (rUnit (ap (λ a → y :: z :: a) (++-:: x zs xs)))
+         ∙ ap (ap (y ::_)) (lUnit _ ∙ ap (_∙ (ap (z ::_) (++-:: x zs xs))) (sym (swap²-++-:: z x zs xs)) ∙ sym (assoc (swap z x (zs ++ xs)) (swap x z (zs ++ xs)) (ap (z ::_) (++-:: x zs xs))))
+         ∙ ap-∙ (y ::_) (swap z x (zs ++ xs)) (++-:: x (z :: zs) xs))
     -- (z :: ++-:: x zs ys) ≡ (swap z x (zs ++ ys) ∙ ++-:: x (z :: zs) ys)
     -- ap (z ::_) (++-:: x zs ys) ≡ (swap z x (zs ++ ys) ∙ ++-:: x (z :: zs) ys)
     V : Hexagon (sym (ap (z ::_) (swap x y (zs ++ xs)))) (swap z x (y :: zs ++ xs)) (ap (x ::_) (swap z y (zs ++ xs))) (swap z y (x :: zs ++ xs)) (ap (y ::_) (swap z x (zs ++ xs))) (sym (swap x y (z :: zs ++ xs)))
@@ -114,9 +114,10 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
            refl
            (ap (λ a → z :: x :: a) (++-:: y zs xs) ∙ ap (z ::_) (++-:: x zs (y :: xs)))
            (ap (x ::_) (++-:: y (z :: zs) xs) ∙ ++-:: x (z :: zs) (y :: xs))
+
     -- left = tpt3 (Square (swap z x (y :: zs ++ xs) ∙ ap (x ::_) (swap z y (zs ++ xs)))) (sym (lUnit refl)) refl refl ((T ∙v S) ∙h (U ∙v (λ i j → (++-:: x (z :: zs) (y :: xs) ) i)))
     left = tpt (λ a →
-                Square
+                    Square
                     (swap z x (y :: zs ++ xs) ∙ ap (x ::_) (swap z y (zs ++ xs)))
                     a
                     (ap (λ a → z :: x :: a) (++-:: y zs xs) ∙ ap (z ::_) (++-:: x zs (y :: xs)))
@@ -126,81 +127,97 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
                 (((T ∙v S) ∙h (U ∙v (λ i j → (++-:: x (z :: zs) (y :: xs) ) i))))
         -- tpt3 (Square (swap z x (y :: zs ++ xs) ∙ ap (x ::_) (swap z y (zs ++ xs)))) (sym (lUnit refl)) refl refl ((T ∙v S) ∙h (U ∙v (λ i j → (++-:: x (z :: zs) (y :: xs) ) i)))
     right : Square
-            (swap z y (x :: zs ++ ys) ∙ ap (y ::_) (swap z x (zs ++ ys)))
+            (swap z y (x :: zs ++ xs) ∙ ap (y ::_) (swap z x (zs ++ xs)))
             refl
-            (ap (λ a → z :: y :: a) (++-:: x zs ys) ∙ ap (z ::_) (++-:: y zs (x :: ys)))
-            (ap (y ::_) (++-:: x (z :: zs) ys) ∙ ++-:: y (z :: zs) (x :: ys))
+            (ap (λ a → z :: y :: a) (++-:: x zs xs) ∙ ap (z ::_) (++-:: y zs (x :: xs)))
+            (ap (y ::_) (++-:: x (z :: zs) xs) ∙ ++-:: y (z :: zs) (x :: xs))
     right = tpt (λ a →
-                Square
-                    (swap z y (x :: zs ++ ys) ∙ ap (y ::_) (swap z x (zs ++ ys)))
+                    Square
+                    (swap z y (x :: zs ++ xs) ∙ ap (y ::_) (swap z x (zs ++ xs)))
                     a
-                    (ap (λ a → z :: y :: a) (++-:: x zs ys) ∙ ap (z ::_) (++-:: y zs (x :: ys)))
-                    (ap (y ::_) (++-:: x (z :: zs) ys) ∙ ++-:: y (z :: zs) (x :: ys))
+                    (ap (λ a → z :: y :: a) (++-:: x zs xs) ∙ ap (z ::_) (++-:: y zs (x :: xs)))
+                    (ap (y ::_) (++-:: x (z :: zs) xs) ∙ ++-:: y (z :: zs) (x :: xs))
                 )
                 (sym (lUnit refl))
-                ((T' ∙v S') ∙h (U' ∙v (λ i j → (++-:: y (z :: zs) (x :: ys) ) i)))
+                ((T' ∙v S') ∙h (U' ∙v (λ i j → (++-:: y (z :: zs) (x :: xs) ) i)))
 
 
-++-β-aux : (x y : A) (xs ys : SList A)
-         -- → Hexagon
-         --   (ap (x ::_) (++-:: y ys xs)) (++-:: x ys (y :: xs)) (ap (ys ++_) (swap x y xs))
-         --   (swap x y (ys ++ xs)) (ap (y ::_) (++-:: x ys xs)) (++-:: y ys (x :: xs))
-        → (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
-         ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
+    module _ (p : ((λ i → x :: ++-:: y zs xs i) ∙∙ ++-:: x zs (y :: xs) ∙∙ (λ i → zs ++ swap x y xs i)) ≡ (swap x y (zs ++ xs) ∙∙ (λ i → y :: ++-:: x zs xs i) ∙∙ ++-:: y zs (x :: xs))) where
+        E : Square
+            (ap (x ::_) (++-:: y (z :: zs) xs) ∙ ++-:: x (z :: zs) (y :: xs))
+            (ap (y ::_) (++-:: x (z :: zs) xs) ∙ ++-:: y (z :: zs) (x :: xs))
+            (swap x y (z :: zs ++ xs))
+            (ap (z :: zs ++_) (swap x y xs))
 
-++-β-aux {A = A} x y xs ys = SListElim2Paths.elim (λ _ → SList A)
-        (λ ys → x :: y :: ys ++ xs)
-        (λ ys → ys ++ y :: x :: xs)
-        (λ ys → (ap (_::_ x) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙
-             ap (_++_ ys) (swap x y xs)))
-        (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
-             ++-:: y ys (x :: xs)))
-        (refl ∙ (swap x y ([] ++ xs))
-          ≡⟨ sym (lUnit (swap x y ([] ++ xs))) ⟩
-        (swap x y ([] ++ xs))
-          ≡⟨ (rUnit _ ∙ rUnit _)⟩
-        (swap x y ([] ++ xs) ∙ refl) ∙ refl
-          ≡⟨ sym (assoc (swap x y ([] ++ xs)) refl refl) ⟩
-        (swap x y ([] ++ xs) ∙ refl ∙ refl)
-          ≡⟨ sym (doubleCompPath≡compPath (swap x y ([] ++ xs)) refl refl) ⟩
-        (swap x y ([] ++ xs) ∙∙ refl ∙∙ refl)
-          ∎
-        )
-
-        (λ z {zs} p →
-            let E = λ i j → hcomp (λ k → (λ
-                 { (i = i0) → left x y xs ys z zs j k -- down x y xs ys z zs j k
-                 ; (i = i1) → right x y xs ys z zs j k -- ap (z :: zs ++_)t (swap x y xs) k
-                 ; (j = i0) → down x y xs ys z zs i k -- {!(left x y xs ys z zs) i k!}
-                 ; (j = i1) → ap (z :: zs ++_) (swap x y xs) k -- {!right i k!}
-                 })) ((z ::_) p j i)
-            in ? -- {!!} -- compPathEq→doubleCompPathEq {!E!} -- compPathEq→doubleCompPathEq {!!}
-            -- Hexagon→doubleCompPath (HexagonRotate⁻ {!!})
-            -- (hexagon {!!} {!!} {!!})
-
-            -- (ap (x ::_) (++-:: y (z :: zs) xs))
-            -- ∙∙ ++-:: x (z :: zs) (y :: xs)
+            -- (ap (x ::_) (++-:: y (z :: zs) xs)) ∙∙ ++-:: x (z :: zs) (y :: xs)
             -- ∙∙ (ap (z ::_) zs ++ swap x y xs)
             -- ≡
             -- swap x y (z :: zs ++ xs)
             -- ∙∙ ap (y ::_) ++-:: x (z :: zs) xs
             -- ∙∙ ++-:: y (z :: zs) (x :: xs)
 
-            -- hcomp (λ k → (λ
-            --     { (i = i0) → {!(left x y xs ys z zs) j k!} -- down x y xs ys z zs j k
-            --     ; (i = i1) → {!!} -- ap (z :: zs ++_)t (swap x y xs) k
-            --     ; (j = i0) → down x y xs ys z zs j k -- {!(left x y xs ys z zs) i k!}
-            --     ; (j = i1) → ap (z :: zs ++_) (swap x y xs) k -- {!right i k!}
-            --     })) ((z ::_) p j i
-            )
-        (λ _ → is-groupoid)
-        ys
+        qux : Square {!!} {!!} {!!} {!!}
+        qux = λ i j → ap (ap (z ::_)) p i j
 
-++-β : (xs ys : SList A) → xs ++ ys ≡ ys ++ xs
-++-β xs ys =
-  SListElimPaths.elim (λ _ → SList _) (_++ ys) (ys ++_)
-    (sym (++-ρ ys))
-    (λ x {xs} p → ap (x ::_) p ∙ ++-:: x ys xs)
-    (λ x y {xs} p → ?)
-    (λ _ → is-groupoid)
-    xs
+        E i j = hcomp ((λ k → (λ
+            { (i = i0) → left j k
+            ; (i = i1) → right j k
+            ; (j = i0) → down i k
+            ; (j = i1) → ap (z :: zs ++_) (swap x y xs) i
+            }))) {!!} -- {!(Square→compPath (compPathEq→doubleCompPathEq ?) i j)!} -- (Square→compPath (compPathEq→doubleCompPathEq {!p!}) i j {!!})
+
+        -- Goal: SList A
+        -- ———— Boundary (wanted) —————————————————————————————————————
+        -- j = i0 ⊢ (ap (_::_ z) (swap x y (zs ++ xs)) i)
+        -- j = i1 ⊢ (z :: zs ++ swap x y xs i)
+        -- i = i0 ⊢ ((ap (λ a → ez :: x :: a) (++-:: y zs xs) ∙
+        --            ap (_::_ z) (++-:: x zs (y :: xs)))
+        --           j)
+        -- i = i1 ⊢ ((ap (λ a → z :: y :: a) (++-:: x zs xs) ∙
+        --            ap (_::_ z) (++-:: y zs (x :: xs)))
+        --           j)
+        -- ———— Context ———————————————————————————————————————————————
+
+
+
+
+
+
+-- ++-β-aux : (x y : A) (xs ys : SList A)
+--          -- → Hexagon
+--          --   (ap (x ::_) (++-:: y ys xs)) (++-:: x ys (y :: xs)) (ap (ys ++_) (swap x y xs))
+--          --   (swap x y (ys ++ xs)) (ap (y ::_) (++-:: x ys xs)) (++-:: y ys (x :: xs))
+--         → (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
+--          ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
+
+-- ++-β-aux {A = A} x y xs ys = SListElim2Paths.elim (λ _ → SList A)
+--         (λ ys → x :: y :: ys ++ xs)
+--         (λ ys → ys ++ y :: x :: xs)
+--         (λ ys → (ap (_::_ x) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙
+--              ap (_++_ ys) (swap x y xs)))
+--         (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
+--              ++-:: y ys (x :: xs)))
+--         (refl ∙ (swap x y ([] ++ xs))
+--           ≡⟨ sym (lUnit (swap x y ([] ++ xs))) ⟩
+--         (swap x y ([] ++ xs))
+--           ≡⟨ (rUnit _ ∙ rUnit _)⟩
+--         (swap x y ([] ++ xs) ∙ refl) ∙ refl
+--           ≡⟨ sym (assoc (swap x y ([] ++ xs)) refl refl) ⟩
+--         (swap x y ([] ++ xs) ∙ refl ∙ refl)
+--           ≡⟨ sym (doubleCompPath≡compPath (swap x y ([] ++ xs)) refl refl) ⟩
+--         (swap x y ([] ++ xs) ∙∙ refl ∙∙ refl)
+--           ∎
+--         )
+
+--         (λ z {zs} p → compPathEq→doubleCompPathEq ((assoc _ _ _) ∙ sym (Square→compPath (E x y xs ys z zs p))))
+--         (λ _ → is-groupoid)
+--         ys
+
+-- ++-β : (xs ys : SList A) → xs ++ ys ≡ ys ++ xs
+-- ++-β xs ys =
+--   SListElimPaths.elim (λ _ → SList _) (_++ ys) (ys ++_)
+--     (sym (++-ρ ys))
+--     (λ x {xs} p → ap (x ::_) p ∙ ++-:: x ys xs)
+--     (λ x y {xs} p → {!!})
+--     (λ _ → is-groupoid)
+--     xs
