@@ -2,13 +2,18 @@ module En.Sn.Quotient where
 
 open import En.Prelude
 open import En.Sn.Base
-open import Cubical.HITs.SetQuotients public
+open import Cubical.HITs.SetQuotients
+open import Cubical.Data.List hiding ( elim ; rec ) public
 
 {-
 Implementation as a set quotient
 -}
 
+infixr 10 _↙_
 
+_↙_ : ℕ → ℕ → List ℕ
+n ↙ zero = []
+n ↙ suc k = (k + n) ∷ n ↙ k
 
 infixr 4 _↝_
 
@@ -22,5 +27,14 @@ data _↝_ : List ℕ → List ℕ → Type where
 _↝ᶠ_ : {n : ℕ} → List (Fin n) → List (Fin n) → Type
 σ ↝ᶠ τ = (map fst σ) ↝ (map fst τ)
 
+-- data _* {ℓ : Level} {A : Type ℓ} (R : Rel A A ℓ) : Rel A A ℓ where
+--     reflex : (w : A) → (R *) w w
+--     trans : ∀ {u} v {w} → R u v → (R *) v w → (R *) u w
+
+
+
+
 qSym₂ : (n : SLevel) → Type₀
 qSym₂ n = List (Fin n) / _↝ᶠ_ {n}
+
+

@@ -1,7 +1,6 @@
 module En.Sn.HIT where
 
-open import En.Prelude hiding (_++_)
-
+open import En.Prelude
 
 {-
 Implementation with rewriting rules inlined into the HIT
@@ -23,7 +22,7 @@ _++_ : StairList → StairList → StairList
 [] ++ y = y
 (n ↙ a ∷ σ) ++ τ = n ↙ a ∷ (σ ++ τ)
 cancel n σ i ++ τ = cancel n (σ ++ τ) i
-swap k l m n σ i ++ τ = swap k l m n (σ ++ τ) i
+swap k l m n {p} σ i ++ τ = swap k l m n {p} (σ ++ τ) i
 braid n k σ i ++ τ = braid n k (σ ++ τ) i
 join n a b σ i ++ τ = join n a b (σ ++ τ) i
 remove n σ i ++ τ = remove n (σ ++ τ) i

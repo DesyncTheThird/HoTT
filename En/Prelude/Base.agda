@@ -25,9 +25,6 @@ open import Cubical.Data.Empty hiding ( elim ; rec ) public
 open import Cubical.Data.Nat.Order.Inductive public
 open import Cubical.Data.Nat.Order public
 open import Cubical.Relation.Binary public
-open import Cubical.Data.List hiding ( elim ; rec ) public
-
-
 
 infix 15 _≅_
 _≅_ = Iso

@@ -2,6 +2,7 @@ module En.Sn.Shift where
 
 open import En.Prelude
 open import En.Sn.Base
+open import Cubical.Data.List hiding ( elim ; rec ) public
 
 {-
 Implementation with stairs inlined into the list structure

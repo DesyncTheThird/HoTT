@@ -8,18 +8,6 @@ open import Cubical.Data.Empty as ⊥
 Implementation using decidability
 -}
 
-infixr 30 _::_
-
-data Sym₂ (n : SLevel) : Type₀ where
-    nil : Sym₂ n
-    _::_ : (k : Fin (suc n)) → Sym₂ n → Sym₂ n
-
-    cancel : (k : Fin (suc n)) (σ : Sym₂ n) → k :: k :: σ ≡ σ
-    swap : (k l : Fin (suc n)) → {p : suc (k .fst) < l .fst} → (σ : Sym₂ n) → l :: k :: σ ≡ k :: l :: σ
-    braid : (k : Fin n) → (σ : Sym₂ n)
-        → fsuc k :: finj k :: fsuc k :: σ ≡ finj k :: fsuc k :: finj k :: σ
-
-
 swapAt≠ : (n : SLevel) (k : Fin (suc n)) → (l : Fin (suc (suc n))) → Fin (suc (suc n))
 swapAt≠ n (k , ϕ) (l , ψ) =
     decRec
