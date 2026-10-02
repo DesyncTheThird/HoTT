@@ -1,12 +1,10 @@
 module En.Sn.Base where
 
-
 open import En.Prelude
-
 open import Cubical.Data.Fin.LehmerCode hiding ( encode ; decode ) renaming ( _∷_ to _▹_ )
+open import Cubical.Data.List hiding ( elim ; rec ; map ) public
 
 SLevel = ℕ
-
 
 infixr 30 _::_
 
@@ -19,20 +17,6 @@ data Sym₂ (n : SLevel) : Type where
     braid : (k : Fin n) → (σ : Sym₂ n)
         → fsuc k :: finj k :: fsuc k :: σ ≡ finj k :: fsuc k :: finj k :: σ
 
--- data _↝_ : {n m : ℕ} → List (Fin (suc n)) → List (Fin (suc m)) → Type₀ where
---     ∷-cong : {n : ℕ} (σ τ : List (Fin (suc n))) → (p : σ ↝ τ) → (k : Fin (suc n)) → (k ∷ σ) ↝ k ∷ τ
---     cancel : {n : ℕ} (k : Fin (suc n)) (σ : List (Fin (suc n))) → k ∷ k ∷ σ ↝ σ
---     swap :   {n : ℕ} (k@(a , _) l(b , _) : Fin (suc n)) → {p : suc a < b} → (σ : List (Fin (suc n))) → l ∷ k ∷ σ ↝ k ∷ l ∷ σ
---     ↙braid : {n : ℕ} (k@(a , p) : Fin n) → (σ : List (Fin (suc (suc (a + n))))) →
---       (n ↙ suc (suc a)) ++ (fsuc ((a + n , <ᵗsucm {m = a + n})) ∷ σ)
---         ↝ (_+ᶠ_ {n = {!suc a!}} {m = suc n} (a , <ᵗsucm {a}) (n , <ᵗsucm {n})) ∷ n ↙ suc (suc a) ++ σ
-
--- test : {n : ℕ} → (k@( a , b ) : Fin n) → (σ : List (Fin (suc (suc (a + n))))) →
---     (n ↙ suc (suc a)) ++ (fsuc ((a + n , <ᵗsucm {m = a + n})) ∷ σ)
---       ↝ ((a , <ᵗ-trans {n = a} {m = suc (a + n)} {k = suc (suc (a + n))} (tpt (λ x → x) (ap (λ z → a <ᵗ suc z) (+-comm n a)) ((<ᵗ-+ {n = a} {k = n}))) (<ᵗsucm {m = suc (a + n)}))) ∷ n ↙ suc (suc a) ++ σ
--- test = {!!}
-
-
 -- [] ++↙ τs = ys
 -- (x ↙ n ∷ xs) ++↙ ys = x ↙ n ∷ (xs ++↙ ys)
 
@@ -41,10 +25,8 @@ data Sym₂ (n : SLevel) : Type where
 infixr 40 _*
 
 data _* {ℓ : Level} {A : Type ℓ} (R : Rel A A ℓ) : Rel A A ℓ where
-    reflex : (w : A) → (R *) w w
+    _▣ : (w : A) → (R *) w w
     trans : ∀ u v w → R u v → (R *) v w → (R *) u w
-
-
 
 -- Sym : (n : ℕ) → Type₀
 -- Sym zero = Unit
@@ -52,11 +34,11 @@ data _* {ℓ : Level} {A : Type ℓ} (R : Rel A A ℓ) : Rel A A ℓ where
 -- Sym (suc (suc n)) = Sym₂ n
 
 baz : equivFun (Iso.inv (equivToIso lehmerEquiv) (1 ▹ 0 ▹ 1 ▹ 0 ▹ [])) ≡ (λ { (0 , tt) → 1 ; (1 , tt) → 0 ; (2 , tt) → 3 ; (3 , tt) → 2 })
-baz = funExt λ { (0 , tt) → refl ; (1 , tt) → refl ; (2 , tt) → refl ; (3 , tt) → refl}
--- baz i (zero , ϕ) = 1
--- baz i (suc zero , ϕ) = 0
--- baz i (suc (suc zero) , ϕ) = 3
--- baz i (suc (suc (suc zero)) , ϕ) = 2
+-- baz = funExt λ { (0 , tt) → refl ; (1 , tt) → refl ; (2 , tt) → refl ; (3 , tt) → refl}
+baz i (zero , ϕ) = 1
+baz i (suc zero , ϕ) = 0
+baz i (suc (suc zero) , ϕ) = 3
+baz i (suc (suc (suc zero)) , ϕ) = 2
 
 
 

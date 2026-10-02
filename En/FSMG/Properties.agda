@@ -1,5 +1,3 @@
-{-# OPTIONS --allow-unsolved-metas #-}
-
 module En.FSMG.Properties where
 
 open import En.Prelude

@@ -159,29 +159,29 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
         qux : Square {!!} {!!} {!!} {!!}
         qux = λ i j → ap (ap (z ::_)) p i j
 
+        qaa : {!!} ∙ (λ j → z :: p i1 j) ≡
+               (λ j → z :: p i0 j) ∙ (λ i → z :: p i i1)
+        qaa = Square→compPath qux
+
+        aaaa : Square {!!} {!!} {!!} {!!}
+        aaaa = doubleCompPathEq→compPathEq p
+
         E i j = hcomp ((λ k → (λ
             { (i = i0) → left j k
             ; (i = i1) → right j k
             ; (j = i0) → down i k
             ; (j = i1) → ap (z :: zs ++_) (swap x y xs) i
-            }))) {!!} -- {!(Square→compPath (compPathEq→doubleCompPathEq ?) i j)!} -- (Square→compPath (compPathEq→doubleCompPathEq {!p!}) i j {!!})
+            }))) ? -- (compPathEq→doubleCompPathEq ((assoc _ _ _) ∙ sym (Squiare→compPath {!!})) i j) -- -- (Square→compPath (compPathEq→doubleCompPathEq {!p!}) i j {!!})
 
         -- Goal: SList A
-        -- ———— Boundary (wanted) —————————————————————————————————————
-        -- j = i0 ⊢ (ap (_::_ z) (swap x y (zs ++ xs)) i)
+        -- ———— Boundary (wanted) ————————————————————————————————————— 
+        -- j = i0 ⊢ (ap (z ::_ ) (swap x y (zs ++ xs)) i)
         -- j = i1 ⊢ (z :: zs ++ swap x y xs i)
-        -- i = i0 ⊢ ((ap (λ a → ez :: x :: a) (++-:: y zs xs) ∙
-        --            ap (_::_ z) (++-:: x zs (y :: xs)))
-        --           j)
-        -- i = i1 ⊢ ((ap (λ a → z :: y :: a) (++-:: x zs xs) ∙
-        --            ap (_::_ z) (++-:: y zs (x :: xs)))
-        --           j)
+        -- i = i0 ⊢ ((ap (z :: x ::_ ) (++-:: y zs xs) ∙
+        --            ap (z ::_ ) (++-:: x zs (y :: xs))) j)
+        -- i = i1 ⊢ ((ap (z :: y ::_ ) (++-:: x zs xs) ∙
+        --            ap (z ::_ ) (++-:: y zs (x :: xs))) j)
         -- ———— Context ———————————————————————————————————————————————
-
-
-
-
-
 
 -- ++-β-aux : (x y : A) (xs ys : SList A)
 --          -- → Hexagon
@@ -197,15 +197,15 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
 --              ap (_++_ ys) (swap x y xs)))
 --         (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
 --              ++-:: y ys (x :: xs)))
---         (refl ∙ (swap x y ([] ++ xs))
---           ≡⟨ sym (lUnit (swap x y ([] ++ xs))) ⟩
---         (swap x y ([] ++ xs))
+--         (refl ∙ (swap x y (nil ++ xs))
+--           ≡⟨ sym (lUnit (swap x y (nil ++ xs))) ⟩
+--         (swap x y (nil ++ xs))
 --           ≡⟨ (rUnit _ ∙ rUnit _)⟩
---         (swap x y ([] ++ xs) ∙ refl) ∙ refl
---           ≡⟨ sym (assoc (swap x y ([] ++ xs)) refl refl) ⟩
---         (swap x y ([] ++ xs) ∙ refl ∙ refl)
---           ≡⟨ sym (doubleCompPath≡compPath (swap x y ([] ++ xs)) refl refl) ⟩
---         (swap x y ([] ++ xs) ∙∙ refl ∙∙ refl)
+--         (swap x y (nil ++ xs) ∙ refl) ∙ refl
+--           ≡⟨ sym (assoc (swap x y (nil ++ xs)) refl refl) ⟩
+--         (swap x y (nil ++ xs) ∙ refl ∙ refl)
+--           ≡⟨ sym (doubleCompPath≡compPath (swap x y (nil ++ xs)) refl refl) ⟩
+--         (swap x y (nil ++ xs) ∙∙ refl ∙∙ refl)
 --           ∎
 --         )
 
