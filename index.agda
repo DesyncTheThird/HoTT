@@ -15,5 +15,14 @@ open import En.SList
 -- spicier lists
 open import En.Sn
 
+-- univalent universes
+open import En.Univ
+
+-- deloopings of automorphism groups
+open import En.BAut
+
+-- universe of finite types
+open import En.UFin
+
 -- all modules
 open import En.Everything
