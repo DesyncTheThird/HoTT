@@ -23,10 +23,10 @@ permissions:
 
 jobs:
   typecheck:
-    name: typecheck (${{ matrix.prover }} ${{ matrix.release }}, cubical ${{ matrix.cubical }})
+    name: typecheck (${{ matrix.prover }} ${{ matrix.release }}, cubical ${{ matrix.cubical }})${{ matrix.required && ' required' || '' }}
     runs-on: ubuntu-latest
-    # we just want one toolchain to work
-    continue-on-error: true
+    # only required combinations can fail the workflow
+    continue-on-error: ${{ !matrix.required }}
     strategy:
       fail-fast: false
       matrix:
@@ -37,6 +37,16 @@ jobs:
         exclude:
           - prover: mikan
             release: stable
+        # failures here are real errors, others are warnings
+        include:
+          - prover: agda
+            release: stable
+            cubical: nightly
+            required: true
+          - prover: agda
+            release: nightly
+            cubical: nightly
+            required: true
     env:
       GH_TOKEN: ${{ github.token }}
 
@@ -93,11 +103,12 @@ jobs:
 
       - name: Build library
         id: build
+        continue-on-error: ${{ !matrix.required }}
         run: ${{ matrix.prover }} --build-library
 
       # keep cache even if typechecking fails
       - name: Save build
-        if: always() && steps.build.outcome != 'skipped' && steps.build-cache.outputs.cache-hit != 'true'
+        if: steps.build.outcome != 'skipped' && steps.build-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v6
         with:
           path: _build
@@ -108,16 +119,27 @@ jobs:
       ########################################################################
 
       - name: Build html
+        id: html
+        if: steps.build.outcome == 'success'
+        continue-on-error: ${{ !matrix.required }}
         run: |
           ${{ matrix.prover }} --html --html-dir=public --highlight-occurrences En/index.agda
           cp Agda.css public/
 
       - name: Upload html
+        if: steps.html.outcome == 'success'
         uses: actions/upload-artifact@v7
         with:
           name: html-${{ matrix.prover }}-${{ matrix.release }}-${{ matrix.cubical }}
           path: public
           retention-days: 7
+
+      - name: Report failure
+        if: ${{ !matrix.required && (steps.build.outcome == 'failure' || steps.html.outcome == 'failure') }}
+        run: |
+          msg="does not typecheck with ${{ matrix.prover }} ${{ env.PROVER_VERSION }}, cubical ${{ env.CUBICAL_VERSION }}"
+          echo "::warning::$msg"
+          echo "$msg" >> "$GITHUB_STEP_SUMMARY"
 
   result:
     needs: typecheck
@@ -132,8 +154,8 @@ jobs:
           pattern: html-*
           path: html
 
-      # pass if at least one pairing typechecked
-      - name: Check toolchain pairings
+      # pass if all required combinations and at least one overall typechecked
+      - name: Check toolchain combinations
         run: |
           {
             echo "| prover | version | cubical | result |"
@@ -149,6 +171,10 @@ jobs:
             fi
             echo "| ${combo//-/ | } | $result |" >> "$GITHUB_STEP_SUMMARY"
           done
+          if [ "${{ needs.typecheck.result }}" != success ]; then
+            echo "::error::a required prover/cubical combination failed"
+            exit 1
+          fi
           if [ -z "$chosen" ]; then
             echo "::error::no prover/cubical combination typechecked"
             exit 1
