@@ -24,7 +24,7 @@ BAut≡ _ _ = Σ≡PropEquiv λ _ → isPropPropTrunc
 ΩBAut≃Aut T = El≡≃ (BAutUUniv T)
 
 isPathConnectedBAut : {T : Type ℓ} (X Y : BAut T) → ∥ X ≡ Y ∥₁
-isPathConnectedBAut X Y = PT.map2 (λ e e' → BAut≡ X Y .fst (ua (invEquiv e ∙ₑ e'))) (X .snd) (Y .snd)
+isPathConnectedBAut X Y = PT.map2 (λ e e' → –> (BAut≡ X Y) (ua (e ⁻¹ₑ ∙ₑ e'))) (X .snd) (Y .snd)
 
 isConnectedBAut : (T : Type ℓ) → isConnected 2 (BAut T)
 isConnectedBAut T = ∣ pt (BAut∙ T) ∣ₕ , Trunc.elim (λ _ → isOfHLevelSuc 1 (isOfHLevelTrunc 2 _ _))

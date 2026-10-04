@@ -20,10 +20,10 @@ module _ (𝒰 : UUniv ℓ ℓ') where
   El≡≃ = _ , 𝒰 .snd _ _
 
   pathToEquivEl : {X Y : 𝒰.U} → X ≡ Y → 𝒰.El X ≃ 𝒰.El Y
-  pathToEquivEl = El≡≃ .fst
+  pathToEquivEl = –> El≡≃
 
   uaEl : {X Y : 𝒰.U} → 𝒰.El X ≃ 𝒰.El Y → X ≡ Y
-  uaEl = invEq El≡≃
+  uaEl = <– El≡≃
 
   uaElβ : {X Y : 𝒰.U} (e : 𝒰.El X ≃ 𝒰.El Y) → pathToEquivEl (uaEl e) ≡ e
   uaElβ = secEq El≡≃
@@ -32,7 +32,7 @@ module _ (𝒰 : UUniv ℓ ℓ') where
   uaElη = retEq El≡≃
 
   pathToEquivElInj : {X Y : 𝒰.U} {p q : X ≡ Y} → pathToEquivEl p ≡ pathToEquivEl q → p ≡ q
-  pathToEquivElInj = invEq (congEquiv El≡≃)
+  pathToEquivElInj = <– (congEquiv El≡≃)
 
   pathToEquivEl-refl : {X : 𝒰.U} → pathToEquivEl (refl {x = X}) ≡ idEquiv (𝒰.El X)
   pathToEquivEl-refl = pathToEquivRefl
@@ -46,7 +46,7 @@ module _ (𝒰 : UUniv ℓ ℓ') where
 
   isOfHLevelU : (n : HLevel) → ((X : 𝒰.U) → isOfHLevel n (𝒰.El X)) → isOfHLevel (suc n) 𝒰.U
   isOfHLevelU n hEl = isOfHLevelPath'⁻ n λ X Y →
-    isOfHLevelRespectEquiv n (invEquiv El≡≃) (isOfHLevel≃ n (hEl X) (hEl Y))
+    isOfHLevelRespectEquiv n (El≡≃ ⁻¹ₑ) (isOfHLevel≃ n (hEl X) (hEl Y))
 
 -- Type is a univalent universe
 
