@@ -10,13 +10,18 @@ permissions:
 
 jobs:
   setup:
-    name: setup (agda ${{ matrix.agda }}, cubical ${{ matrix.cubical }})
+    name: setup (${{ matrix.prover }} ${{ matrix.release }}, cubical ${{ matrix.cubical }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        agda: [stable, nightly, mikan]
+        prover: [agda, mikan]
+        release: [stable, nightly]
         cubical: [stable, nightly]
+        # mikan has no releases
+        exclude:
+          - prover: mikan
+            release: stable
     env:
       GH_TOKEN: ${{ github.token }}
 
@@ -26,7 +31,7 @@ jobs:
 
       - name: Resolve versions
         id: resolve
-        run: .github/scripts/setup-toolchain.sh --resolve-only ${{ matrix.agda }} ${{ matrix.cubical }}
+        run: .github/scripts/setup-toolchain.sh --resolve-only --prover=${{ matrix.prover }} --release=${{ matrix.release }} --cubical=${{ matrix.cubical }}
 
       - name: Look up cached toolchain
         id: lookup
@@ -38,7 +43,7 @@ jobs:
 
       - name: Set up GHC
         id: ghc
-        if: matrix.agda == 'mikan' && steps.lookup.outputs.cache-hit != 'true'
+        if: matrix.prover == 'mikan' && steps.lookup.outputs.cache-hit != 'true'
         uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.12"
@@ -49,13 +54,13 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ steps.ghc.outputs.cabal-store }}
-          key: cabal-store-mikan-${{ steps.ghc.outputs.ghc-version }}-${{ matrix.cubical }}-${{ github.run_id }}
-          restore-keys: cabal-store-mikan-${{ steps.ghc.outputs.ghc-version }}-
+          key: cabal-store/mikan/ghc-${{ steps.ghc.outputs.ghc-version }}/${{ github.run_id }}
+          restore-keys: cabal-store/mikan/ghc-${{ steps.ghc.outputs.ghc-version }}/
 
-      - name: Install agda and cubical
+      - name: Install prover and cubical
         id: install
         if: steps.lookup.outputs.cache-hit != 'true'
-        run: .github/scripts/setup-toolchain.sh ${{ matrix.agda }} ${{ matrix.cubical }}
+        run: .github/scripts/setup-toolchain.sh --prover=${{ matrix.prover }} --release=${{ matrix.release }} --cubical=${{ matrix.cubical }}
 
       - name: Save toolchain
         if: steps.lookup.outputs.cache-hit != 'true'
