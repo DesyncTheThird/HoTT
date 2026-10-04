@@ -28,10 +28,10 @@ UFin≃ΣBAut = isoToEquiv i
   where
     open Iso
     i : Iso UFin (Σ[ n ∈ ℕ ] BAut (Fin n))
-    i .fun (X , n , t) = n , X , PT.map invEquiv t
-    i .inv (n , X , t) = X , n , PT.map invEquiv t
-    i .sec (n , X , t) j = n , X , squash₁ (PT.map invEquiv (PT.map invEquiv t)) t j
-    i .ret (X , n , t) j = X , n , squash₁ (PT.map invEquiv (PT.map invEquiv t)) t j
+    i .fun (X , n , t) = n , X , PT.map _⁻¹ₑ t
+    i .inv (n , X , t) = X , n , PT.map _⁻¹ₑ t
+    i .sec (n , X , t) j = n , X , squash₁ (PT.map _⁻¹ₑ (PT.map _⁻¹ₑ t)) t j
+    i .ret (X , n , t) j = X , n , squash₁ (PT.map _⁻¹ₑ (PT.map _⁻¹ₑ t)) t j
 
 Fin≃→≡ : {m n : ℕ} → Fin m ≃ Fin n → m ≡ n
 Fin≃→≡ e = cardEquiv (FinU _) (FinU _) ∣ e ∣₁
@@ -187,14 +187,14 @@ module _ {ℓ} {A B C D : Type ℓ} where
 
   -- assocl₊-dist-dist⟷₂l
   ×-distribʳ-assoc : Path ((A ⊎ (B ⊎ C)) × D ≃ ((A × D) ⊎ (B × D)) ⊎ (C × D))
-    (≃-× (invEquiv ⊎-assoc-≃) (idEquiv D) ∙ₑ ×-distribʳ≃ ∙ₑ ⊎-equiv ×-distribʳ≃ (idEquiv _))
-    (×-distribʳ≃ ∙ₑ ⊎-equiv (idEquiv _) ×-distribʳ≃ ∙ₑ invEquiv ⊎-assoc-≃)
+    (≃-× (⊎-assoc-≃ ⁻¹ₑ) (idEquiv D) ∙ₑ ×-distribʳ≃ ∙ₑ ⊎-equiv ×-distribʳ≃ (idEquiv _))
+    (×-distribʳ≃ ∙ₑ ⊎-equiv (idEquiv _) ×-distribʳ≃ ∙ₑ ⊎-assoc-≃ ⁻¹ₑ)
   ×-distribʳ-assoc = equivEq (×-η (⊎-η refl (⊎-η refl refl)))
 
   -- assocl⋆-distl⟷₂l
   ×-distribˡ-assoc : Path (A × (B × (C ⊎ D)) ≃ ((A × B) × C) ⊎ ((A × B) × D))
-    (invEquiv Σ-assoc-≃ ∙ₑ ×-distribˡ≃)
-    (≃-× (idEquiv A) ×-distribˡ≃ ∙ₑ ×-distribˡ≃ ∙ₑ ⊎-equiv (invEquiv Σ-assoc-≃) (invEquiv Σ-assoc-≃))
+    (Σ-assoc-≃ ⁻¹ₑ ∙ₑ ×-distribˡ≃)
+    (≃-× (idEquiv A) ×-distribˡ≃ ∙ₑ ×-distribˡ≃ ∙ₑ ⊎-equiv (Σ-assoc-≃ ⁻¹ₑ) (Σ-assoc-≃ ⁻¹ₑ))
   ×-distribˡ-assoc = equivEq (×-η (funExt λ _ → ×-η (funExt λ _ → ⊎-η refl refl)))
 
   -- absorbr0-absorbl0⟷₂
@@ -216,12 +216,12 @@ module _ {ℓ} {A B C D : Type ℓ} where
 
   -- absorbr⟷₂[assocl⋆◎[absorbr⊗id⟷]]◎absorbr
   ×-zeroˡ-assoc : Path (⊥* {ℓ} × (A × B) ≃ ⊥*)
-    ×-zeroˡ≃ (invEquiv Σ-assoc-≃ ∙ₑ ≃-× ×-zeroˡ≃ (idEquiv B) ∙ₑ ×-zeroˡ≃)
+    ×-zeroˡ≃ (Σ-assoc-≃ ⁻¹ₑ ∙ₑ ≃-× ×-zeroˡ≃ (idEquiv B) ∙ₑ ×-zeroˡ≃)
   ×-zeroˡ-assoc = equivEq (×-η ⊥*-η)
 
   -- [id⟷⊗absorbr]◎absorbl⟷₂assocl⋆◎[absorbl⊗id⟷]◎absorbr
   ×-zero-assoc : Path (A × (⊥* {ℓ} × B) ≃ ⊥*)
-    (≃-× (idEquiv A) ×-zeroˡ≃ ∙ₑ ×-zeroʳ≃) (invEquiv Σ-assoc-≃ ∙ₑ ≃-× ×-zeroʳ≃ (idEquiv B) ∙ₑ ×-zeroˡ≃)
+    (≃-× (idEquiv A) ×-zeroˡ≃ ∙ₑ ×-zeroʳ≃) (Σ-assoc-≃ ⁻¹ₑ ∙ₑ ≃-× ×-zeroʳ≃ (idEquiv B) ∙ₑ ×-zeroˡ≃)
   ×-zero-assoc = equivEq (×-η (funExt λ _ → ×-η ⊥*-η))
 
   -- elim⊥-A[0⊕B]⟷₂l
@@ -235,8 +235,8 @@ module _ {ℓ} {A B C D : Type ℓ} where
 
   -- fully-distribute⟷₂l
   ×-distrib-full : Path ((A ⊎ B) × (C ⊎ D) ≃ (((A × C) ⊎ (B × C)) ⊎ (A × D)) ⊎ (B × D))
-    (×-distribˡ≃ ∙ₑ ⊎-equiv ×-distribʳ≃ ×-distribʳ≃ ∙ₑ invEquiv ⊎-assoc-≃)
-    (×-distribʳ≃ ∙ₑ ⊎-equiv ×-distribˡ≃ ×-distribˡ≃ ∙ₑ invEquiv ⊎-assoc-≃
+    (×-distribˡ≃ ∙ₑ ⊎-equiv ×-distribʳ≃ ×-distribʳ≃ ∙ₑ ⊎-assoc-≃ ⁻¹ₑ)
+    (×-distribʳ≃ ∙ₑ ⊎-equiv ×-distribˡ≃ ×-distribˡ≃ ∙ₑ ⊎-assoc-≃ ⁻¹ₑ
      ∙ₑ ⊎-equiv ⊎-assoc-≃ (idEquiv _) ∙ₑ ⊎-equiv (⊎-equiv (idEquiv _) ⊎-swap-≃) (idEquiv _)
-     ∙ₑ ⊎-equiv (invEquiv ⊎-assoc-≃) (idEquiv _))
+     ∙ₑ ⊎-equiv (⊎-assoc-≃ ⁻¹ₑ) (idEquiv _))
   ×-distrib-full = equivEq (×-η (⊎-η (funExt λ _ → ⊎-η refl refl) (funExt λ _ → ⊎-η refl refl)))

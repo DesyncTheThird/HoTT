@@ -35,5 +35,17 @@ open import Cubical.Relation.Binary public
 infix 15 _≅_
 _≅_ = Iso
 
+-- forward and backward maps of an equivalence
+–> : ∀ {ℓ ℓ'} {A : Type ℓ} {B : Type ℓ'} → A ≃ B → A → B
+–> = equivFun
+
+<– : ∀ {ℓ ℓ'} {A : Type ℓ} {B : Type ℓ'} → A ≃ B → B → A
+<– = invEq
+
+-- inverse of an equivalence
+infix 40 _⁻¹ₑ
+_⁻¹ₑ : ∀ {ℓ ℓ'} {A : Type ℓ} {B : Type ℓ'} → A ≃ B → B ≃ A
+_⁻¹ₑ = invEquiv
+
 postulate
     sorry : ∀ {ℓ : Level} {A : Type ℓ} → A
