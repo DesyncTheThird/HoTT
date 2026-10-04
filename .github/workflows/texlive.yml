@@ -1,0 +1,19 @@
+name: texlive
+on:
+  # keeps the texlive cache warm
+  schedule:
+    - cron: "7 6 */6 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  touch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup TeX Live
+        uses: zauguin/install-texlive@v4
+        with:
+          packages: scheme-full
