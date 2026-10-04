@@ -90,7 +90,19 @@ fi
 git -C "$dir/cubical" init -q
 git -C "$dir/cubical" fetch -q --depth=1 https://github.com/agda/cubical "$cubical_ref"
 git -C "$dir/cubical" checkout -q FETCH_HEAD
-(cd "$dir/cubical" && "$dir/bin/agda" --build-library)
+if ! (cd "$dir/cubical" && "$dir/bin/agda" --build-library); then
+  # keep what built, then try only the imported modules
+  echo "::warning::cubical $cubical_version does not fully typecheck with $agda_version"
+  repo=${GITHUB_WORKSPACE:-$PWD}
+  grep -rhoE 'import[[:space:]]+Cubical(\.[^[:space:]();]+)+' "$repo/En" \
+    | awk '{ print $2 }' | sort -u \
+    | while read -r module; do
+        file=$(find "$dir/cubical" -path "$dir/cubical/${module//.//}.*agda" | head -n 1)
+        [[ -n $file ]] || continue
+        (cd "$dir/cubical" && "$dir/bin/agda" "$file" > /dev/null) \
+          || echo "::warning::failed to typecheck $module"
+      done
+fi
 
 cat > "$dir/versions.env" <<EOV
 AGDA_VERSION=$agda_version
