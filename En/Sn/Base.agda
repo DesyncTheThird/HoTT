@@ -1,6 +1,7 @@
 module En.Sn.Base where
 
 open import En.Prelude
+open Finℕ
 open import Cubical.Data.Fin.LehmerCode hiding ( encode ; decode ) renaming ( _∷_ to _▹_ )
 open import Cubical.Data.List hiding ( elim ; rec ; map ) public
 
@@ -91,4 +92,3 @@ infixr 4 _+ᶠ_
 _+ᶠ_ : {n m : ℕ} → Fin n → Fin m → Fin (n + m)
 -- _+ᶠ_ {n} {m} (a , p) (b , q) = b , +-monotone 0 n b m p q -- <ᵗ-trans {n = b}
 _+ᶠ_ {n} {m} (a , p) (b , q) = a + b , +-monotone a n b m p q
-

@@ -1,6 +1,7 @@
 module En.Sn.HIT where
 
 open import En.Prelude
+open Finℕ
 open import En.Sn.Base
 open import Cubical.Data.Sigma
 open import Cubical.HITs.PropositionalTruncation.Base

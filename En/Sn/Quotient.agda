@@ -1,6 +1,7 @@
 module En.Sn.Quotient where
 
 open import En.Prelude
+open Finℕ
 open import En.Sn.Base
 open import Cubical.HITs.SetQuotients
 open import Cubical.Data.List hiding ( elim ; rec ) public
@@ -46,11 +47,3 @@ _↝ᶠ_ : {n : ℕ} → List (Fin n) → List (Fin n) → Type
 
 qSym₂ : (n : SLevel) → Type₀
 qSym₂ n = List (Fin n) / _↝ᶠ_ {n}
-
-
-
-
-
-
-
-
