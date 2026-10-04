@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        agda: [stable, nightly]
+        agda: [stable, nightly, mikan]
         cubical: [stable, nightly]
     env:
       GH_TOKEN: ${{ github.token }}
@@ -51,6 +51,13 @@ jobs:
           key: toolchain-${{ matrix.agda }}-${{ matrix.cubical }}-
           restore-keys: toolchain-${{ matrix.agda }}-${{ matrix.cubical }}-
 
+      - name: Set up GHC on cache miss
+        if: matrix.agda == 'mikan' && steps.toolchain.outputs.cache-matched-key == ''
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "9.12"
+          cabal-version: latest
+
       - name: Install agda and cubical on cache miss
         id: install
         if: steps.toolchain.outputs.cache-matched-key == ''
@@ -65,9 +72,7 @@ jobs:
           key: ${{ steps.install.outputs.key }}
 
       - name: Use toolchain
-        run: |
-          .github/scripts/use-toolchain.sh
-          ~/toolchain/bin/agda --version
+        run: .github/scripts/use-toolchain.sh
 
       ########################################################################
       ## TESTING
@@ -130,7 +135,7 @@ jobs:
             echo "|---|---|---|"
           } >> "$GITHUB_STEP_SUMMARY"
           chosen=
-          for pair in stable-stable stable-nightly nightly-stable nightly-nightly; do
+          for pair in stable-stable stable-nightly nightly-stable nightly-nightly mikan-stable mikan-nightly; do
             if [ -d "html/html-$pair" ]; then
               result=pass
               chosen=${chosen:-$pair}
