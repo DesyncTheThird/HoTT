@@ -101,6 +101,9 @@ jobs:
           key: build/${{ matrix.prover }}-${{ matrix.release }}/cubical-${{ matrix.cubical }}/${{ matrix.prover }}-${{ env.PROVER_VERSION }}+cubical-${{ env.CUBICAL_VERSION }}/${{ github.sha }}
           restore-keys: build/${{ matrix.prover }}-${{ matrix.release }}/cubical-${{ matrix.cubical }}/${{ matrix.prover }}-${{ env.PROVER_VERSION }}+cubical-${{ env.CUBICAL_VERSION }}/
 
+      - name: Generate Everything
+        run: .github/scripts/gen-everything.sh > En/Everything.agda
+
       - name: Build library
         id: build
         continue-on-error: ${{ !matrix.required }}
