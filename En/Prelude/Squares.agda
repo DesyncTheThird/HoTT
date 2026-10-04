@@ -155,3 +155,19 @@ compPathEq→doubleCompPathEq :
     {p : a ≡ b} {q : b ≡ c} {r : c ≡ d} {s : a ≡ e} {t : e ≡ f} {u : f ≡ d}
     → p ∙ q ∙ r ≡ s ∙ t ∙ u → (p ∙∙ q ∙∙ r) ≡ (s ∙∙ t ∙∙ u)
 compPathEq→doubleCompPathEq {p = p} {q} {r} {s} {t} {u} P = doubleCompPath≡compPath p q r ∙ P ∙ sym (doubleCompPath≡compPath s t u)
+
+compPath→Square₁ : ∀ {ℓ} {A : Type ℓ} {a b c d : A} {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+    (γ : q ≡ sym r ∙ p ∙ s) → Square p q r s
+compPath→Square₁ {p = p} {q} {r} {s} γ = compPath→Square
+  (ap (r ∙_) γ ∙ assoc r (sym r) (p ∙ s) ∙ ap (_∙ (p ∙ s)) (rCancel r) ∙ sym (lUnit (p ∙ s)))
+
+compPath→Square₂ : ∀ {ℓ} {A : Type ℓ} {a b c d : A} {p : a ≡ b} {q : c ≡ d} {r : a ≡ c} {s : b ≡ d}
+    (γ : r ≡ p ∙ s ∙ sym q) → Square p q r s
+compPath→Square₂ {p = p} {q} {r} {s} γ = compPath→Square
+  (ap (_∙ q) γ ∙ sym (assoc p (s ∙ sym q) q)
+  ∙ ap (p ∙_) (sym (assoc s (sym q) q) ∙ ap (s ∙_) (lCancel q) ∙ sym (rUnit s)))
+
+compPath≡refl→≡sym : ∀ {ℓ} {A : Type ℓ} {a b : A} {p : a ≡ b} {q : b ≡ a}
+    (γ : p ∙ q ≡ refl) → p ≡ sym q
+compPath≡refl→≡sym {p = p} {q} γ =
+  rUnit p ∙ ap (p ∙_) (sym (rCancel q)) ∙ assoc p q (sym q) ∙ ap (_∙ sym q) γ ∙ sym (lUnit (sym q))
