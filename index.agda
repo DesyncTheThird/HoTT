@@ -1,4 +1,4 @@
-module En.index where
+module index where
 
 -- prelude
 open import En.Prelude

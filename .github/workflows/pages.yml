@@ -1,0 +1,69 @@
+name: pages
+on:
+  # combine the latest quarto and agda builds on main
+  workflow_run:
+    workflows: [quarto, agda]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # skip failed upstream runs
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Download quarto site and agda html
+        run: |
+          latest() {
+            gh run list -R "$GITHUB_REPOSITORY" --workflow "$1" --branch main --status success \
+              -L 1 --json databaseId -q '.[0].databaseId'
+          }
+          quarto_run=$(latest quarto)
+          if [ -z "$quarto_run" ]; then
+            echo "::error::no successful quarto run on main"
+            exit 1
+          fi
+          gh run download "$quarto_run" -R "$GITHUB_REPOSITORY" -n quarto-site -D site
+          echo "quarto site from run $quarto_run" >> "$GITHUB_STEP_SUMMARY"
+          agda_run=$(latest agda)
+          if [ -z "$agda_run" ]; then
+            echo "::warning::no successful agda run on main, publishing without agda html"
+            exit 0
+          fi
+          gh run download "$agda_run" -R "$GITHUB_REPOSITORY" -n agda-html -D site/agda
+          echo "agda html from run $agda_run" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
