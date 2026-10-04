@@ -18,96 +18,139 @@ on:
       - "README.md"
   workflow_dispatch:
 
-env:
-  AGDA_BRANCH: v2.8.0
-  CUBICAL_BRANCH: v0.9
-
 permissions:
-  pages: write
-  id-token: write
+  contents: read
 
 jobs:
   typecheck:
+    name: typecheck (agda ${{ matrix.agda }}, cubical ${{ matrix.cubical }})
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
+    # we just want one toolchain to work
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        agda: [stable, nightly]
+        cubical: [stable, nightly]
+    env:
+      GH_TOKEN: ${{ github.token }}
 
     steps:
-      - name: Cache Agda artifacts
-        uses: actions/cache@v5
-        with:
-          key: ${{ env.AGDA_BRANCH }}-${{ env.CUBICAL_BRANCH }}
-          path: |
-            /tmp/cubical/_build
-            /tmp/symmetries/_build
-
-      ########################################################################
-      ## INSTALLATION STEPS
-      ########################################################################
-
-      - name: Set up cache folders
-        run: |
-          mkdir -p /tmp/cubical/
-          mkdir -p /tmp/En/
-
-      - name: Download and install Agda from github
-        run: |
-          mkdir /tmp/agda/
-          cd /tmp/agda/
-          wget -O Agda.tar.xz https://github.com/agda/agda/releases/download/${{ env.AGDA_BRANCH }}/Agda-${{ env.AGDA_BRANCH }}-linux.tar.xz
-          tar -xf Agda.tar.xz
-          chmod +x ./agda
-          ./agda --version
-          pwd >> $GITHUB_PATH
-
-      - name: Download and install the cubical library from github
-        run: |
-          git clone https://github.com/agda/cubical --branch ${{ env.CUBICAL_BRANCH }} --depth=1
-          cd cubical
-          [ -d /tmp/cubical/_build ] && cp -r /tmp/cubical/_build .
-          agda --build-library
-          cp -r _build /tmp/cubical/
-          mkdir -p ~/.agda
-          echo "$GITHUB_WORKSPACE/cubical/cubical.agda-lib" >> ~/.agda/libraries
-
-      ########################################################################
-      ## CHECKOUT
-      ########################################################################
-
-      # By default github actions do not pull the repo
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
+
+      ########################################################################
+      ## TOOLCHAIN
+      ########################################################################
+
+      - name: Restore toolchain
+        id: toolchain
+        uses: actions/cache/restore@v6
         with:
-          path: En
+          path: ~/toolchain
+          key: toolchain-${{ matrix.agda }}-${{ matrix.cubical }}-
+          restore-keys: toolchain-${{ matrix.agda }}-${{ matrix.cubical }}-
+
+      - name: Install agda and cubical on cache miss
+        if: steps.toolchain.outputs.cache-matched-key == ''
+        run: .github/scripts/setup-toolchain.sh ${{ matrix.agda }} ${{ matrix.cubical }}
+
+      - name: Use toolchain
+        run: |
+          .github/scripts/use-toolchain.sh
+          ~/toolchain/bin/agda --version
 
       ########################################################################
       ## TESTING
       ########################################################################
 
+      - name: Cache build
+        uses: actions/cache@v6
+        with:
+          path: _build
+          key: en-${{ matrix.agda }}-${{ matrix.cubical }}-${{ env.AGDA_VERSION }}-${{ env.CUBICAL_VERSION }}-${{ github.sha }}
+          restore-keys: en-${{ matrix.agda }}-${{ matrix.cubical }}-${{ env.AGDA_VERSION }}-${{ env.CUBICAL_VERSION }}-
+
       - name: Build library
-        run: |
-          cd En
-          [ -d /tmp/En/_build ] && cp -r /tmp/En/_build .
-          agda --build-library
-          cp -r _build /tmp/En/
+        run: agda --build-library
 
       ########################################################################
-      ## HTML PAGE
+      ## HTML
       ########################################################################
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
 
       - name: Build html
         run: |
-          cd En
           agda --html --html-dir=public --highlight-occurrences En/index.agda
           cp Agda.css public/
 
-      - name: Upload artifact
+      - name: Upload html
+        uses: actions/upload-artifact@v7
+        with:
+          name: html-${{ matrix.agda }}-${{ matrix.cubical }}
+          path: public
+          retention-days: 7
+
+  result:
+    needs: typecheck
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download html
+        uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          pattern: html-*
+          path: html
+
+      # pass if at least one pairing typechecked
+      - name: Check toolchain pairings
+        run: |
+          {
+            echo "| agda | cubical | result |"
+            echo "|---|---|---|"
+          } >> "$GITHUB_STEP_SUMMARY"
+          chosen=
+          for pair in stable-stable stable-nightly nightly-stable nightly-nightly; do
+            if [ -d "html/html-$pair" ]; then
+              result=pass
+              chosen=${chosen:-$pair}
+            else
+              result=fail
+            fi
+            echo "| ${pair%-*} | ${pair#*-} | $result |" >> "$GITHUB_STEP_SUMMARY"
+          done
+          if [ -z "$chosen" ]; then
+            echo "::error::no agda/cubical pairing typechecked"
+            exit 1
+          fi
+          echo "html from agda ${chosen%-*}, cubical ${chosen#*-}" >> "$GITHUB_STEP_SUMMARY"
+          mv "html/html-$chosen" public
+
+      - name: Upload pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
-          path: 'En/public'
+          path: public
+
+  deploy:
+    needs: result
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v5

@@ -1,0 +1,49 @@
+name: toolchain
+on:
+  schedule:
+    # daily at 06:07 utc
+    - cron: "7 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    name: setup (agda ${{ matrix.agda }}, cubical ${{ matrix.cubical }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        agda: [stable, nightly]
+        cubical: [stable, nightly]
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Resolve versions
+        id: resolve
+        run: .github/scripts/setup-toolchain.sh --resolve-only ${{ matrix.agda }} ${{ matrix.cubical }}
+
+      - name: Look up cached toolchain
+        id: lookup
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/toolchain
+          key: ${{ steps.resolve.outputs.key }}
+          lookup-only: true
+
+      - name: Install agda and cubical
+        id: install
+        if: steps.lookup.outputs.cache-hit != 'true'
+        run: .github/scripts/setup-toolchain.sh ${{ matrix.agda }} ${{ matrix.cubical }}
+
+      - name: Save toolchain
+        if: steps.lookup.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ~/toolchain
+          key: ${{ steps.install.outputs.key }}
