@@ -4,9 +4,9 @@ open import En.Prelude
 open import En.Sn.Base
 open import Cubical.Data.Sigma
 open import Cubical.HITs.PropositionalTruncation.Base
-    renaming ( ∥_∥₁ to ∥_∥ 
+    renaming ( ∥_∥₁ to ∥_∥
              ; ∣_∣₁ to ∣_∣
-             ; squash₁ to squash 
+             ; squash₁ to squash
              )
 open import Cubical.HITs.PropositionalTruncation.Properties
 
@@ -45,15 +45,24 @@ f : List (ℕ × ℕ) → StairList
 f [] = []
 f ((a , b) ∷ l) = a ↙ b ∷ f l
 
-proj : (σ : StairList) → ∥ (Σ[ l ∈ List (ℕ × ℕ) ] f l ≡ σ) ∥
+proj-fib : StairList → Type
+proj-fib σ = ∥ (Σ[ l ∈ List (ℕ × ℕ) ] f l ≡ σ) ∥
+
+proj∷ : (n a : ℕ) {σ : StairList} → proj-fib σ → proj-fib (n ↙ a ∷ σ)
+proj∷ n a x = ∃∥∥-rec (rec isPropPropTrunc (map (λ (τ , r) → (n , a) ∷ τ , ∣ (ap (n ↙ a ∷_) r) ∣)) ∣ x ∣)
+
+proj-path : {σ τ : StairList} (p : σ ≡ τ) (x : proj-fib σ) (y : proj-fib τ) → PathP (λ i → proj-fib (p i)) x y
+proj-path p x y = isOfHLevel→isOfHLevelDep 1 (λ _ → squash) x y p
+
+proj : (σ : StairList) → proj-fib σ
 proj [] = ∣ [] , refl ∣
-proj (n ↙ a ∷ σ) = ∃∥∥-rec (rec isPropPropTrunc (map (λ (τ , r) → (n , a) ∷ τ , ∣ (ap (n ↙ a ∷_) r) ∣)) ∣ proj σ ∣)
-proj (cancel n σ i) = {!!}
-proj (swap k l m n s i) = {!!}
-proj (braid n k s i) = {!!}
-proj (join n a b s i) = {!!}
-proj (remove n s i) = {!!}
-proj (is-set σ τ p q i j) = {!!}
+proj (n ↙ a ∷ σ) = proj∷ n a (proj σ)
+proj (cancel n σ i) = proj-path (cancel n σ) (proj∷ n 1 (proj∷ n 1 (proj σ))) (proj σ) i
+proj (swap k l m n {p} s i) = proj-path (swap k l m n {p} s) (proj∷ l n (proj∷ k m (proj s))) (proj∷ k m (proj∷ l n (proj s))) i
+proj (braid n k s i) = proj-path (braid n k s) (proj∷ n (suc (suc k)) (proj∷ (suc (k + n)) 1 (proj s))) (proj∷ (k + n) 1 (proj∷ n (suc (suc k)) (proj s))) i
+proj (join n a b s i) = proj-path (join n a b s) (proj∷ n a (proj∷ (suc (n + a)) b (proj s))) (proj∷ n (a + b) (proj s)) i
+proj (remove n s i) = proj-path (remove n s) (proj∷ n 0 (proj s)) (proj s) i
+proj (is-set σ τ p q i j) = isOfHLevel→isOfHLevelDep 2 {B = proj-fib} (λ _ → isProp→isSet squash) (proj σ) (proj τ) (λ k → proj (p k)) (λ k → proj (q k)) (is-set σ τ p q) i j
 
 -- 𝔫 : StairList → List (ℕ × ℕ)
 -- 𝔫 [] = []
@@ -77,4 +86,3 @@ braid n k σ i ⧺ τ = braid n k (σ ⧺ τ) i
 join n a b σ i ⧺ τ = join n a b (σ ⧺ τ) i
 remove n σ i ⧺ τ = remove n (σ ⧺ τ) i
 is-set σ σ' p q i j ⧺ τ = isSet→Square is-set (σ ⧺ τ) (σ' ⧺ τ) (ap (_⧺ τ) p) (σ ⧺ τ) (σ' ⧺ τ) (ap (_⧺ τ) q) refl refl i j
-
