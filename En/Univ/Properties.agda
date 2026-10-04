@@ -2,8 +2,8 @@ module En.Univ.Properties where
 
 open import En.Prelude
 open import Cubical.Foundations.Univalence
-open import Cubical.Foundations.Transport using ( substComposite )
-open import Cubical.Foundations.Equiv.Properties using ( congEquiv )
+open import Cubical.Foundations.Transport
+open import Cubical.Foundations.Equiv.Properties
 open import En.Univ.Base
 import En.SMG as S hiding ( SMG* ; SMG*Fun )
 
