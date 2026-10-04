@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        agda: [stable, nightly]
+        agda: [stable, nightly, mikan]
         cubical: [stable, nightly]
     env:
       GH_TOKEN: ${{ github.token }}
@@ -35,6 +35,22 @@ jobs:
           path: ~/toolchain
           key: ${{ steps.resolve.outputs.key }}
           lookup-only: true
+
+      - name: Set up GHC
+        id: ghc
+        if: matrix.agda == 'mikan' && steps.lookup.outputs.cache-hit != 'true'
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "9.12"
+          cabal-version: latest
+
+      - name: Cache cabal store
+        if: steps.ghc.outcome == 'success'
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.ghc.outputs.cabal-store }}
+          key: cabal-store-mikan-${{ steps.ghc.outputs.ghc-version }}-${{ matrix.cubical }}-${{ github.run_id }}
+          restore-keys: cabal-store-mikan-${{ steps.ghc.outputs.ghc-version }}-
 
       - name: Install agda and cubical
         id: install

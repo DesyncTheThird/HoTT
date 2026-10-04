@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# install agda + cubical into $TOOLCHAIN_DIR
+# install agda/mikan + cubical into $TOOLCHAIN_DIR
 set -euo pipefail
 
 usage() {
-  echo "usage: $0 [--resolve-only] <stable|nightly> <stable|nightly>" >&2
+  echo "usage: $0 [--resolve-only] <stable|nightly|mikan> <stable|nightly>" >&2
   exit 2
 }
 
@@ -18,18 +18,24 @@ cubical_ch=$2
 dir=${TOOLCHAIN_DIR:-$HOME/toolchain}
 
 case $agda_ch in
-  stable)
-    agda_tag=$(gh release view -R agda/agda --json tagName -q .tagName)
+  stable | nightly)
+    if [[ $agda_ch == stable ]]; then
+      agda_tag=$(gh release view -R agda/agda --json tagName -q .tagName)
+    else
+      agda_tag=nightly
+    fi
+    agda_asset=$(gh release view "$agda_tag" -R agda/agda --json assets \
+      -q '.assets[].name | select(endswith("-linux.tar.xz"))')
+    agda_version=${agda_asset#Agda-}
+    agda_version=${agda_version%-linux.tar.xz}
     ;;
-  nightly)
-    agda_tag=nightly
+  mikan)
+    mikan_rev=$(curl -fsSL https://codeberg.org/api/v1/repos/1lab/mikan/branches/main | jq -r .commit.id)
+    [[ $mikan_rev =~ ^[0-9a-f]{40}$ ]] || { echo "could not resolve mikan main" >&2; exit 1; }
+    agda_version=mikan-${mikan_rev:0:7}
     ;;
   *) usage ;;
 esac
-agda_asset=$(gh release view "$agda_tag" -R agda/agda --json assets \
-  -q '.assets[].name | select(endswith("-linux.tar.xz"))')
-agda_version=${agda_asset#Agda-}
-agda_version=${agda_version%-linux.tar.xz}
 
 case $cubical_ch in
   stable)
@@ -53,13 +59,31 @@ fi
 $resolve_only && exit 0
 
 rm -rf "$dir"
-mkdir -p "$dir/agda" "$dir/bin" "$dir/cubical"
+mkdir -p "$dir/bin" "$dir/cubical"
 
 # agda
-gh release download "$agda_tag" -R agda/agda -p "$agda_asset" -O - | tar -xJ -C "$dir/agda"
-agda_bin=$(find "$dir/agda" -type f -name agda | head -n 1)
-chmod +x "$agda_bin"
-ln -s "$agda_bin" "$dir/bin/agda"
+if [[ $agda_ch == mikan ]]; then
+  # build from source, needs ghc and cabal
+  src=$(mktemp -d)
+  git -C "$src" init -q
+  git -C "$src" fetch -q --depth=1 https://codeberg.org/1lab/mikan "$mikan_rev"
+  git -C "$src" checkout -q FETCH_HEAD
+  (cd "$src" && cabal update && cabal install exe:mikan -foptimise-heavily \
+    --installdir="$dir/mikan" --install-method=copy --overwrite-policy=always)
+  # link mikan as agda
+  ln -s "$dir/mikan/mikan" "$dir/bin/mikan"
+  ln -s "$dir/mikan/mikan" "$dir/bin/agda"
+  # unpack data files inside the toolchain dir
+  export Mikan_datadir=$dir/mikan-data
+  mkdir -p "$Mikan_datadir"
+  "$dir/bin/agda" --setup
+else
+  mkdir -p "$dir/agda"
+  gh release download "$agda_tag" -R agda/agda -p "$agda_asset" -O - | tar -xJ -C "$dir/agda"
+  agda_bin=$(find "$dir/agda" -type f -name agda | head -n 1)
+  chmod +x "$agda_bin"
+  ln -s "$agda_bin" "$dir/bin/agda"
+fi
 "$dir/bin/agda" --version
 
 # cubical
@@ -72,3 +96,6 @@ cat > "$dir/versions.env" <<EOV
 AGDA_VERSION=$agda_version
 CUBICAL_VERSION=$cubical_version
 EOV
+if [[ $agda_ch == mikan ]]; then
+  echo "Mikan_datadir=$dir/mikan-data" >> "$dir/versions.env"
+fi
