@@ -146,3 +146,97 @@ UFin×* = UUnivSMG.UUniv* UFinUUniv isGroupoidUFin 𝟙 _×ᶠ_ ≃-×
   (λ _ _ _ _ → equivEq refl)
   (λ _ _ _ → equivEq refl)
   (λ _ _ → equivEq refl)
+
+-- rig coherences for fun (we don't need them)
+
+-- naturality of distributors and annihilators
+
+module _ {ℓ} {A A' B B' C C' : Type ℓ} (e₁ : A ≃ A') (e₂ : B ≃ B') (e₃ : C ≃ C') where
+
+  -- dist⟷₂l
+  ×-distribʳ≃-nat : ≃-× (⊎-equiv e₁ e₂) e₃ ∙ₑ ×-distribʳ≃ ≡ ×-distribʳ≃ ∙ₑ ⊎-equiv (≃-× e₁ e₃) (≃-× e₂ e₃)
+  ×-distribʳ≃-nat = equivEq (×-η (⊎-η refl refl))
+
+  -- distl⟷₂l
+  ×-distribˡ≃-nat : ≃-× e₁ (⊎-equiv e₂ e₃) ∙ₑ ×-distribˡ≃ ≡ ×-distribˡ≃ ∙ₑ ⊎-equiv (≃-× e₁ e₂) (≃-× e₁ e₃)
+  ×-distribˡ≃-nat = equivEq (×-η (funExt λ _ → ⊎-η refl refl))
+
+module _ {ℓ} {A A' : Type ℓ} (e : A ≃ A') where
+
+  -- absorbl⟷₂l
+  ×-zeroʳ≃-nat : ≃-× e (idEquiv (⊥* {ℓ})) ∙ₑ ×-zeroʳ≃ ≡ ×-zeroʳ≃
+  ×-zeroʳ≃-nat = equivEq (×-η (funExt λ _ → ⊥*-η))
+
+  -- absorbr⟷₂l
+  ×-zeroˡ≃-nat : ≃-× (idEquiv (⊥* {ℓ})) e ∙ₑ ×-zeroˡ≃ ≡ ×-zeroˡ≃
+  ×-zeroˡ≃-nat = equivEq (×-η ⊥*-η)
+
+-- laplaza's coherences
+
+module _ {ℓ} {A B C D : Type ℓ} where
+
+  -- swap₊distl⟷₂l
+  ×-distribˡ-swap : Path (A × (B ⊎ C) ≃ (A × C) ⊎ (A × B))
+    (≃-× (idEquiv A) ⊎-swap-≃ ∙ₑ ×-distribˡ≃) (×-distribˡ≃ ∙ₑ ⊎-swap-≃)
+  ×-distribˡ-swap = equivEq (×-η (funExt λ _ → ⊎-η refl refl))
+
+  -- dist-swap⋆⟷₂l
+  ×-distribʳ-swap : Path ((A ⊎ B) × C ≃ (C × A) ⊎ (C × B))
+    (×-distribʳ≃ ∙ₑ ⊎-equiv Σ-swap-≃ Σ-swap-≃) (Σ-swap-≃ ∙ₑ ×-distribˡ≃)
+  ×-distribʳ-swap = equivEq (×-η (⊎-η refl refl))
+
+  -- assocl₊-dist-dist⟷₂l
+  ×-distribʳ-assoc : Path ((A ⊎ (B ⊎ C)) × D ≃ ((A × D) ⊎ (B × D)) ⊎ (C × D))
+    (≃-× (invEquiv ⊎-assoc-≃) (idEquiv D) ∙ₑ ×-distribʳ≃ ∙ₑ ⊎-equiv ×-distribʳ≃ (idEquiv _))
+    (×-distribʳ≃ ∙ₑ ⊎-equiv (idEquiv _) ×-distribʳ≃ ∙ₑ invEquiv ⊎-assoc-≃)
+  ×-distribʳ-assoc = equivEq (×-η (⊎-η refl (⊎-η refl refl)))
+
+  -- assocl⋆-distl⟷₂l
+  ×-distribˡ-assoc : Path (A × (B × (C ⊎ D)) ≃ ((A × B) × C) ⊎ ((A × B) × D))
+    (invEquiv Σ-assoc-≃ ∙ₑ ×-distribˡ≃)
+    (≃-× (idEquiv A) ×-distribˡ≃ ∙ₑ ×-distribˡ≃ ∙ₑ ⊎-equiv (invEquiv Σ-assoc-≃) (invEquiv Σ-assoc-≃))
+  ×-distribˡ-assoc = equivEq (×-η (funExt λ _ → ×-η (funExt λ _ → ⊎-η refl refl)))
+
+  -- absorbr0-absorbl0⟷₂
+  ×-zeroˡ≡×-zeroʳ : Path (⊥* {ℓ} × ⊥* {ℓ} ≃ ⊥*) ×-zeroˡ≃ ×-zeroʳ≃
+  ×-zeroˡ≡×-zeroʳ = equivEq (×-η ⊥*-η)
+
+  -- absorbr⟷₂distl-absorb-unite
+  ×-zeroˡ-distribˡ : Path (⊥* {ℓ} × (A ⊎ B) ≃ ⊥*)
+    ×-zeroˡ≃ (×-distribˡ≃ ∙ₑ ⊎-equiv ×-zeroˡ≃ ×-zeroˡ≃ ∙ₑ ⊎-IdL-⊥*-≃)
+  ×-zeroˡ-distribˡ = equivEq (×-η ⊥*-η)
+
+  -- unite⋆r0-absorbr1⟷₂
+  ×-unitʳ≡×-zeroˡ : Path (⊥* {ℓ} × Unit* {ℓ} ≃ ⊥*) ×-unitʳ≃ ×-zeroˡ≃
+  ×-unitʳ≡×-zeroˡ = equivEq (×-η ⊥*-η)
+
+  -- absorbl≡swap⋆◎absorbr
+  ×-zeroʳ-swap : Path (A × ⊥* {ℓ} ≃ ⊥*) ×-zeroʳ≃ (Σ-swap-≃ ∙ₑ ×-zeroˡ≃)
+  ×-zeroʳ-swap = equivEq (×-η (funExt λ _ → ⊥*-η))
+
+  -- absorbr⟷₂[assocl⋆◎[absorbr⊗id⟷]]◎absorbr
+  ×-zeroˡ-assoc : Path (⊥* {ℓ} × (A × B) ≃ ⊥*)
+    ×-zeroˡ≃ (invEquiv Σ-assoc-≃ ∙ₑ ≃-× ×-zeroˡ≃ (idEquiv B) ∙ₑ ×-zeroˡ≃)
+  ×-zeroˡ-assoc = equivEq (×-η ⊥*-η)
+
+  -- [id⟷⊗absorbr]◎absorbl⟷₂assocl⋆◎[absorbl⊗id⟷]◎absorbr
+  ×-zero-assoc : Path (A × (⊥* {ℓ} × B) ≃ ⊥*)
+    (≃-× (idEquiv A) ×-zeroˡ≃ ∙ₑ ×-zeroʳ≃) (invEquiv Σ-assoc-≃ ∙ₑ ≃-× ×-zeroʳ≃ (idEquiv B) ∙ₑ ×-zeroˡ≃)
+  ×-zero-assoc = equivEq (×-η (funExt λ _ → ×-η ⊥*-η))
+
+  -- elim⊥-A[0⊕B]⟷₂l
+  ×-distribˡ-unitˡ : Path (A × (⊥* {ℓ} ⊎ B) ≃ A × B)
+    (≃-× (idEquiv A) ⊎-IdL-⊥*-≃) (×-distribˡ≃ ∙ₑ ⊎-equiv ×-zeroʳ≃ (idEquiv _) ∙ₑ ⊎-IdL-⊥*-≃)
+  ×-distribˡ-unitˡ = equivEq (×-η (funExt λ _ → ⊎-η ⊥*-η refl))
+
+  -- elim⊥-1[A⊕B]⟷₂l
+  ×-unitˡ-distribˡ : Path (Unit* {ℓ} × (A ⊎ B) ≃ A ⊎ B) ×-unitˡ≃ (×-distribˡ≃ ∙ₑ ⊎-equiv ×-unitˡ≃ ×-unitˡ≃)
+  ×-unitˡ-distribˡ = equivEq (×-η (funExt λ _ → ⊎-η refl refl))
+
+  -- fully-distribute⟷₂l
+  ×-distrib-full : Path ((A ⊎ B) × (C ⊎ D) ≃ (((A × C) ⊎ (B × C)) ⊎ (A × D)) ⊎ (B × D))
+    (×-distribˡ≃ ∙ₑ ⊎-equiv ×-distribʳ≃ ×-distribʳ≃ ∙ₑ invEquiv ⊎-assoc-≃)
+    (×-distribʳ≃ ∙ₑ ⊎-equiv ×-distribˡ≃ ×-distribˡ≃ ∙ₑ invEquiv ⊎-assoc-≃
+     ∙ₑ ⊎-equiv ⊎-assoc-≃ (idEquiv _) ∙ₑ ⊎-equiv (⊎-equiv (idEquiv _) ⊎-swap-≃) (idEquiv _)
+     ∙ₑ ⊎-equiv (invEquiv ⊎-assoc-≃) (idEquiv _))
+  ×-distrib-full = equivEq (×-η (⊎-η (funExt λ _ → ⊎-η refl refl) (funExt λ _ → ⊎-η refl refl)))
