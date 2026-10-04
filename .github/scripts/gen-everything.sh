@@ -23,6 +23,6 @@ echo "module En.Everything where"
 echo
 (cd "$root" && find En -type f \( -name '*.agda' -o -name '*.lagda*' \)) \
   | sed -E 's/\.l?agda(\.[a-z]+)?$//; s|/|.|g' \
-  | grep -vxE 'En\.(index|Everything)' \
+  | grep -vx 'En\.Everything' \
   | LC_ALL=C sort \
   | sed 's/^/import /'

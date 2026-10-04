@@ -24,6 +24,8 @@ website:
         href: index.qmd
       - text: "About"
         href: about.qmd
+      - text: "Agda"
+        href: agda/
     right:
       - icon: github
         href: https://github.com/desyncthethird/HoTT

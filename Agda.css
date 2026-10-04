@@ -1,145 +1,190 @@
-@import url("https://cdnjs.cloudflare.com/ajax/libs/Iosevka/6.0.0/iosevka/iosevka.min.css");
+/* Iosevka */
+@import url(https://cdnjs.cloudflare.com/ajax/libs/Iosevka/11.1.1/iosevka/iosevka.min.css);
+
+/* gruvbox light/dark palette */
+:root {
+  --bg: #fbf1c7;
+  --bg2: #d5c4a1;
+  --fg: #3c3836;
+  --gray: #928374;
+  --gray-text: #665c54;
+  --red: #9d0006;
+  --green: #79740e;
+  --yellow: #b57614;
+  --blue: #076678;
+  --purple: #8f3f71;
+  --aqua: #427b58;
+  --orange: #af3a03;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #282828;
+    --bg2: #504945;
+    --fg: #ebdbb2;
+    --gray: #928374;
+    --gray-text: #a89984;
+    --red: #fb4934;
+    --green: #b8bb26;
+    --yellow: #fabd2f;
+    --blue: #83a598;
+    --purple: #d3869b;
+    --aqua: #8ec07c;
+    --orange: #fe8019;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
 
 .Agda {
-  font-family: "Iosevka Web", monospace;
+  font-family: 'Iosevka', 'Iosevka Web', monospace
 }
 
+/* Aspects. */
 .Agda .Comment {
-  color: #93a1a1;
+  color: var(--red)
 }
 
-.Agda .Background {
-  background: #fdf6e3;
-}
+.Agda .Background {}
 
 .Agda .Markup {
-  color: #657b83;
+  color: var(--fg)
 }
 
 .Agda .Keyword {
-  color: #cb4b16;
+  color: var(--orange)
 }
 
 .Agda .String {
-  color: #2aa198;
+  color: var(--red)
 }
 
 .Agda .Number {
-  color: #6c71c4;
+  color: var(--purple)
 }
 
 .Agda .Symbol {
-  color: #586e75;
+  color: var(--gray-text)
 }
 
 .Agda .PrimitiveType {
-  color: #268bd2;
+  color: var(--blue)
 }
 
 .Agda .Pragma {
-  color: #657b83;
+  color: var(--fg)
 }
+
+.Agda .Operator {}
 
 .Agda .Hole {
-  background: #eee8d5;
+  background: var(--bg2)
 }
 
+/* NameKinds. */
 .Agda .Bound {
-  color: #657b83;
+  color: var(--fg)
 }
 
 .Agda .Generalizable {
-  color: #657b83;
+  color: var(--fg)
 }
 
 .Agda .InductiveConstructor {
-  color: #859900;
+  color: var(--green)
 }
 
 .Agda .CoinductiveConstructor {
-  color: #b58900;
+  color: var(--yellow)
 }
 
 .Agda .Datatype {
-  color: #268bd2;
+  color: var(--blue)
 }
 
 .Agda .Field {
-  color: #d33682;
+  color: var(--aqua)
 }
 
 .Agda .Function {
-  color: #268bd2;
+  color: var(--blue)
 }
 
 .Agda .Macro {
-  color: #268bd2;
+  color: var(--blue)
 }
 
 .Agda .Module {
-  color: #6c71c4;
+  color: var(--purple)
 }
 
 .Agda .Postulate {
-  color: #268bd2;
+  color: var(--blue)
 }
 
 .Agda .Primitive {
-  color: #268bd2;
+  color: var(--blue)
 }
 
 .Agda .Record {
-  color: #268bd2;
+  color: var(--blue)
 }
 
+/* OtherAspects. */
+.Agda .DottedPattern {}
+
 .Agda .UnsolvedMeta {
-  color: #657b83;
-  background: #eee8d5;
+  color: var(--fg);
+  background: var(--yellow)
 }
 
 .Agda .UnsolvedConstraint {
-  color: #657b83;
-  background: #eee8d5;
+  color: var(--fg);
+  background: var(--yellow)
 }
 
 .Agda .TerminationProblem {
-  color: #fdf6e3;
-  background: #cb4b16;
+  color: var(--fg);
+  background: var(--orange)
 }
 
 .Agda .IncompletePattern {
-  color: #657b83;
-  background: #eee8d5;
+  color: var(--fg);
+  background: var(--bg2)
 }
 
 .Agda .Error {
-  color: #dc322f;
-  text-decoration: underline;
+  color: var(--red);
+  text-decoration: underline
 }
 
 .Agda .TypeChecks {
-  color: #657b83;
-  background: #eee8d5;
+  color: var(--fg);
+  background: var(--blue)
 }
 
 .Agda .Deadcode {
-  color: #fdf6e3;
-  background: #93a1a1;
+  color: var(--fg);
+  background: var(--gray)
 }
 
 .Agda .ShadowingInTelescope {
-  color: #fdf6e3;
-  background: #93a1a1;
+  color: var(--fg);
+  background: var(--gray)
 }
 
+/* Standard attributes. */
 .Agda a {
-  text-decoration: none;
+  text-decoration: none
 }
 
 .Agda a[href]:hover {
-  background-color: #eee8d5;
+  background-color: var(--bg2)
 }
 
 .Agda [href].hover-highlight {
-  background-color: #eee8d5;
+  background-color: var(--bg2);
 }
