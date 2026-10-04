@@ -2,9 +2,6 @@ module En.SList.Base where
 
 open import En.Prelude
 
-postulate
-    sorry : ∀ {ℓ : Level} {A : Type ℓ} → A
-
 infixr 30 _::_
 
 data SList {ℓ} (A : Type ℓ) : Type ℓ where

@@ -28,3 +28,6 @@ open import Cubical.Relation.Binary public
 
 infix 15 _≅_
 _≅_ = Iso
+
+postulate
+    sorry : ∀ {ℓ : Level} {A : Type ℓ} → A
