@@ -1,113 +1,143 @@
 #!/usr/bin/env bash
-# install agda/mikan + cubical into $TOOLCHAIN_DIR
+# install a proof assistant (agda or mikan) + cubical into a toolchain dir
 set -euo pipefail
 
 usage() {
-  echo "usage: $0 [--resolve-only] <stable|nightly|mikan> <stable|nightly>" >&2
+  cat <<EOF
+usage: $0 [--prover=agda|mikan] [--release=stable|nightly]
+       [--cubical=stable|nightly] [--dir=PATH] [--resolve-only]
+
+install a prover + cubical into PATH (default: \$TOOLCHAIN_DIR or ~/toolchain)
+defaults: agda, stable, stable
+EOF
+}
+
+die_usage() {
+  echo "error: $1" >&2
+  usage >&2
   exit 2
 }
 
-resolve_only=false
-if [[ ${1:-} == --resolve-only ]]; then
-  resolve_only=true
-  shift
-fi
-[[ $# -eq 2 ]] || usage
-agda_ch=$1
-cubical_ch=$2
+prover=agda
+release=stable
+cubical=stable
 dir=${TOOLCHAIN_DIR:-$HOME/toolchain}
+resolve_only=false
 
-case $agda_ch in
-  stable | nightly)
-    if [[ $agda_ch == stable ]]; then
+for arg in "$@"; do
+  case $arg in
+    --prover=agda | --prover=mikan) prover=${arg#*=} ;;
+    --release=stable | --release=nightly) release=${arg#*=} ;;
+    --cubical=stable | --cubical=nightly) cubical=${arg#*=} ;;
+    --dir=?*) dir=${arg#*=} ;;
+    --resolve-only) resolve_only=true ;;
+    -h | --help) usage; exit 0 ;;
+    *) die_usage "bad argument: $arg" ;;
+  esac
+done
+
+# resolve prover
+case $prover-$release in
+  agda-*)
+    case $(uname -s)-$(uname -m) in
+      Linux-x86_64) platform=linux ;;
+      Darwin-arm64) platform=macOS-arm64 ;;
+      Darwin-x86_64) platform=macOS-x64 ;;
+      *) echo "error: no agda release binary for $(uname -s) $(uname -m)" >&2; exit 1 ;;
+    esac
+    if [[ $release == stable ]]; then
       agda_tag=$(gh release view -R agda/agda --json tagName -q .tagName)
     else
       agda_tag=nightly
     fi
     agda_asset=$(gh release view "$agda_tag" -R agda/agda --json assets \
-      -q '.assets[].name | select(endswith("-linux.tar.xz"))')
-    agda_version=${agda_asset#Agda-}
-    agda_version=${agda_version%-linux.tar.xz}
+      -q ".assets[].name | select(endswith(\"-$platform.tar.xz\"))")
+    prover_version=${agda_asset#Agda-}
+    prover_version=${prover_version%-"$platform".tar.xz}
     ;;
-  mikan)
+  mikan-nightly)
     mikan_rev=$(curl -fsSL https://codeberg.org/api/v1/repos/1lab/mikan/branches/main | jq -r .commit.id)
-    [[ $mikan_rev =~ ^[0-9a-f]{40}$ ]] || { echo "could not resolve mikan main" >&2; exit 1; }
-    agda_version=mikan-${mikan_rev:0:7}
+    [[ $mikan_rev =~ ^[0-9a-f]{40}$ ]] || { echo "error: could not resolve mikan main" >&2; exit 1; }
+    prover_version=${mikan_rev:0:7}
     ;;
-  *) usage ;;
+  mikan-stable) die_usage "mikan has no releases, use --release=nightly" ;;
 esac
 
-case $cubical_ch in
-  stable)
-    cubical_ref=$(gh release view -R agda/cubical --json tagName -q .tagName)
-    cubical_version=$cubical_ref
-    ;;
-  nightly)
-    cubical_ref=$(gh api repos/agda/cubical/commits/master -q .sha)
-    cubical_version=${cubical_ref:0:7}
-    ;;
-  *) usage ;;
-esac
+# resolve cubical
+if [[ $cubical == stable ]]; then
+  cubical_ref=$(gh release view -R agda/cubical --json tagName -q .tagName)
+  cubical_version=$cubical_ref
+else
+  cubical_ref=$(gh api repos/agda/cubical/commits/master -q .sha)
+  cubical_version=${cubical_ref:0:7}
+fi
 
-key="toolchain-$agda_ch-$cubical_ch-$agda_version-$cubical_version"
-echo "agda $agda_version, cubical $cubical_version"
+key="toolchain/$prover-$release/cubical-$cubical/$prover-$prover_version+cubical-$cubical_version"
+echo "prover:  $prover $release ($prover_version)"
+echo "cubical: $cubical ($cubical_version)"
+echo "key:     $key"
 if [[ -n ${GITHUB_OUTPUT:-} ]]; then
   echo "key=$key" >> "$GITHUB_OUTPUT"
-else
-  echo "key=$key"
 fi
 $resolve_only && exit 0
 
+# only replace an earlier toolchain dir
+if [[ -e $dir && -n $(ls -A "$dir") && ! -f $dir/versions.env ]]; then
+  echo "error: $dir is not empty and not a toolchain dir, refusing to replace it" >&2
+  exit 1
+fi
 rm -rf "$dir"
 mkdir -p "$dir/bin" "$dir/cubical"
 
-# agda
-if [[ $agda_ch == mikan ]]; then
-  # build from source, needs ghc and cabal
+# prover
+if [[ $prover == mikan ]]; then
+  # build from source
   src=$(mktemp -d)
   git -C "$src" init -q
   git -C "$src" fetch -q --depth=1 https://codeberg.org/1lab/mikan "$mikan_rev"
   git -C "$src" checkout -q FETCH_HEAD
   (cd "$src" && cabal update && cabal install exe:mikan -foptimise-heavily \
     --installdir="$dir/mikan" --install-method=copy --overwrite-policy=always)
-  # link mikan as agda
   ln -s "$dir/mikan/mikan" "$dir/bin/mikan"
-  ln -s "$dir/mikan/mikan" "$dir/bin/agda"
-  # unpack data files inside the toolchain dir
-  export Mikan_datadir=$dir/mikan-data
-  mkdir -p "$Mikan_datadir"
-  "$dir/bin/agda" --setup
+  datadir_var=Mikan_datadir
 else
   mkdir -p "$dir/agda"
   gh release download "$agda_tag" -R agda/agda -p "$agda_asset" -O - | tar -xJ -C "$dir/agda"
   agda_bin=$(find "$dir/agda" -type f -name agda | head -n 1)
   chmod +x "$agda_bin"
   ln -s "$agda_bin" "$dir/bin/agda"
+  datadir_var=Agda_datadir
 fi
-"$dir/bin/agda" --version
+
+# unpack data files inside the toolchain dir
+datadir=$dir/$prover-data
+mkdir -p "$datadir"
+export "$datadir_var=$datadir"
+"$dir/bin/$prover" --setup
+"$dir/bin/$prover" --version
 
 # cubical
 git -C "$dir/cubical" init -q
 git -C "$dir/cubical" fetch -q --depth=1 https://github.com/agda/cubical "$cubical_ref"
 git -C "$dir/cubical" checkout -q FETCH_HEAD
-if ! (cd "$dir/cubical" && "$dir/bin/agda" --build-library); then
+echo "$dir/cubical/cubical.agda-lib" > "$dir/libraries"
+if ! (cd "$dir/cubical" && "$dir/bin/$prover" --build-library); then
   # keep what built, then try only the imported modules
-  echo "::warning::cubical $cubical_version does not fully typecheck with $agda_version"
+  echo "::warning::cubical $cubical_version does not fully typecheck with $prover $prover_version"
   repo=${GITHUB_WORKSPACE:-$PWD}
   grep -rhoE 'import[[:space:]]+Cubical(\.[^[:space:]();]+)+' "$repo/En" \
     | awk '{ print $2 }' | sort -u \
     | while read -r module; do
         file=$(find "$dir/cubical" -path "$dir/cubical/${module//.//}.*agda" | head -n 1)
         [[ -n $file ]] || continue
-        (cd "$dir/cubical" && "$dir/bin/agda" "$file" > /dev/null) \
+        (cd "$dir/cubical" && "$dir/bin/$prover" "$file" > /dev/null) \
           || echo "::warning::failed to typecheck $module"
       done
 fi
 
 cat > "$dir/versions.env" <<EOV
-AGDA_VERSION=$agda_version
+PROVER=$prover
+PROVER_VERSION=$prover_version
 CUBICAL_VERSION=$cubical_version
+$datadir_var=$datadir
 EOV
-if [[ $agda_ch == mikan ]]; then
-  echo "Mikan_datadir=$dir/mikan-data" >> "$dir/versions.env"
-fi
