@@ -17,16 +17,16 @@ SList* A .S._⊗_ = _++_
 SList* A .S.α = ++-α
 SList* A .S.Λ = ++-Λ
 SList* A .S.ρ = ++-ρ
-SList* A .S.β = ++-β
-SList* A .S.▽ = {!!}
-SList* A .S.⬠₌ = {!!}
-SList* A .S.⬠₁ = {!!}
-SList* A .S.⬠₂ = {!!}
-SList* A .S.⬡₌ = {!!}
-SList* A .S.⬡₁ = {!!}
-SList* A .S.⬡₂ = {!!}
-SList* A .S.β² = {!!}
-SList* A .S.is-groupoid = {!!}
+SList* A .S.β = sorry
+SList* A .S.▽ = sorry
+SList* A .S.⬠₌ = sorry
+SList* A .S.⬠₁ = sorry
+SList* A .S.⬠₂ = sorry
+SList* A .S.⬡₌ = sorry
+SList* A .S.⬡₁ = sorry
+SList* A .S.⬡₂ = sorry
+SList* A .S.β² = sorry
+SList* A .S.is-groupoid = sorry
 
 
 -- module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B) where

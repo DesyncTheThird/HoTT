@@ -156,22 +156,23 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
             -- ∙∙ ap (y ::_) ++-:: x (z :: zs) xs
             -- ∙∙ ++-:: y (z :: zs) (x :: xs)
 
-        qux : Square {!!} {!!} {!!} {!!}
+        qux : Square _ _ _ _
         qux = λ i j → ap (ap (z ::_)) p i j
 
-        qaa : {!!} ∙ (λ j → z :: p i1 j) ≡
+        qaa : _ ∙ (λ j → z :: p i1 j) ≡
                (λ j → z :: p i0 j) ∙ (λ i → z :: p i i1)
         qaa = Square→compPath qux
 
-        aaaa : Square {!!} {!!} {!!} {!!}
+        aaaa : Square _ _ _ _
         aaaa = doubleCompPathEq→compPathEq p
 
-        E i j = hcomp ((λ k → (λ
-            { (i = i0) → left j k
-            ; (i = i1) → right j k
-            ; (j = i0) → down i k
-            ; (j = i1) → ap (z :: zs ++_) (swap x y xs) i
-            }))) ? -- (compPathEq→doubleCompPathEq ((assoc _ _ _) ∙ sym (Squiare→compPath {!!})) i j) -- -- (Square→compPath (compPathEq→doubleCompPathEq {!p!}) i j {!!})
+        E = sorry
+        -- E i j = hcomp ((λ k → (λ
+        --     { (i = i0) → left j k
+        --     ; (i = i1) → right j k
+        --     ; (j = i0) → down i k
+        --     ; (j = i1) → ap (z :: zs ++_) (swap x y xs) i
+        --     }))) {!!} -- (compPathEq→doubleCompPathEq ((assoc _ _ _) ∙ sym (Squiare→compPath {!!})) i j) -- -- (Square→compPath (compPathEq→doubleCompPathEq {!p!}) i j {!!})
 
         -- Goal: SList A
         -- ———— Boundary (wanted) ————————————————————————————————————— 
