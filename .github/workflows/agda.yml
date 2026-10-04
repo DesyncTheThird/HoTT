@@ -52,8 +52,17 @@ jobs:
           restore-keys: toolchain-${{ matrix.agda }}-${{ matrix.cubical }}-
 
       - name: Install agda and cubical on cache miss
+        id: install
         if: steps.toolchain.outputs.cache-matched-key == ''
         run: .github/scripts/setup-toolchain.sh ${{ matrix.agda }} ${{ matrix.cubical }}
+
+      # keep the toolchain even if typechecking fails
+      - name: Save toolchain
+        if: steps.install.outcome == 'success'
+        uses: actions/cache/save@v6
+        with:
+          path: ~/toolchain
+          key: ${{ steps.install.outputs.key }}
 
       - name: Use toolchain
         run: |
@@ -64,15 +73,25 @@ jobs:
       ## TESTING
       ########################################################################
 
-      - name: Cache build
-        uses: actions/cache@v6
+      - name: Restore build
+        id: build-cache
+        uses: actions/cache/restore@v6
         with:
           path: _build
           key: en-${{ matrix.agda }}-${{ matrix.cubical }}-${{ env.AGDA_VERSION }}-${{ env.CUBICAL_VERSION }}-${{ github.sha }}
           restore-keys: en-${{ matrix.agda }}-${{ matrix.cubical }}-${{ env.AGDA_VERSION }}-${{ env.CUBICAL_VERSION }}-
 
       - name: Build library
+        id: build
         run: agda --build-library
+
+      # keep cache even if typechecking fails
+      - name: Save build
+        if: always() && steps.build.outcome != 'skipped' && steps.build-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: _build
+          key: ${{ steps.build-cache.outputs.cache-primary-key }}
 
       ########################################################################
       ## HTML
