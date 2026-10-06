@@ -8,11 +8,15 @@ open import Cubical.Data.FinSet.Properties
 open import Cubical.Data.FinSet.Constructors
 open import Cubical.Data.FinSet.Induction using ( 𝟘 ; 𝟙 ) public
 import Cubical.Data.FinSet.Induction as FS
+open import En.Univ.Base
 
 -- universe of finite types
 
 UFin : Type₁
 UFin = FinSet ℓ-zero
+
+UFinSub : SubUniv ℓ-zero ℓ-zero
+UFinSub = isFinSet , λ _ → isPropIsFinSet
 
 FinU : ℕ → UFin
 FinU n = Fin n , isFinSetFin

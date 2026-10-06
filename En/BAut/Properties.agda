@@ -15,7 +15,7 @@ private
     ℓ : Level
 
 BAutUUniv : (T : Type ℓ) → UUniv (ℓ-suc ℓ) ℓ
-BAutUUniv T = SubUUniv {P = λ X → ∥ T ≃ X ∥₁} λ _ → isPropPropTrunc
+BAutUUniv T = SubUUniv (BAutSub T)
 
 BAut≡ : {T : Type ℓ} (X Y : BAut T) → (X .fst ≡ Y .fst) ≃ (X ≡ Y)
 BAut≡ _ _ = Σ≡PropEquiv λ _ → isPropPropTrunc

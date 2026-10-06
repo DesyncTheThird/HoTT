@@ -20,3 +20,8 @@ isUUniv 𝒰 = (X Y : 𝒰 .U) → isEquiv (λ (p : X ≡ Y) → pathToEquiv (ap
 
 UUniv : ∀ ℓ ℓ' → Type (ℓ-suc (ℓ-max ℓ ℓ'))
 UUniv ℓ ℓ' = Σ (Univ ℓ ℓ') isUUniv
+
+-- subuniverses of Type
+
+SubUniv : ∀ ℓ ℓ' → Type (ℓ-max (ℓ-suc ℓ) (ℓ-suc ℓ'))
+SubUniv ℓ ℓ' = Σ[ P ∈ (Type ℓ → Type ℓ') ] ((X : Type ℓ) → isProp (P X))
