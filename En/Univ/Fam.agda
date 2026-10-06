@@ -161,6 +161,18 @@ module FamPath (𝒮 : SubUniv ℓ ℓ') (A : Type ℓ'') where
     encode X Y p ∙ᶜ encode Y Z q
       ∎
 
+  decode-∙ : {X Y Z : Fam 𝒮 A} (c : Cover X Y) (d : Cover Y Z)
+    → decode X Z (c ∙ᶜ d) ≡ decode X Y c ∙ decode Y Z d
+  decode-∙ {X} {Y} {Z} c d = encodeInj X Z $
+    encode X Z (decode X Z (c ∙ᶜ d))
+      ≡⟨ encodeDecode X Z (c ∙ᶜ d) ⟩
+    c ∙ᶜ d
+      ≡⟨ sym (cong₂ _∙ᶜ_ (encodeDecode X Y c) (encodeDecode Y Z d)) ⟩
+    encode X Y (decode X Y c) ∙ᶜ encode Y Z (decode Y Z d)
+      ≡⟨ sym (encode-∙ (decode X Y c) (decode Y Z d)) ⟩
+    encode X Z (decode X Y c ∙ decode Y Z d)
+      ∎
+
   -- path space via SIP
 
   LabelEquivStr : StrEquiv (LabelStructure {ℓ = ℓ} A) (ℓ-max ℓ ℓ'')
