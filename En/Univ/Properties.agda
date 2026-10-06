@@ -56,9 +56,9 @@ TypeUUniv ℓ .snd _ _ = univalence .snd
 
 -- subuniverses of Type are univalent universes
 
-SubUUniv : {P : Type ℓ → Type ℓ'} → (∀ X → isProp (P X)) → UUniv (ℓ-max (ℓ-suc ℓ) ℓ') ℓ
-SubUUniv {P = P} _ .fst = univ (Σ (Type _) P) fst
-SubUUniv isPropP .snd _ _ = ((_ , isEmbeddingFstΣProp isPropP) ∙ₑ univalence) .snd
+SubUUniv : SubUniv ℓ ℓ' → UUniv (ℓ-max (ℓ-suc ℓ) ℓ') ℓ
+SubUUniv (P , _) .fst = univ (TypeWithStr _ P) fst
+SubUUniv (_ , isPropP) .snd _ _ = ((_ , isEmbeddingFstΣProp isPropP) ∙ₑ univalence) .snd
 
 -- SMG structure on a univalent universe
 

@@ -19,7 +19,7 @@ isGroupoidUFin : isGroupoid UFin
 isGroupoidUFin = isGroupoidFinSet
 
 UFinUUniv : UUniv (ℓ-suc ℓ-zero) ℓ-zero
-UFinUUniv = SubUUniv {P = isFinSet} λ _ → isPropIsFinSet
+UFinUUniv = SubUUniv UFinSub
 
 -- cardinality
 
