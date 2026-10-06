@@ -24,5 +24,8 @@ open import En.BAut
 -- universe of finite types
 open import En.UFin
 
+-- homotopy finite multisets
+open import En.Bag
+
 -- all modules
 open import En.Everything
