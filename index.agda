@@ -27,5 +27,8 @@ open import En.UFin
 -- homotopy finite multisets
 open import En.Bag
 
+-- lists up to permutation
+open import En.PList
+
 -- all modules
 open import En.Everything
