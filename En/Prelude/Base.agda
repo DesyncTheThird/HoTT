@@ -10,7 +10,9 @@ open import Cubical.Foundations.Prelude
 open import Cubical.Foundations.HLevels public
 open import Cubical.Foundations.Path public
 open import Cubical.Foundations.GroupoidLaws
-  renaming (cong-∙ to ap-∙) public
+  renaming ( cong-∙ to ap-∙
+           ; cong-∙∙ to ap-∙∙
+           ) public
 open import Cubical.Foundations.Function public
 open import Cubical.Foundations.Equiv public
 open import Cubical.Foundations.Structure public

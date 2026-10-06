@@ -101,7 +101,7 @@ HexagonRotate⁻ :
     {p : a ≡ b} {q : b ≡ c} {r : c ≡ d} {s : a ≡ e} {t : e ≡ f} {u : f ≡ d}
     (⬡ : Hexagon p q r s t u )
     → Hexagon (sym s) p q t u (sym r)
-HexagonRotate⁻ {p = p} {q} {r} {s} {t} {u} ⬡ .Hexagon.⬡₌ =  t ∙ u ∙ sym r
+HexagonRotate⁻ {p = p} {q} {r} {s} {t} {u} ⬡ .Hexagon.⬡₌ = t ∙ u ∙ sym r
 HexagonRotate⁻ {p = p} {q} {r} {s} {t} {u} ⬡ .Hexagon.⬡₁ i j = 
     hcomp (λ k → λ
       { (i = i0) → compPath→Square (sym (rUnit (sym p ∙ s))) j k
@@ -143,6 +143,14 @@ Hexagon→Square :
     → Hexagon p q r s t u → Square (sym p ∙ s) (r ∙ sym u) q t
 Hexagon→Square {p = p} {q} {r} {s} {t} {u} ⬡ = ⬡ .Hexagon.⬡₁ ∙h ⬡ .Hexagon.⬡₂
 
+Square→Hexagon :
+    {a b c d e f : A}
+    {p : a ≡ b} {q : b ≡ c} {r : c ≡ d} {s : a ≡ e} {t : e ≡ f} {u : f ≡ d}
+    → Square (sym p ∙ s) (r ∙ sym u) q t → Hexagon p q r s t u
+Square→Hexagon {p = p} {q} {r} {s} {t} {u} S =
+    hexagon (p ∙ q ∙ r)
+            (compPath→Square ((lUnit _) ∙ ap (_∙ q ∙ r) (sym (lCancel p)) ∙ sym (assoc _ _ _) ))
+            (compPath→Square ((sym (assoc p (q ∙ r) (sym u)) ∙ ap (p ∙_) (sym (assoc _ _ _) ∙ Square→compPath S)) ∙ assoc _ _ _ ∙ ap (_∙ t) (assoc _ _ _ ∙ ap (_∙ s) (rCancel p) ∙ sym (lUnit _))))
 
 doubleCompPathEq→compPathEq :
     {a b c d e f : A}

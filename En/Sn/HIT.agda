@@ -15,7 +15,6 @@ open import Cubical.HITs.PropositionalTruncation.Properties
 Implementation with rewriting rules inlined into the HIT
 -}
 
-
 curryΣ :
   {A C : Type} {B : A → Type}
   → (Σ[ a ∈ A ] B a → C) → (a : A) → B a → C
@@ -29,17 +28,16 @@ uncurryΣ f (a , b) = f a b
 ∃∥∥-rec : {A : Type} {B : A → Type} → ∥ Σ[ a ∈ A ] (∥ B a ∥) ∥ → ∥ Σ[ a ∈ A ] B a ∥
 ∃∥∥-rec {A} {B} = rec ((isPropPropTrunc {A = Σ[ a ∈ A ] B a})) (uncurryΣ (λ a → map λ b → a , b))
 
-
-
-
 data StairList : Type where
     [] : StairList
     _↙_∷_ : (n : ℕ) → (a : ℕ) → StairList → StairList
+    remove : (n : ℕ) (σ : StairList) → n ↙ 0 ∷ σ ≡ σ
     cancel : (n : ℕ) (σ : StairList) → n ↙ 1 ∷ (n ↙ 1 ∷ σ) ≡ σ
+    join :   (n a b : ℕ) → (σ : StairList) → (n ↙ a ∷ (suc (n + a) ↙ b ∷ σ)) ≡ n ↙ a + b ∷ σ
+    
     swap :   (k l m n : ℕ) → {p : suc k < l} → (σ : StairList) → l ↙ n ∷ (k ↙ m ∷ σ) ≡ k ↙ m ∷ (l ↙ n ∷ σ)
     braid :  (n k : ℕ) → (σ : StairList) → n ↙ suc (suc k) ∷ (suc (k + n) ↙ 1 ∷ σ) ≡ (k + n) ↙ 1 ∷ (n ↙ suc (suc k) ∷ σ)
-    join :   (n a b : ℕ) → (σ : StairList) → (n ↙ a ∷ (suc (n + a) ↙ b ∷ σ)) ≡ n ↙ a + b ∷ σ
-    remove : (n : ℕ) (σ : StairList) → n ↙ 0 ∷ σ ≡ σ
+    
     is-set : isSet StairList
 
 f : List (ℕ × ℕ) → StairList
@@ -67,8 +65,15 @@ proj (is-set σ τ p q i j) = isOfHLevel→isOfHLevelDep 2 {B = proj-fib} (λ _ 
 
 -- 𝔫 : StairList → List (ℕ × ℕ)
 -- 𝔫 [] = []
--- 𝔫 (n ↙ a ∷ σ) = (n , a) ∷ 𝔫 σ
--- 𝔫 (cancel n σ i) = {!.!}
+-- 𝔫 (n ↙ zero ∷ σ) = 𝔫 σ
+-- 𝔫 (n ↙ suc a ∷ σ) = {!!}
+-- 𝔫 (n ↙ a ∷ cancel n₁ σ i) = {!!}
+-- 𝔫 (n ↙ a ∷ swap k l m n₁ σ i) = {!!}
+-- 𝔫 (n ↙ a ∷ braid n₁ k σ i) = {!!}
+-- 𝔫 (n ↙ a ∷ join n₁ a₁ b σ i) = {!!}
+-- 𝔫 (n ↙ a ∷ remove n₁ σ i) = {!!}
+-- 𝔫 (n ↙ a ∷ is-set σ σ₁ x y i i₁) = {!!}
+-- 𝔫 (cancel n σ i) = {!!}
 -- 𝔫 (swap k l m n₁ σ i) = {!!}
 -- 𝔫 (braid n₁ k σ i) = {!!}
 -- 𝔫 (join n₁ a b σ i) = {!!}
