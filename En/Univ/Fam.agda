@@ -12,11 +12,12 @@ open import Cubical.Structures.Axioms
 open import Cubical.Structures.Constant
 open import Cubical.Structures.Function
 open import Cubical.Structures.Pointed
+open import Cubical.HITs.Truncation as Trunc
 open import En.Univ.Base
 
 private
   variable
-    ℓ ℓ' ℓ'' : Level
+    ℓ ℓ' ℓ'' ℓ''' : Level
 
 -- families over a subuniverse
 
@@ -210,3 +211,39 @@ module FamPath (𝒮 : SubUniv ℓ ℓ') (A : Type ℓ'') where
           ≃⟨ equivΠCod (λ _ → implicit≃Explicit ⁻¹ₑ) ∙ₑ implicit≃Explicit ⁻¹ₑ ⟩
         ({x : ⟨ X ⟩} {y : ⟨ Y ⟩} → –> e x ≡ y → labels X x ≡ labels Y y)
           ■
+
+-- functoriality
+
+mapFam : {𝒮 : SubUniv ℓ ℓ'} {A : Type ℓ''} {B : Type ℓ'''} → (A → B) → Fam 𝒮 A → Fam 𝒮 B
+mapFam f (X , v , p) = X , f ∘ v , p
+
+-- truncation commutes with families
+
+truncΠ→ : {A : Type ℓ''} (n : HLevel) (X : Type ℓ) → ∥ (X → A) ∥ (suc n) → (X → ∥ A ∥ (suc n))
+truncΠ→ n X = Trunc.rec (isOfHLevelΠ _ λ _ → isOfHLevelTrunc _) λ f x → ∣ f x ∣
+
+module _ (𝒮 : SubUniv ℓ ℓ') {A : Type ℓ''} (n : HLevel)
+  (isOfHLevel𝒮 : isOfHLevel (suc n) (TypeWithStr ℓ (𝒮 .fst)))
+  (isEquivTruncΠ→ : (X : TypeWithStr ℓ (𝒮 .fst)) → isEquiv (truncΠ→ {A = A} n ⟨ X ⟩)) where
+
+  private
+    S = TypeWithStr ℓ (𝒮 .fst)
+
+  truncFam≃ : ∥ Fam 𝒮 A ∥ (suc n) ≃ Fam 𝒮 (∥ A ∥ (suc n))
+  truncFam≃ =
+    ∥ Fam 𝒮 A ∥ (suc n)
+      ≃⟨ isoToEquiv (mapCompIso (equivToIso (FamPath.Fam≃Σ 𝒮 A))) ⟩
+    ∥ Σ[ X ∈ S ] (⟨ X ⟩ → A) ∥ (suc n)
+      ≃⟨ isoToEquiv (truncOfΣIso (suc n)) ⟩
+    ∥ Σ[ X ∈ S ] ∥ (⟨ X ⟩ → A) ∥ (suc n) ∥ (suc n)
+      ≃⟨ isoToEquiv (mapCompIso (equivToIso (Σ-cong-equiv-snd λ X → truncΠ→ n ⟨ X ⟩ , isEquivTruncΠ→ X))) ⟩
+    ∥ Σ[ X ∈ S ] (⟨ X ⟩ → ∥ A ∥ (suc n)) ∥ (suc n)
+      ≃⟨ truncIdempotent≃ (suc n) (isOfHLevelΣ (suc n) isOfHLevel𝒮 λ _ → isOfHLevelΠ (suc n) λ _ → isOfHLevelTrunc (suc n)) ⟩
+    Σ[ X ∈ S ] (⟨ X ⟩ → ∥ A ∥ (suc n))
+      ≃⟨ FamPath.Fam≃Σ 𝒮 _ ⁻¹ₑ ⟩
+    Fam 𝒮 (∥ A ∥ (suc n))
+      ■
+
+  truncFam≃-β : (X : Fam 𝒮 A) → –> truncFam≃ ∣ X ∣ ≡ mapFam {𝒮 = 𝒮} ∣_∣ X
+  truncFam≃-β _ = refl
+

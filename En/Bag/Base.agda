@@ -8,7 +8,7 @@ open import En.UFin.Base
 
 private
   variable
-    ℓ : Level
+    ℓ ℓ' : Level
 
 -- homotopy finite multisets
 
@@ -27,3 +27,8 @@ module _ {A : Type ℓ} where
   (X ⊗ Y) .fst = ⟨ X ⟩ ⊎ ⟨ Y ⟩
   (X ⊗ Y) .snd .fst = ⊎.rec (X .snd .fst) (Y .snd .fst)
   (X ⊗ Y) .snd .snd = isFinSet⊎ (⟨ X ⟩ , X .snd .snd) (⟨ Y ⟩ , Y .snd .snd)
+
+-- functoriality
+
+mapBag : {A : Type ℓ} {B : Type ℓ'} → (A → B) → Bag A → Bag B
+mapBag = mapFam {𝒮 = UFinSub}

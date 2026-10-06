@@ -8,6 +8,10 @@ open import Cubical.Data.Sum as ⊎
 open import Cubical.Data.FinSet.Base
 open import Cubical.Data.FinSet.Cardinality
 open import Cubical.Data.Fin.LehmerCode
+open import Cubical.Data.Empty.Properties
+open import Cubical.Foundations.Equiv.Properties
+import Cubical.Data.FinSet.Induction as FS
+open import Cubical.HITs.Truncation as Trunc
 open import En.Univ
 open import En.BAut
 open import En.UFin.Base
@@ -144,6 +148,58 @@ UFin×* = UUnivSMG.UUniv* UFinUUniv isGroupoidUFin 𝟙 _×ᶠ_ ≃-×
   (λ _ _ _ _ → equivEq refl)
   (λ _ _ _ → equivEq refl)
   (λ _ _ → equivEq refl)
+
+-- truncation commutes with finite products
+
+module _ {ℓ} {A : Type ℓ} (n : HLevel) where
+
+  private
+    open Iso
+
+    Π𝟙+Iso : {X : Type} {B : Type ℓ} → Iso ((Unit* {ℓ-zero} ⊎ X) → B) (B × (X → B))
+    Π𝟙+Iso .fun f = f (inl tt*) , f ∘ inr
+    Π𝟙+Iso .inv (b , g) = ⊎.rec (λ _ → b) g
+    Π𝟙+Iso .sec _ = refl
+    Π𝟙+Iso .ret _ = ⊎-η refl refl
+
+    truncΠ→' : (X : UFin) → ∥ (⟨ X ⟩ → A) ∥ (suc n) → (⟨ X ⟩ → ∥ A ∥ (suc n))
+    truncΠ→' X = truncΠ→ n ⟨ X ⟩
+
+  isEquivTruncΠ→ : (X : UFin) → isEquiv (truncΠ→ n ⟨ X ⟩)
+  isEquivTruncΠ→ =
+    FS.elimProp𝟙+
+      (λ X → isEquiv (truncΠ→' X))
+      (λ _ → isPropIsEquiv _)
+      base
+      (λ {X} → step {X})
+    where
+      base : isEquiv (truncΠ→' 𝟘)
+      base = isEquivFromIsContr _ (isContr→isContrTrunc (suc n) isContrΠ⊥*) isContrΠ⊥*
+
+      module _ {X : UFin} (h : isEquiv (truncΠ→' X)) where
+
+        e : ∥ (Unit* ⊎ ⟨ X ⟩ → A) ∥ (suc n) ≃ (Unit* ⊎ ⟨ X ⟩ → ∥ A ∥ (suc n))
+        e =
+          ∥ (Unit* ⊎ ⟨ X ⟩ → A) ∥ (suc n)
+            ≃⟨ isoToEquiv (mapCompIso Π𝟙+Iso) ⟩
+          ∥ A × (⟨ X ⟩ → A) ∥ (suc n)
+            ≃⟨ isoToEquiv (truncOfProdIso (suc n)) ⟩
+          ∥ A ∥ (suc n) × ∥ (⟨ X ⟩ → A) ∥ (suc n)
+            ≃⟨ Σ-cong-equiv-snd (λ _ → truncΠ→' X , h) ⟩
+          ∥ A ∥ (suc n) × (⟨ X ⟩ → ∥ A ∥ (suc n))
+            ≃⟨ isoToEquiv (invIso Π𝟙+Iso) ⟩
+          (Unit* ⊎ ⟨ X ⟩ → ∥ A ∥ (suc n))
+            ■
+
+        e≡truncΠ→ : –> e ≡ truncΠ→' (𝟙 +ᶠ X)
+        e≡truncΠ→ =
+          funExt (Trunc.elim {B = λ p → –> e p ≡ truncΠ→' (𝟙 +ᶠ X) p}
+            (λ _ → isOfHLevelPath (suc n) (isOfHLevelΠ _ λ _ → isOfHLevelTrunc _) _ _)
+            (λ _ → ⊎-η refl refl)
+          )
+
+        step : isEquiv (truncΠ→' (𝟙 +ᶠ X))
+        step = tpt isEquiv e≡truncΠ→ (snd e)
 
 -- rig coherences for fun (we don't need them)
 
