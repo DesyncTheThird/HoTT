@@ -3,6 +3,7 @@ module En.FSMG.Properties where
 open import En.Prelude
 open import En.FSMG.Base
 import En.SMG as S hiding (SMG* ; SMG*Fun)
+open import Cubical.HITs.Truncation as Trunc
 
 FSMG* : ∀ {ℓ} (A : Type ℓ) → S.SMG*Sq (FSMG A)
 FSMG* A .S.𝕀 = 𝕀
@@ -209,3 +210,39 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
       (λ _ → refl)
       ♭-retract
     )
+
+-- fsmg on groupoid truncation
+
+module _ {ℓ} (A : Type ℓ) where
+
+  private
+    to : FSMG A → FSMG (∥ A ∥ 3)
+    to = Univ._♯ A _ (FSMG* _) (η ∘ ∣_∣)
+
+    from : FSMG (∥ A ∥ 3) → FSMG A
+    from = Univ._♯ (∥ A ∥ 3) _ (FSMG* A) (Trunc.rec is-groupoid η)
+
+    to-from : (X : FSMG (∥ A ∥ 3)) → to (from X) ≡ X
+    to-from = FSMG*Elim*Set.elim (∥ A ∥ 3)
+      (Trunc.elim (λ _ → isOfHLevelPath 3 is-groupoid _ _) λ _ → refl)
+      refl
+      (λ p q i → p i ⊗ q i)
+      (λ p q r i j → α (p j) (q j) (r j) i)
+      (λ p i j → Λ (p j) i)
+      (λ p i j → ρ (p j) i)
+      (λ p q i j → β (p j) (q j) i)
+      (λ _ → is-groupoid _ _)
+
+    from-to : (X : FSMG A) → from (to X) ≡ X
+    from-to = FSMG*Elim*Set.elim A
+      (λ _ → refl)
+      refl
+      (λ p q i → p i ⊗ q i)
+      (λ p q r i j → α (p j) (q j) (r j) i)
+      (λ p i j → Λ (p j) i)
+      (λ p i j → ρ (p j) i)
+      (λ p q i j → β (p j) (q j) i)
+      (λ _ → is-groupoid _ _)
+
+  FSMG≃FSMGTrunc : FSMG A ≃ FSMG (∥ A ∥ 3)
+  FSMG≃FSMGTrunc = isoToEquiv (iso to from to-from from-to)
