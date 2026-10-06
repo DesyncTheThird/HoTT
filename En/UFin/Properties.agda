@@ -2,11 +2,9 @@ module En.UFin.Properties where
 
 open import En.Prelude
 open SumFin
-open import Cubical.Foundations.Pointed
 open import Cubical.Homotopy.Loopspace
 open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Data.Sum as ⊎
-open import Cubical.Data.Unit
 open import Cubical.Data.FinSet.Base
 open import Cubical.Data.FinSet.Cardinality
 open import Cubical.Data.Fin.LehmerCode
