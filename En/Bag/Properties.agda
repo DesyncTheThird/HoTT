@@ -7,6 +7,7 @@ open import En.UFin
 open import En.Bag.Base
 import En.SMG as S hiding ( SMG* ; SMG*Fun )
 open import En.SMG.Code
+open import Cubical.HITs.Truncation as Trunc
 
 private
   variable
@@ -63,3 +64,13 @@ module _ {A : Type ℓ} where
 
 Bag* : {A : Type ℓ} → isGroupoid A → S.SMG*Sq (Bag A)
 Bag* isGroupoidA = Code* (isGroupoidBag isGroupoidA)
+
+-- truncation commutes with bags
+
+module _ {A : Type ℓ} (n : HLevel) where
+
+  truncBag≃ : ∥ Bag A ∥ (3 + n) ≃ Bag (∥ A ∥ (3 + n))
+  truncBag≃ = truncFam≃ UFinSub (2 + n) (isOfHLevelPlus' 3 isGroupoidUFin) (isEquivTruncΠ→ (2 + n))
+
+  truncBag≃-β : (X : Bag A) → –> truncBag≃ ∣ X ∣ ≡ mapBag ∣_∣ X
+  truncBag≃-β _ = refl
