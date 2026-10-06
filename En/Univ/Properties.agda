@@ -6,6 +6,7 @@ open import Cubical.Foundations.Transport
 open import Cubical.Foundations.Equiv.Properties
 open import En.Univ.Base
 import En.SMG as S hiding ( SMG* ; SMG*Fun )
+open import En.SMG.Code
 
 private
   variable
@@ -60,7 +61,7 @@ SubUUniv : SubUniv ℓ ℓ' → UUniv (ℓ-max (ℓ-suc ℓ) ℓ') ℓ
 SubUUniv (P , _) .fst = univ (TypeWithStr _ P) fst
 SubUUniv (_ , isPropP) .snd _ _ = ((_ , isEmbeddingFstΣProp isPropP) ∙ₑ univalence) .snd
 
--- SMG structure on a univalent universe
+-- SMG on a univalent universe
 
 module _ (𝒰 : UUniv ℓ ℓ') (isGroupoidU : isGroupoid (𝒰 .fst .U)) where
 
@@ -87,70 +88,11 @@ module _ (𝒰 : UUniv ℓ ℓ') (isGroupoidU : isGroupoid (𝒰 .fst .U)) where
     (β²≃ : (X Y : 𝒰.U) → β≃ X Y ∙ₑ β≃ Y X ≡ idEquiv (𝒰.El (X ⊗ Y)))
     where
 
-    private
-      ptoe = pathToEquivEl 𝒰
-      uaU = uaEl 𝒰
-      β' = uaElβ 𝒰
-      inj = pathToEquivElInj 𝒰
-      ptoe-∙ = pathToEquivEl-∙ 𝒰
-      ptoe-refl = pathToEquivEl-refl 𝒰
-
-      ptoe-⊗ = pathToEquivEl-⊗
-
-      ptoe-⊗ₗ : {X X' : 𝒰.U} (p : X ≡ X') (Y : 𝒰.U) → ptoe (ap (_⊗ Y) p) ≡ ptoe p ⊗≃ idEquiv (𝒰.El Y)
-      ptoe-⊗ₗ p Y = ptoe-⊗ p refl ∙ ap (ptoe p ⊗≃_) ptoe-refl
-
-      ptoe-⊗ᵣ : (X : 𝒰.U) {Y Y' : 𝒰.U} (q : Y ≡ Y') → ptoe (ap (X ⊗_) q) ≡ idEquiv (𝒰.El X) ⊗≃ ptoe q
-      ptoe-⊗ᵣ X q = ptoe-⊗ refl q ∙ ap (_⊗≃ ptoe q) ptoe-refl
-
-      α : (X Y Z : 𝒰.U) → (X ⊗ Y) ⊗ Z ≡ X ⊗ (Y ⊗ Z)
-      α X Y Z = uaU (α≃ X Y Z)
-
-      Λ : (X : 𝒰.U) → 𝕀 ⊗ X ≡ X
-      Λ X = uaU (Λ≃ X)
-
-      ρ : (X : 𝒰.U) → X ⊗ 𝕀 ≡ X
-      ρ X = uaU (ρ≃ X)
-
-      β : (X Y : 𝒰.U) → X ⊗ Y ≡ Y ⊗ X
-      β X Y = uaU (β≃ X Y)
+    open CodeSMG (λ X Y → 𝒰.El X ≃ 𝒰.El Y) (λ _ _ → El≡≃ 𝒰) (λ X → idEquiv (𝒰.El X)) _∙ₑ_
+      (λ _ → pathToEquivEl-refl 𝒰) (pathToEquivEl-∙ 𝒰) 𝕀 _⊗_ _⊗≃_ pathToEquivEl-⊗ α≃ Λ≃ ρ≃ β≃
+      (λ X Y → ▽≃ X Y ∙ ap (α≃ X 𝕀 Y ∙ₑ_) (sym (compEquivEquivId _)))
+      (λ W X Y Z → ap (α≃ (W ⊗ X) Y Z ∙ₑ_) (compEquivIdEquiv _) ∙ ⬠≃ W X Y Z)
+      ⬡≃ β²≃ using (Code*)
 
     UUniv* : S.SMG*Sq 𝒰.U
-    UUniv* .S.𝕀 = 𝕀
-    UUniv* .S._⊗_ = _⊗_
-    UUniv* .S.α = α
-    UUniv* .S.Λ = Λ
-    UUniv* .S.ρ = ρ
-    UUniv* .S.β = β
-    UUniv* .S.▽ X Y = compPath→Square₁ (inj (lhs ∙ ▽≃ X Y ∙ sym rhs))
-      where
-        lhs : ptoe (ap (_⊗ Y) (ρ X)) ≡ ρ≃ X ⊗≃ idEquiv (𝒰.El Y)
-        lhs = ptoe-⊗ₗ _ Y ∙ ap (_⊗≃ idEquiv (𝒰.El Y)) (β' _)
-        rhs : ptoe (α X 𝕀 Y ∙ ap (X ⊗_) (Λ Y) ∙ refl) ≡ α≃ X 𝕀 Y ∙ₑ (idEquiv (𝒰.El X) ⊗≃ Λ≃ Y)
-        rhs = ptoe-∙ _ _ ∙ cong₂ _∙ₑ_ (β' _)
-                (ptoe-∙ _ _ ∙ ap (_∙ₑ ptoe refl) (ptoe-⊗ᵣ X _ ∙ ap (idEquiv (𝒰.El X) ⊗≃_) (β' _))
-                 ∙ ap ((idEquiv (𝒰.El X) ⊗≃ Λ≃ Y) ∙ₑ_) ptoe-refl ∙ compEquivEquivId _)
-    UUniv* .S.⬠₌ W X Y Z = α (W ⊗ X) Y Z ∙∙ refl ∙∙ α W X (Y ⊗ Z)
-    UUniv* .S.⬠₁ W X Y Z = flipSquare (doubleCompPath-filler (α (W ⊗ X) Y Z) refl (α W X (Y ⊗ Z)))
-    UUniv* .S.⬠₂ W X Y Z = compPath→Square₂ (inj (lhs ∙ ⬠≃ W X Y Z ∙ sym rhs))
-      where
-        lhs : ptoe (α (W ⊗ X) Y Z ∙∙ refl ∙∙ α W X (Y ⊗ Z)) ≡ α≃ (W ⊗ X) Y Z ∙ₑ α≃ W X (Y ⊗ Z)
-        lhs = ap ptoe (doubleCompPath≡compPath _ _ _) ∙ ptoe-∙ _ _
-            ∙ cong₂ _∙ₑ_ (β' _) (ptoe-∙ _ _ ∙ cong₂ _∙ₑ_ ptoe-refl (β' _) ∙ compEquivIdEquiv _)
-        rhs : ptoe (ap (_⊗ Z) (α W X Y) ∙ α W (X ⊗ Y) Z ∙ ap (W ⊗_) (α X Y Z))
-            ≡ (α≃ W X Y ⊗≃ idEquiv (𝒰.El Z)) ∙ₑ α≃ W (X ⊗ Y) Z ∙ₑ (idEquiv (𝒰.El W) ⊗≃ α≃ X Y Z)
-        rhs = ptoe-∙ _ _ ∙ cong₂ _∙ₑ_ (ptoe-⊗ₗ _ Z ∙ ap (_⊗≃ idEquiv (𝒰.El Z)) (β' _))
-                (ptoe-∙ _ _ ∙ cong₂ _∙ₑ_ (β' _) (ptoe-⊗ᵣ W _ ∙ ap (idEquiv (𝒰.El W) ⊗≃_) (β' _)))
-    UUniv* .S.⬡₌ X Y Z = α X Y Z ∙∙ β X (Y ⊗ Z) ∙∙ α Y Z X
-    UUniv* .S.⬡₁ X Y Z = flipSquare (doubleCompPath-filler (α X Y Z) (β X (Y ⊗ Z)) (α Y Z X))
-    UUniv* .S.⬡₂ X Y Z = compPath→Square₂ (inj (lhs ∙ ⬡≃ X Y Z ∙ sym rhs))
-      where
-        lhs : ptoe (α X Y Z ∙∙ β X (Y ⊗ Z) ∙∙ α Y Z X) ≡ α≃ X Y Z ∙ₑ β≃ X (Y ⊗ Z) ∙ₑ α≃ Y Z X
-        lhs = ap ptoe (doubleCompPath≡compPath _ _ _) ∙ ptoe-∙ _ _
-            ∙ cong₂ _∙ₑ_ (β' _) (ptoe-∙ _ _ ∙ cong₂ _∙ₑ_ (β' _) (β' _))
-        rhs : ptoe (ap (_⊗ Z) (β X Y) ∙ α Y X Z ∙ ap (Y ⊗_) (β X Z))
-            ≡ (β≃ X Y ⊗≃ idEquiv (𝒰.El Z)) ∙ₑ α≃ Y X Z ∙ₑ (idEquiv (𝒰.El Y) ⊗≃ β≃ X Z)
-        rhs = ptoe-∙ _ _ ∙ cong₂ _∙ₑ_ (ptoe-⊗ₗ _ Z ∙ ap (_⊗≃ idEquiv (𝒰.El Z)) (β' _))
-                (ptoe-∙ _ _ ∙ cong₂ _∙ₑ_ (β' _) (ptoe-⊗ᵣ Y _ ∙ ap (idEquiv (𝒰.El Y) ⊗≃_) (β' _)))
-    UUniv* .S.β² X Y = compPath≡refl→≡sym (inj (ptoe-∙ _ _ ∙ cong₂ _∙ₑ_ (β' _) (β' _) ∙ β²≃ X Y ∙ sym ptoe-refl))
-    UUniv* .S.is-groupoid = isGroupoidU
+    UUniv* = Code* isGroupoidU
