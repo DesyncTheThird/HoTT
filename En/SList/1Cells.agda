@@ -159,31 +159,34 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
                                             ∙ ap (ap (z ::_)) p ∙
                                             ap-∙∙ (z ::_) (swap x y (zs ++ xs)) (ap (y ::_) (++-:: x zs xs)) (++-:: y zs (x :: xs))
 
--- ++-β-aux : (x y : A) (xs ys : SList A)
---         → (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
---          ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
+++-β-aux : (x y : A) (xs ys : SList A)
+        → (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
+         ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
 
--- ++-β-aux {A = A} x y xs ys = SListElim2Paths.elim (λ _ → SList A)
---         (λ ys → x :: y :: ys ++ xs)
---         (λ ys → ys ++ y :: x :: xs)
---         (λ ys → (ap (_::_ x) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙
---              ap (_++_ ys) (swap x y xs)))
---         (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
---              ++-:: y ys (x :: xs)))
---         (refl ∙ (swap x y (nil ++ xs))
---           ≡⟨ sym (lUnit (swap x y (nil ++ xs))) ⟩
---         (swap x y (nil ++ xs))
---           ≡⟨ (rUnit _ ∙ rUnit _)⟩
---         (swap x y (nil ++ xs) ∙ refl) ∙ refl
---           ≡⟨ sym (assoc (swap x y (nil ++ xs)) refl refl) ⟩
---         (swap x y (nil ++ xs) ∙ refl ∙ refl)
---           ≡⟨ sym (doubleCompPath≡compPath (swap x y (nil ++ xs)) refl refl) ⟩
---         (swap x y (nil ++ xs) ∙∙ refl ∙∙ refl)
---           ∎
---         )
---         (λ z {zs} p → compPathEq→doubleCompPathEq ((assoc _ _ _) ∙ sym (Square→compPath (E x y xs ys z zs p))))
---         (λ _ → is-groupoid)
---         ys
+++-β-aux {A = A} x y xs ys = SListElim2Paths.elim (λ _ → SList A)
+        (λ ys → x :: y :: ys ++ xs)
+        (λ ys → ys ++ y :: x :: xs)
+        (λ ys → (ap (_::_ x) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙
+             ap (_++_ ys) (swap x y xs)))
+        (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
+             ++-:: y ys (x :: xs)))
+        (refl ∙ (swap x y (nil ++ xs))
+          ≡⟨ sym (lUnit (swap x y (nil ++ xs))) ⟩
+        (swap x y (nil ++ xs))
+          ≡⟨ (rUnit _ ∙ rUnit _)⟩
+        (swap x y (nil ++ xs) ∙ refl) ∙ refl
+          ≡⟨ sym (assoc (swap x y (nil ++ xs)) refl refl) ⟩
+        (swap x y (nil ++ xs) ∙ refl ∙ refl)
+          ≡⟨ sym (doubleCompPath≡compPath (swap x y (nil ++ xs)) refl refl) ⟩
+        (swap x y (nil ++ xs) ∙∙ refl ∙∙ refl)
+          ∎
+        )
+        
+        (λ z {zs} p → doubleCompPath≡compPath (ap (x ::_) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs))(ap (z :: zs ++_ ) (swap x y xs))
+                    ∙ ((assoc (ap (x ::_ ) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs)) (ap (z :: zs ++_) (swap x y xs))) ∙ sym (Square→compPath (E x y xs ys z zs p)))
+                    ∙ sym (doubleCompPath≡compPath (swap x y (z :: zs ++ xs)) (ap (y ::_) (++-:: x (z :: zs) xs)) (++-:: y (z :: zs) (x :: xs))))
+        (λ _ → is-groupoid)
+        ys
 
 ++-β : (xs ys : SList A) → xs ++ ys ≡ ys ++ xs
 ++-β xs ys =
