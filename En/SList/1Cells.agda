@@ -193,6 +193,6 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
   SListElimPaths.elim (λ _ → SList _) (_++ ys) (ys ++_)
     (sym (++-ρ ys))
     (λ x {xs} p → ap (x ::_) p ∙ ++-:: x ys xs)
-    (λ x y {xs} p → sorry)
+    (λ x y {xs} p → sorry) -- TODO: swap case of ++-β
     (λ _ → is-groupoid)
     xs
