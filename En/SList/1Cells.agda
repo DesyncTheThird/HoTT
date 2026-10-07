@@ -160,9 +160,6 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
                                             ap-∙∙ (z ::_) (swap x y (zs ++ xs)) (ap (y ::_) (++-:: x zs xs)) (++-:: y zs (x :: xs))
 
 ++-β-aux : (x y : A) (xs ys : SList A)
-         -- → Hexagon
-         --   (ap (x ::_) (++-:: y ys xs)) (++-:: x ys (y :: xs)) (ap (ys ++_) (swap x y xs))
-         --   (swap x y (ys ++ xs)) (ap (y ::_) (++-:: x ys xs)) (++-:: y ys (x :: xs))
         → (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
          ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
 
@@ -184,8 +181,10 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
         (swap x y (nil ++ xs) ∙∙ refl ∙∙ refl)
           ∎
         )
-
-        (λ z {zs} p → compPathEq→doubleCompPathEq ((assoc _ _ _) ∙ sym (Square→compPath (E x y xs ys z zs p))))
+        
+        (λ z {zs} p → doubleCompPath≡compPath (ap (x ::_) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs))(ap (z :: zs ++_ ) (swap x y xs))
+                    ∙ ((assoc (ap (x ::_ ) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs)) (ap (z :: zs ++_) (swap x y xs))) ∙ sym (Square→compPath (E x y xs ys z zs p)))
+                    ∙ sym (doubleCompPath≡compPath (swap x y (z :: zs ++ xs)) (ap (y ::_) (++-:: x (z :: zs) xs)) (++-:: y (z :: zs) (x :: xs))))
         (λ _ → is-groupoid)
         ys
 
