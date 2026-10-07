@@ -1,0 +1,51 @@
+name: sorry
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.agda"
+  # run on a commit or range
+  workflow_dispatch:
+    inputs:
+      MANUAL_COMMIT_REF:
+        description: commit to get the diff for
+        required: true
+      MANUAL_BASE_REF:
+        description: base commit to compare against
+        required: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  issues:
+    name: todo to issue
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # sorry -- TODO: title
+      - name: Sync issues
+        uses: alstr/todo-to-issue-action@v5
+        with:
+          IDENTIFIERS: '[{"name": "TODO", "labels": ["sorry", "bug"]}]'
+          AUTO_ASSIGN: "true"
+          CLOSE_ISSUES: "true"
+        env:
+          MANUAL_COMMIT_REF: ${{ inputs.MANUAL_COMMIT_REF }}
+          MANUAL_BASE_REF: ${{ inputs.MANUAL_BASE_REF }}
+
+      # labels the sorry issues
+      - name: Label issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create sorry --color d93f0b --force
+          gh issue list --state open --limit 500 --json number,labels,author \
+            --jq '.[] | select(.author.is_bot and all(.labels[]; .name != "sorry")) | .number' |
+            xargs -r -I{} gh issue edit {} --add-label sorry --add-label bug
