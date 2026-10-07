@@ -55,7 +55,7 @@ swapAt-eq n fk@(k , ϕ) with discreteℕ k k | discreteℕ (suc k) k
 
 
 swapAt² : (n : SLevel) (k : Fin (suc n)) → (l : Fin (suc (suc n))) → swapAt n k (swapAt n k l) ≡ l
-swapAt² n fk@(k , ϕ) fl@(l , ψ) = sorry
+swapAt² n fk@(k , ϕ) fl@(l , ψ) = sorry -- TODO: swapAt is an involution (swapAt²)
 
 
 -- swapAt n (k , ϕ) (swapAt n (k , ϕ) (l , ψ)) ≡ (l , ψ)

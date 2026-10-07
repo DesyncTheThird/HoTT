@@ -17,16 +17,16 @@ SList* A .S._⊗_ = _++_
 SList* A .S.α = ++-α
 SList* A .S.Λ = ++-Λ
 SList* A .S.ρ = ++-ρ
-SList* A .S.β = sorry
-SList* A .S.▽ = sorry
-SList* A .S.⬠₌ = sorry
-SList* A .S.⬠₁ = sorry
-SList* A .S.⬠₂ = sorry
-SList* A .S.⬡₌ = sorry
-SList* A .S.⬡₁ = sorry
-SList* A .S.⬡₂ = sorry
-SList* A .S.β² = sorry
-SList* A .S.is-groupoid = sorry
+SList* A .S.β = sorry -- TODO: symmetry β for SList*
+SList* A .S.▽ = sorry -- TODO: triangle ▽ for SList*
+SList* A .S.⬠₌ = sorry -- TODO: pentagon ⬠₌ for SList*
+SList* A .S.⬠₁ = sorry -- TODO: pentagon ⬠₁ for SList*
+SList* A .S.⬠₂ = sorry -- TODO: pentagon ⬠₂ for SList*
+SList* A .S.⬡₌ = sorry -- TODO: hexagon ⬡₌ for SList*
+SList* A .S.⬡₁ = sorry -- TODO: hexagon ⬡₁ for SList*
+SList* A .S.⬡₂ = sorry -- TODO: hexagon ⬡₂ for SList*
+SList* A .S.β² = sorry -- TODO: symmetry involution β² for SList*
+SList* A .S.is-groupoid = sorry -- TODO: is-groupoid for SList*
 
 
 -- module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B) where
