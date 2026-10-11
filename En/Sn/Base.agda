@@ -1,7 +1,7 @@
 module En.Sn.Base where
 
 open import En.Prelude
-open Finℕ
+open FN
 open import Cubical.Data.Fin.LehmerCode hiding ( encode ; decode ) renaming ( _∷_ to _▹_ )
 open import Cubical.Data.List hiding ( elim ; rec ; map ) public
 

@@ -1,7 +1,7 @@
 module En.Sn.Dec where
 
 open import En.Prelude
-open Finℕ
+open FN
 open import En.Sn.Base
 open import Cubical.Data.Empty as ⊥
 
