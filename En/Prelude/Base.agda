@@ -24,9 +24,9 @@ open import Cubical.Data.Nat.Properties public
 import Cubical.Data.SumFin
 import Cubical.Data.Fin
 -- finite types as iterated sums
-module SumFin = Cubical.Data.SumFin hiding ( elim ; ⊤ ; tt ; _⊎_ ; inl ; inr )
+module FS = Cubical.Data.SumFin hiding ( elim ; ⊤ ; tt ; _⊎_ ; inl ; inr )
 -- finite types as bounded naturals
-module Finℕ = Cubical.Data.Fin hiding ( elim ; _/_ )
+module FN = Cubical.Data.Fin hiding ( elim ; _/_ )
 open import Cubical.Relation.Nullary.Base public
 open import Cubical.Data.Nat.Order public
 open import Cubical.Data.Empty hiding ( elim ; rec ) public

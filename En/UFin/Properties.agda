@@ -1,7 +1,7 @@
 module En.UFin.Properties where
 
 open import En.Prelude
-open SumFin
+open FS
 open import Cubical.Homotopy.Loopspace
 open import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.Data.Sum as ⊎
@@ -10,7 +10,7 @@ open import Cubical.Data.FinSet.Cardinality
 open import Cubical.Data.Fin.LehmerCode
 open import Cubical.Data.Empty.Properties
 open import Cubical.Foundations.Equiv.Properties
-import Cubical.Data.FinSet.Induction as FS
+import Cubical.Data.FinSet.Induction as FinSetInd
 open import Cubical.HITs.Truncation as Trunc
 open import En.Univ
 open import En.BAut
@@ -167,7 +167,7 @@ module _ {ℓ} {A : Type ℓ} (n : HLevel) where
 
   isEquivTruncΠ→ : (X : UFin) → isEquiv (truncΠ→ n ⟨ X ⟩)
   isEquivTruncΠ→ =
-    FS.elimProp𝟙+
+    FinSetInd.elimProp𝟙+
       (λ X → isEquiv (truncΠ→' X))
       (λ _ → isPropIsEquiv _)
       base

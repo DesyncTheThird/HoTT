@@ -1,7 +1,7 @@
 module En.Sn.Shift where
 
 open import En.Prelude
-open Finℕ
+open FN
 open import En.Sn.Base
 open import Cubical.Data.List hiding ( elim ; rec ) public
 

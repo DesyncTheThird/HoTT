@@ -1,7 +1,7 @@
 module En.Sn.Quotient where
 
 open import En.Prelude
-open Finℕ
+open FN
 open import En.Sn.Base
 open import Cubical.HITs.SetQuotients
 open import Cubical.Data.List hiding ( elim ; rec ) public
