@@ -52,7 +52,6 @@ module SListElim {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
     elim (is-groupoid xs xs' p q r s i j k) = isGroupoid→CubeP (λ i j k → P (is-groupoid xs xs' p q r s i j k))
          (λ j k → elim (r j k)) (λ j k → elim (s j k)) (λ i k → elim (p k)) (λ i k → elim (q k)) (λ i j → elim xs) (λ i j → elim xs') (is-groupoid* xs') i j k
 
-
 module SListElimSet {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
     (nil* : P nil)
     (_::*_ : (x : A) {xs : SList A} → (xs* : P xs) → P (x :: xs))
@@ -63,22 +62,23 @@ module SListElimSet {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
     (is-set* : (xs : SList A) → isSet (P xs))
     where
     elim : (xs : SList A) → P xs
-    elim =
+    elim = let p₀ : (x y z : A) → (xs : SList A) → (xs* : P xs)
+                   → x :: (y :: (z :: xs)) ≡ z :: y :: x :: xs
+               p₀ x y z xs xs* = swap x y (z :: xs) ∙ (ap (y ::_) (swap x z xs)) ∙ swap y z (x :: xs)
+               Q : (x y z : A) → (xs : SList A) → (xs* : P xs)
+                   → PathP (λ i → P (p₀ x y z xs xs* i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*)))
+               Q x y z xs xs*  = compPathP' {B = P} (swap* x y (z ::* xs*)) (compPathP' {B = P} (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*)))
+               q : (x y z : A) → (xs : SList A) → (xs* : P xs)
+                   → p₀ x y z xs xs* ≡ ⬡₌ x y z xs
+               q x y z xs xs* = ap (swap x y (z :: xs) ∙_) (Square→compPath (⬡₁ x y z xs)) ∙ assoc _ _ _ ∙ ap (_∙ ⬡₌ x y z xs) (rCancel _) ∙ sym (lUnit _)
+               ⬡₌* : {x y z : A} → {xs : SList A} → {xs* : P xs} → PathP (λ i → P (⬡₌ x y z xs i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*)))
+               ⬡₌* {x} {y} {z} {xs} {xs*} = tpt (λ p → PathP (λ i → P (p i)) ((x ::* (y ::* (z ::* xs*)))) (z ::* (y ::* (x ::* xs*)))) (q x y z xs xs*) (Q x y z xs xs*)
+      in
       SListElim.elim P nil* _::*_ swap*
         (λ x y {xs} xs* → isSet→SquareP (λ i j → is-set* (swap² x y xs i j)) (swap* x y xs*) (symP (swap* y x xs*)) refl refl)
-        (λ x y z {xs} xs* → let p₀ : x :: (y :: (z :: xs)) ≡ z :: y :: x :: xs
-                                p₀ = swap x y (z :: xs) ∙ (ap (y ::_) (swap x z xs)) ∙ swap y z (x :: xs)
-                                Q : PathP (λ i → P (p₀ i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*)))
-                                Q = compPathP' {B = P} (swap* x y (z ::* xs*)) (compPathP' {B = P} (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*)))
-                                q : p₀ ≡ ⬡₌ x y z xs
-                                q = ap (swap x y (z :: xs) ∙_) (Square→compPath (⬡₁ x y z xs)) ∙ assoc _ _ _ ∙ ap (_∙ ⬡₌ x y z xs) (rCancel _) ∙ sym (lUnit _)
-                            in tpt (λ p → PathP (λ i → P (p i)) ((x ::* (y ::* (z ::* xs*)))) (z ::* (y ::* (x ::* xs*)))) q Q
-        
-        -- tpt (λ p → PathP (λ i → P (p i)) ((x ::* (y ::* (z ::* xs*)))) (z ::* (y ::* (x ::* xs*)))) {!!} (compPathP' (swap* x y (z ::* xs*)) (compPathP' (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*))))
-        -- compPathP' (swap* x y (z ::* xs*)) (compPathP' (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*)))
-        )
-        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₁ x y z xs i j)) (symP (swap* x y (z ::* xs*))) (swap* y z (x ::* xs*)) (apP (λ _ → y ::*_) (swap* x z xs*)) {!!})
-        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₂ x y z xs i j)) (apP (λ i → _::*_ x) (swap* y z xs*)) (symP (apP (λ _ → z ::*_ ) (swap* x y xs*))) {!!} λ i → swap* x z (y ::* xs*) i)
+        (λ x y z {xs} xs* → ⬡₌*)
+        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₁ x y z xs i j)) (symP (swap* x y (z ::* xs*))) (swap* y z (x ::* xs*)) (apP (λ _ → y ::*_) (swap* x z xs*)) ⬡₌*)
+        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₂ x y z xs i j)) (apP (λ i → _::*_ x) (swap* y z xs*)) (symP (apP (λ _ → z ::*_ ) (swap* x y xs*))) ⬡₌* λ i → swap* x z (y ::* xs*) i)
         (λ xs → isSet→isGroupoid (is-set* xs) )
 
 -- PathP (λ i → P (⬡₌ x y z xs i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*)))
