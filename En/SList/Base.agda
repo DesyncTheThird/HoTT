@@ -66,11 +66,20 @@ module SListElimSet {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
     elim =
       SListElim.elim P nil* _::*_ swap*
         (λ x y {xs} xs* → isSet→SquareP (λ i j → is-set* (swap² x y xs i j)) (swap* x y xs*) (symP (swap* y x xs*)) refl refl)
-        (λ x y z {xs} xs* → sorry -- compPathP (swap* x y (z ::* xs*)) (compPathP (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*))) {!!}
+        (λ x y z {xs} xs* → let p₀ : x :: (y :: (z :: xs)) ≡ z :: y :: x :: xs
+                                p₀ = swap x y (z :: xs) ∙ (ap (y ::_) (swap x z xs)) ∙ swap y z (x :: xs)
+                                Q : PathP (λ i → P (p₀ i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*)))
+                                Q = compPathP' {B = P} (swap* x y (z ::* xs*)) (compPathP' {B = P} (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*)))
+                                q : p₀ ≡ ⬡₌ x y z xs
+                                q = ap (swap x y (z :: xs) ∙_) (Square→compPath (⬡₁ x y z xs)) ∙ assoc _ _ _ ∙ ap (_∙ ⬡₌ x y z xs) (rCancel _) ∙ sym (lUnit _)
+                            in tpt (λ p → PathP (λ i → P (p i)) ((x ::* (y ::* (z ::* xs*)))) (z ::* (y ::* (x ::* xs*)))) q Q
+        
+        -- tpt (λ p → PathP (λ i → P (p i)) ((x ::* (y ::* (z ::* xs*)))) (z ::* (y ::* (x ::* xs*)))) {!!} (compPathP' (swap* x y (z ::* xs*)) (compPathP' (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*))))
+        -- compPathP' (swap* x y (z ::* xs*)) (compPathP' (apP (λ _ → y ::*_) (swap* x z xs*)) (swap* y z (x ::* xs*)))
         )
-        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₁ x y z xs i j)) (symP (swap* x y (z ::* xs*))) (swap* y z (x ::* xs*)) (apP (λ i₁ → y ::*_) (swap* x z xs*)) sorry)
-        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₂ x y z xs i j)) (apP (λ i → _::*_ x) (swap* y z xs*)) (symP (apP (λ i → _::*_ z) (swap* x y xs*))) sorry λ i → swap* x z (y ::* xs*) i)
-        (λ xs → isSet→isGroupoid (is-set* xs))
+        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₁ x y z xs i j)) (symP (swap* x y (z ::* xs*))) (swap* y z (x ::* xs*)) (apP (λ _ → y ::*_) (swap* x z xs*)) {!!})
+        (λ x y z {xs} xs* → isSet→SquareP (λ i j → is-set* (⬡₂ x y z xs i j)) (apP (λ i → _::*_ x) (swap* y z xs*)) (symP (apP (λ _ → z ::*_ ) (swap* x y xs*))) {!!} λ i → swap* x z (y ::* xs*) i)
+        (λ xs → isSet→isGroupoid (is-set* xs) )
 
 -- PathP (λ i → P (⬡₌ x y z xs i)) (x ::* (y ::* (z ::* xs*))) (z ::* (y ::* (x ::* xs*)))
 
