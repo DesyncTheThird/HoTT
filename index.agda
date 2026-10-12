@@ -12,6 +12,9 @@ open import En.FSMG
 -- spicy lists
 open import En.SList
 
+-- group actions
+open import En.GroupAction
+
 -- spicier lists
 open import En.Sn
 
