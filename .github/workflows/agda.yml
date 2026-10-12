@@ -32,11 +32,17 @@ jobs:
       matrix:
         prover: [agda, mikan]
         release: [stable, nightly]
-        cubical: [stable, nightly]
-        # mikan has no releases
+        cubical: [stable, nightly, mikan]
+        # mikan has no releases, and only builds the cubical mikan fork
         exclude:
           - prover: mikan
             release: stable
+          - prover: mikan
+            cubical: stable
+          - prover: mikan
+            cubical: nightly
+          - prover: agda
+            cubical: mikan
         # failures here are real errors, others are warnings
         include:
           - prover: agda
@@ -46,6 +52,10 @@ jobs:
           - prover: agda
             release: nightly
             cubical: nightly
+            required: true
+          - prover: mikan
+            release: nightly
+            cubical: mikan
             required: true
     env:
       GH_TOKEN: ${{ github.token }}
@@ -174,7 +184,7 @@ jobs:
             echo "|---|---|---|---|"
           } >> "$GITHUB_STEP_SUMMARY"
           chosen=
-          for combo in agda-stable-stable agda-stable-nightly agda-nightly-stable agda-nightly-nightly mikan-nightly-stable mikan-nightly-nightly; do
+          for combo in agda-stable-stable agda-stable-nightly agda-nightly-stable agda-nightly-nightly mikan-nightly-mikan; do
             if [ -d "html/html-$combo" ]; then
               result=pass
               chosen=${chosen:-$combo}
