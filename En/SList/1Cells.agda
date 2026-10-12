@@ -7,7 +7,6 @@ import En.SMG as S hiding (SMG* ; SMG*Fun)
 
 private
   variable
-    ℓ : Level
     A : Type ℓ
 
 ++-Λ : (xs : SList A) → nil ++ xs ≡ xs

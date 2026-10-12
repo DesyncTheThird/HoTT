@@ -7,10 +7,6 @@ open import En.Bag
 open import En.PList.Base
 open import En.GroupoidQuotients.Properties
 
-private
-  variable
-    ℓ : Level
-
 module _ {A : Type ℓ} where
 
   isGroupoidPList : isGroupoid (PList A)

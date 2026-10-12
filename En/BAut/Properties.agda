@@ -10,10 +10,6 @@ open import Cubical.HITs.PropositionalTruncation as PT
 open import En.Univ
 open import En.BAut.Base
 
-private
-  variable
-    ℓ : Level
-
 BAutUUniv : (T : Type ℓ) → UUniv (ℓ-suc ℓ) ℓ
 BAutUUniv T = SubUUniv (BAutSub T)
 

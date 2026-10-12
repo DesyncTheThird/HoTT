@@ -34,6 +34,10 @@ open import Cubical.Data.Nat.Order.Inductive public
 open import Cubical.Data.Nat.Order public
 open import Cubical.Relation.Binary public
 
+-- universe levels
+variable
+  ℓ ℓ' ℓ'' ℓ''' : Level
+
 infix 15 _≅_
 _≅_ = Iso
 

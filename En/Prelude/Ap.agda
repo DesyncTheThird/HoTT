@@ -53,7 +53,6 @@ ap₃-coh₂ f p q r i j = f (p (i ∧ ~ j)) (q i) (r (i ∨ j))
 
 private
   variable
-    ℓ : Level
     A B C D E F G H : Type ℓ
 
 

@@ -10,10 +10,6 @@ open import Cubical.Algebra.Group.MorphismProperties
 open import Cubical.Algebra.Group.Subgroup
 open import Cubical.Algebra.SymmetricGroup
 
-private
-  variable
-    ℓ ℓ' ℓ'' : Level
-
 -- some useful group notation
 
 module GroupNotation (G : Group ℓ) where

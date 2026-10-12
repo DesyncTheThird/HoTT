@@ -5,7 +5,6 @@ open import Cubical.Data.Sum
 
 private
   variable
-    ℓ ℓ' ℓ'' : Level
     A : Type ℓ
     B : Type ℓ'
 

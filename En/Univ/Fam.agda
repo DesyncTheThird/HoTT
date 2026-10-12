@@ -15,10 +15,6 @@ open import Cubical.Structures.Pointed
 open import Cubical.HITs.Truncation as Trunc
 open import En.Univ.Base
 
-private
-  variable
-    ℓ ℓ' ℓ'' ℓ''' : Level
-
 -- families over a subuniverse
 
 LabelStructure : Type ℓ'' → Type ℓ → Type (ℓ-max ℓ ℓ'')

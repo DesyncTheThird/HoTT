@@ -7,10 +7,6 @@ open import En.Univ.Fam
 open import En.UFin.Base
 open import En.Bag.Base
 
-private
-  variable
-    ℓ : Level
-
 -- finite vectors
 
 Vec : Type ℓ → Type ℓ
