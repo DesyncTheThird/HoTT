@@ -68,16 +68,19 @@ jobs:
       ## TOOLCHAIN
       ########################################################################
 
+      - name: Resolve versions
+        id: resolve
+        run: .github/scripts/setup-toolchain.sh --resolve-only --prover=${{ matrix.prover }} --release=${{ matrix.release }} --cubical=${{ matrix.cubical }}
+
       - name: Restore toolchain
         id: toolchain
         uses: actions/cache/restore@v6
         with:
           path: ~/toolchain
-          key: toolchain/${{ matrix.prover }}-${{ matrix.release }}/cubical-${{ matrix.cubical }}/
-          restore-keys: toolchain/${{ matrix.prover }}-${{ matrix.release }}/cubical-${{ matrix.cubical }}/
+          key: ${{ steps.resolve.outputs.key }}
 
       - name: Set up GHC on cache miss
-        if: matrix.prover == 'mikan' && steps.toolchain.outputs.cache-matched-key == ''
+        if: matrix.prover == 'mikan' && steps.toolchain.outputs.cache-hit != 'true'
         uses: haskell-actions/setup@v2
         with:
           ghc-version: "9.12"
@@ -85,7 +88,7 @@ jobs:
 
       - name: Install prover and cubical on cache miss
         id: install
-        if: steps.toolchain.outputs.cache-matched-key == ''
+        if: steps.toolchain.outputs.cache-hit != 'true'
         run: .github/scripts/setup-toolchain.sh --prover=${{ matrix.prover }} --release=${{ matrix.release }} --cubical=${{ matrix.cubical }}
 
       # keep the toolchain even if typechecking fails
