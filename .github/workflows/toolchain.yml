@@ -17,11 +17,17 @@ jobs:
       matrix:
         prover: [agda, mikan]
         release: [stable, nightly]
-        cubical: [stable, nightly]
-        # mikan has no releases
+        cubical: [stable, nightly, mikan]
+        # mikan has no releases, and only builds the cubical mikan fork
         exclude:
           - prover: mikan
             release: stable
+          - prover: mikan
+            cubical: stable
+          - prover: mikan
+            cubical: nightly
+          - prover: agda
+            cubical: mikan
     env:
       GH_TOKEN: ${{ github.token }}
 
