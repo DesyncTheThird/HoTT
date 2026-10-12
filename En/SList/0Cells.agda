@@ -6,7 +6,6 @@ import En.SMG as S hiding (SMG* ; SMG*Fun)
 
 private
   variable
-    ℓ : Level
     A : Type ℓ
 
 infixr 20 _++_

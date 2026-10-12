@@ -5,7 +5,6 @@ open import Cubical.Data.Empty as ⊥
 
 private
   variable
-    ℓ ℓ' : Level
     A : Type ℓ
     P : Type ℓ
 

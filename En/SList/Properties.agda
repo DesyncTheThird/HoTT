@@ -8,7 +8,6 @@ import En.SMG as S hiding (SMG* ; SMG*Fun)
 
 private
   variable
-    ℓ : Level
     A : Type ℓ
 
 SList* : ∀ {ℓ} (A : Type ℓ) → S.SMG*Sq (SList A)

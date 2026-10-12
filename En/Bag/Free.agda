@@ -6,10 +6,6 @@ open import En.FSMG
 open import En.Bag.Base
 open import En.Bag.Properties
 
-private
-  variable
-    ℓ : Level
-
 -- bags are the free symmetric monoidal groupoid
 
 FSMG≃Bag : {A : Type ℓ} → isGroupoid A → FSMG A ≃ Bag A

@@ -8,10 +8,6 @@ open import En.Univ.Base
 import En.SMG as S hiding ( SMG* ; SMG*Fun )
 open import En.SMG.Code
 
-private
-  variable
-    ℓ ℓ' : Level
-
 module _ (𝒰 : UUniv ℓ ℓ') where
 
   private

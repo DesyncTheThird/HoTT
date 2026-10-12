@@ -5,10 +5,6 @@ open import Cubical.Foundations.Pointed
 open import Cubical.HITs.PropositionalTruncation
 open import En.Univ.Base
 
-private
-  variable
-    ℓ : Level
-
 -- automorphism groups and their delooping
 
 Aut : Type ℓ → Type ℓ

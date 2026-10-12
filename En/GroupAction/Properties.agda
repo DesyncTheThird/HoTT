@@ -8,10 +8,6 @@ open import Cubical.Algebra.Group.Subgroup
 open import En.GroupoidQuotients.Properties
 open import En.GroupAction.Base
 
-private
-  variable
-    ℓ ℓ' ℓ'' : Level
-
 -- orbit–stabiliser theorem
 
 module _ {G : Group ℓ} {X : Type ℓ} (isSetX : isSet X) (φ : Action G X) (x₀ : X) (t : Transversal φ x₀) where
