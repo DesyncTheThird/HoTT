@@ -13,7 +13,7 @@ private
 -- bags are the free symmetric monoidal groupoid
 
 FSMG≃Bag : {A : Type ℓ} → isGroupoid A → FSMG A ≃ Bag A
-FSMG≃Bag = sorry
+FSMG≃Bag = sorry -- TODO: bags are the free symmetric monoidal groupoid (FSMG≃Bag)
 
 -- 1-truncated freeness
 
