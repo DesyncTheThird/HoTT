@@ -5,7 +5,7 @@ set -euo pipefail
 usage() {
   cat <<EOF
 usage: $0 [--prover=agda|mikan] [--release=stable|nightly]
-       [--cubical=stable|nightly] [--dir=PATH] [--resolve-only]
+       [--cubical=stable|nightly|mikan] [--dir=PATH] [--resolve-only]
 
 install a prover + cubical into PATH (default: \$TOOLCHAIN_DIR or ~/toolchain)
 defaults: agda, stable, stable
@@ -28,7 +28,7 @@ for arg in "$@"; do
   case $arg in
     --prover=agda | --prover=mikan) prover=${arg#*=} ;;
     --release=stable | --release=nightly) release=${arg#*=} ;;
-    --cubical=stable | --cubical=nightly) cubical=${arg#*=} ;;
+    --cubical=stable | --cubical=nightly | --cubical=mikan) cubical=${arg#*=} ;;
     --dir=?*) dir=${arg#*=} ;;
     --resolve-only) resolve_only=true ;;
     -h | --help) usage; exit 0 ;;
@@ -64,13 +64,23 @@ case $prover-$release in
 esac
 
 # resolve cubical
-if [[ $cubical == stable ]]; then
-  cubical_ref=$(gh release view -R agda/cubical --json tagName -q .tagName)
-  cubical_version=$cubical_ref
-else
-  cubical_ref=$(gh api repos/agda/cubical/commits/master -q .sha)
-  cubical_version=${cubical_ref:0:7}
-fi
+cubical_repo=agda/cubical
+case $cubical in
+  stable)
+    cubical_ref=$(gh release view -R "$cubical_repo" --json tagName -q .tagName)
+    cubical_version=$cubical_ref
+    ;;
+  nightly)
+    cubical_ref=$(gh api "repos/$cubical_repo/commits/master" -q .sha)
+    cubical_version=${cubical_ref:0:7}
+    ;;
+  mikan)
+    # fork that builds with mikan
+    cubical_repo=vikraman/cubical
+    cubical_ref=$(gh api "repos/$cubical_repo/commits/mikan" -q .sha)
+    cubical_version=${cubical_ref:0:7}
+    ;;
+esac
 
 key="toolchain/$prover-$release/cubical-$cubical/$prover-$prover_version+cubical-$cubical_version"
 echo "prover:  $prover $release ($prover_version)"
@@ -118,7 +128,7 @@ export "$datadir_var=$datadir"
 
 # cubical
 git -C "$dir/cubical" init -q
-git -C "$dir/cubical" fetch -q --depth=1 https://github.com/agda/cubical "$cubical_ref"
+git -C "$dir/cubical" fetch -q --depth=1 "https://github.com/$cubical_repo" "$cubical_ref"
 git -C "$dir/cubical" checkout -q FETCH_HEAD
 echo "$dir/cubical/cubical.agda-lib" > "$dir/libraries"
 if ! (cd "$dir/cubical" && "$dir/bin/$prover" --build-library); then
