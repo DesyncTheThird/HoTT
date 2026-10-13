@@ -3,7 +3,12 @@ module En.Sn.Base where
 open import En.Prelude
 open FN
 
+private
+  variable
+    n : ℕ
+
 infixr 30 _::_
+infixr 20 _++_
 
 -- Coxeter presentation of the symmetric group on suc n points
 
@@ -14,6 +19,8 @@ data Sym (n : ℕ) : Type where
   comm : (k l : Fin n) → suc (k .fst) <ᵗ l .fst → (σ : Sym n) → l :: k :: σ ≡ k :: l :: σ
   braid : (k l : Fin n) → suc (k .fst) ≡ l .fst → (σ : Sym n) → l :: k :: l :: σ ≡ k :: l :: k :: σ
   trunc : isSet (Sym n)
+
+pattern [_] k = k :: nil
 
 module SymElimSet {ℓ} {n : ℕ} (P : Sym n → Type ℓ)
   (nil* : P nil)
@@ -52,3 +59,16 @@ module SymElimProp {ℓ} {n : ℕ} (P : Sym n → Type ℓ)
       (λ k l p {σ} _ → isProp→PathP (λ i → isProp* (comm k l p σ i)) _ _)
       (λ k l p {σ} _ → isProp→PathP (λ i → isProp* (braid k l p σ i)) _ _)
       (λ σ → isProp→isSet (isProp* σ))
+
+-- concatenation
+
+_++_ : Sym n → Sym n → Sym n
+σ ++ ρ =
+  SymElimSet.elim (λ _ → Sym _)
+    ρ
+    (λ k τ → k :: τ)
+    (λ k τ → cancel k τ)
+    (λ k l p τ → comm k l p τ)
+    (λ k l p τ → braid k l p τ)
+    (λ _ → trunc)
+    σ
