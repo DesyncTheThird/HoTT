@@ -1,4 +1,4 @@
 module En.Sn where
 
-open import En.Prelude
-open import En.Sn.Base
+open import En.Sn.Base public
+open import En.Sn.Properties public
