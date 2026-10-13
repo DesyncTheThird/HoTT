@@ -1,6 +1,7 @@
 module En.GroupAction.Properties where
 
 open import En.Prelude hiding ( _·_ )
+open import En.Prelude.Group
 open import Cubical.Algebra.Group
 open import Cubical.Algebra.Group.Morphisms
 open import Cubical.Algebra.Group.MorphismProperties

@@ -1,33 +1,14 @@
 module En.GroupAction.Base where
 
 open import En.Prelude hiding ( _·_ )
+open import En.Prelude.Group
 open import Cubical.HITs.SetTruncation as ST using ( ∥_∥₂ ; ∣_∣₂ ; squash₂ )
 open import Cubical.HITs.SetQuotients as SQ using ( _/_ ; [_] )
 open import Cubical.HITs.GroupoidQuotients as GQ using ( _//_ ; eq// )
 open import Cubical.Algebra.Group
 open import Cubical.Algebra.Group.Morphisms
-open import Cubical.Algebra.Group.MorphismProperties
 open import Cubical.Algebra.Group.Subgroup
 open import Cubical.Algebra.SymmetricGroup
-
--- some useful group notation
-
-module GroupNotation (G : Group ℓ) where
-
-  open GroupStr (G .snd) public
-
-  infix 40 _⁻¹ᵍ
-
-  _⁻¹ᵍ : ⟨ G ⟩ → ⟨ G ⟩
-  _⁻¹ᵍ = inv
-
--- underlying map and equivalence of a group equivalence
-
-GroupEquiv→Equiv : {G : Group ℓ} {H : Group ℓ'} → GroupEquiv G H → ⟨ G ⟩ ≃ ⟨ H ⟩
-GroupEquiv→Equiv ψ = ψ .fst
-
-–>ᵍ : {G : Group ℓ} {H : Group ℓ'} → GroupEquiv G H → ⟨ G ⟩ → ⟨ H ⟩
-–>ᵍ ψ = –> (GroupEquiv→Equiv ψ)
 
 -- right actions of a group on a type
 
@@ -151,7 +132,7 @@ module _ {G : Group ℓ} {Y : Type ℓ'} (φ : Action G Y) where
 
 compTransversal : {G : Group ℓ} {H : Group ℓ''} {Y : Type ℓ'} (ψ : GroupHom G H) (φ : Action H Y) {x₀ : Y}
   → Transversal (restrictAction ψ φ) x₀ → Transversal φ x₀
-compTransversal ψ φ (c , c-spec) = ψ .fst ∘ c , c-spec
+compTransversal ψ φ (c , c-path) = ψ .fst ∘ c , c-path
 
 -- stabilisers
 
