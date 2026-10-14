@@ -15,6 +15,9 @@ open import En.SList
 -- group actions
 open import En.GroupAction
 
+-- group presentations
+open import En.GroupPresentation
+
 -- spicier lists
 open import En.Sn
 

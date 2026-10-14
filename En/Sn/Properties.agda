@@ -8,10 +8,10 @@ private
   variable
     n : ℕ
 
+-- group structure
+
 isSetSym : isSet (Sym n)
 isSetSym = trunc
-
--- group structure
 
 ++-assoc : (σ ρ υ : Sym n) → σ ++ (ρ ++ υ) ≡ (σ ++ ρ) ++ υ
 ++-assoc σ ρ υ =
@@ -66,3 +66,6 @@ rev =
 
 CoxeterGroup : ℕ → Group₀
 CoxeterGroup n = makeGroup {G = Sym n} nil _++_ rev trunc ++-assoc ++-unit-r (λ _ → refl) ++-revr ++-revl
+
+isContrSym0 : isContr (Sym 0)
+isContrSym0 = nil , SymElimProp.elim (λ σ → nil ≡ σ) refl (λ { (_ , ()) }) (λ _ → trunc _ _)
