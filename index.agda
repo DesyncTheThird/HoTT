@@ -36,5 +36,8 @@ open import En.Bag
 -- lists up to permutation
 open import En.PList
 
+-- equivalences from FSMG to Bag
+open import En.Equiv
+
 -- all modules
 open import En.Everything
