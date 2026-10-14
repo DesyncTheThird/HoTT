@@ -116,4 +116,6 @@ module _ {A : Type ℓA} {R S : A → A → Type ℓR}
   where
 
   //-cong : A // isTransR ≃ A // isTransS
-  //-cong = sorry -- TODO: groupoid quotients are functorial in relations (//-cong), by GQ.rec both ways
+  //-cong = sorry
+    -- TODO: functoriality of groupoid quotients (//-cong)
+    --  groupoid quotients are functorial in relations; by GQ.rec both ways

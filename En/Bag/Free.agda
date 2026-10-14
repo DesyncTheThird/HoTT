@@ -5,11 +5,7 @@ open import Cubical.HITs.Truncation as Trunc
 open import En.FSMG
 open import En.Bag.Base
 open import En.Bag.Properties
-
--- bags are the free symmetric monoidal groupoid
-
-FSMG≃Bag : {A : Type ℓ} → isGroupoid A → FSMG A ≃ Bag A
-FSMG≃Bag = sorry -- TODO: bags are the free symmetric monoidal groupoid (FSMG≃Bag)
+open import En.Equiv using ( FSMG≃Bag ) public
 
 -- 1-truncated freeness
 

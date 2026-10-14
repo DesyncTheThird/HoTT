@@ -161,7 +161,9 @@ module _ {G H : Group ℓ} {Y : Type ℓ'} (ψ : GroupEquiv G H) (φG : Action G
   ActionGroupoid≃ : ActionGroupoid φG ≃ ActionGroupoid φH
   ActionGroupoid≃ =
     //-cong (isTransActionRel φG) (isTransActionRel φH) (λ {x} {y} → ActionRel≃ {x} {y})
-      (λ r s → sorry) -- TODO: ActionRel≃ preserves composition (ActionGroupoid≃), from pres· of ψ and naturality of h
+      (λ r s → sorry)
+      -- TODO: ActionRel≃ preserves composition (ActionGroupoid≃)
+      --  from pres· of ψ and naturality of h
 
 -- change of group for wreath products
 
