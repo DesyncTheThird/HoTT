@@ -8,6 +8,12 @@ open import En.Bag.Base
 open import En.Bag.Properties
 open import En.PList.Base
 open import En.GroupoidQuotients.Properties
+open import En.GroupAction.Base
+
+-- vectors up to automorphisms of their positions
+
+Vec//Aut : Type ℓ → Type ℓ
+Vec//Aut A = Σ[ m ∈ ℕ ] A ≀ autAction (FS.Fin m) FS.isSetFin
 
 module _ {A : Type ℓ} where
 
