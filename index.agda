@@ -27,6 +27,9 @@ open import En.Univ
 -- deloopings of automorphism groups
 open import En.BAut
 
+-- higher and concrete groups
+open import En.HigherGroup
+
 -- universe of finite types
 open import En.UFin
 

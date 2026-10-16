@@ -5,7 +5,8 @@ open import Cubical.HITs.Truncation as Trunc
 open import En.FSMG
 open import En.Bag.Base
 open import En.Bag.Properties
-open import En.Equiv using ( FSMG≃Bag ) public
+import En.Equiv
+open En.Equiv.Concrete using ( FSMG≃Bag ) public
 
 -- 1-truncated freeness
 

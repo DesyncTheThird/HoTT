@@ -52,9 +52,6 @@ BAutGroup T .isConnectedB = isConnectedBAut T
 BAutConcrete : (T : Type ℓ) → isSet T → ConcreteGroup (ℓ-suc ℓ)
 BAutConcrete T isSetT = BAutGroup T , isOfHLevelBAut 2 isSetT
 
-ElBAut : {T : Type ℓ} → BAut T → Type ℓ
-ElBAut = fst
-
 -- actions
 
 ∞Action : ∞Group ℓ → (ℓ' : Level) → Type (ℓ-max ℓ (ℓ-suc ℓ'))
