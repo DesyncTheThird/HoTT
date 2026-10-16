@@ -16,6 +16,9 @@ Aut∙ T = Aut T , idEquiv T
 BAut : Type ℓ → Type (ℓ-suc ℓ)
 BAut {ℓ} T = Σ[ X ∈ Type ℓ ] ∥ T ≃ X ∥₁
 
+ElBAut : {T : Type ℓ} → BAut T → Type ℓ
+ElBAut = fst
+
 BAutSub : (T : Type ℓ) → SubUniv ℓ ℓ
 BAutSub T = (λ X → ∥ T ≃ X ∥₁) , λ _ → isPropPropTrunc
 
