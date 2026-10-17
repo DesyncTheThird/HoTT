@@ -6,6 +6,9 @@
 # Formalisation
 
 - Website: [https://desyncthethird.github.io/HoTT/agda](https://desyncthethird.github.io/HoTT/agda/)
+- Module dependency graph: [https://desyncthethird.github.io/HoTT/agda/depgraph.svg](https://desyncthethird.github.io/HoTT/agda/depgraph.svg)
+
+[![module dependency graph](https://desyncthethird.github.io/HoTT/agda/depgraph.svg)](https://desyncthethird.github.io/HoTT/agda/depgraph.svg)
 
 # Notes
 
