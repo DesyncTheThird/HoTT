@@ -18,7 +18,10 @@ open import En.GroupAction
 -- group presentations
 open import En.GroupPresentation
 
--- spicier lists
+-- lehmer codes
+open import En.LehmerCode
+
+-- presentations of the symmetric group
 open import En.Sn
 
 -- univalent universes

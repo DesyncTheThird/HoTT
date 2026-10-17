@@ -1,6 +1,7 @@
 module En.Prelude where
 
 open import En.Prelude.Base public
+open import En.Prelude.Except public
 open import En.Prelude.Ap public
 open import En.Prelude.Squares public
 open import En.Prelude.Coherence public
