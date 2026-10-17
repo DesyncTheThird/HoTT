@@ -1,0 +1,69 @@
+% !TeX root = lics27-fsmg.tex
+
+\ProvidesPackage{vc-macros}
+
+\RequirePackage{amsthm}
+\RequirePackage{xparse}
+\RequirePackage{xcolor-solarized}
+\RequirePackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=solarized-red,
+  filecolor=solarized-magenta,
+  urlcolor=solarized-blue
+}
+
+\RequirePackage{apxproof}
+
+% editing marks
+\newcommand{\todo}[1]{{\color{solarized-red}TODO: #1}}
+\providecommand{\note}[1]{\textcolor{solarized-green}{NOTE: #1}}
+\newcommand{\redtext}[1]{\textcolor{solarized-red}{#1}}
+\newcommand{\newtext}[1]{\textcolor{solarized-blue}{#1}}
+
+% author marks
+\newcommand{\vc}[1]{\textcolor{solarized-magenta}{VC: #1}}
+\newcommand{\rl}[1]{\textcolor{solarized-violet}{RL: #1}}
+\newcommand{\fnf}[1]{\textcolor{solarized-cyan}{FNF: #1}}
+
+% references
+\makeatletter
+\newcommand{\crefnames}[3]{%
+  \@for\next:=#1\do{%
+    \expandafter\crefname\expandafter{\next}{#2}{#3}%
+  }%
+}
+\makeatother
+%% shorten cref names
+\crefnames{part,chapter,section,subsection}{\S}{\S\S}
+\crefnames{paragraph}{\P}{\P\P}
+
+%% nil and cons
+\newcommand{\nil}{\term{nil}}
+\newcommand{\doublecolon}[0]{\mathbin{\,\normalcolon\normalcolon\,}}
+\newcommand{\cons}{\doublecolon}
+
+% ++
+\newcommand{\doubleplus}[0]{\mathbin{+\kern -0.4em+}}
+\newcommand{\concat}{\mult}
+\newcommand{\append}{\mult}
+
+%% two character variable names
+\newcommand{\xs}{\ensuremath{\mathit{xs}}}
+\newcommand{\ys}{\ensuremath{\mathit{ys}}}
+\newcommand{\zs}{\ensuremath{\mathit{zs}}}
+
+% mult
+\newcommand{\mult}{\mathbin{\bullet}}
+
+% constructions
+\newcommand{\List}{\term{List}}
+\newcommand{\PList}{\term{PList}}
+\newcommand{\SList}{\term{SList}}
+\newcommand{\Bag}{\term{Bag}}
+\newcommand{\Perm}{\term{Perm}}
+\newcommand{\FSMG}{\term{FSMG}}
+
+% apxproof
+\newtheoremrep{proposition}[theorem]{Proposition}
+\newtheoremrep{lemma}[theorem]{Lemma}

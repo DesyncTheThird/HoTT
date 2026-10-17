@@ -1,0 +1,13 @@
+dist/
+*.aux
+*.axp
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.vtc
+*.tar.gz
+*.zip

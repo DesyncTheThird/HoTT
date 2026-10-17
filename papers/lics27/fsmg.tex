@@ -1,0 +1,194 @@
+% !TeX root = lics27-fsmg.tex
+\providecommand{\variant}{lics27}
+% anonymous submission except for arXiv
+\ifnum\pdfstrcmp{\variant}{arxiv}=0 \else\PassOptionsToClass{anonymous}{lipics-v2021}\fi
+\documentclass[a4paper,UKenglish,cleveref,thm-restate]{lipics-v2021}
+
+%% variants
+\RequirePackage{etoolbox}
+\newcommand{\ifvariant}[1]{\ifdefstring{\variant}{#1}}
+\newcommand{\ifarxiv}{\ifvariant{arxiv}}
+
+\ifvariant{arxiv}{%
+  \hideLIPIcs
+  \nolinenumbers
+  \usepackage[appendix=inline,bibliography=common]{apxproof}
+}{}
+\ifvariant{lics27-appendix}{%
+  \usepackage[appendix=append,bibliography=common]{apxproof}
+}{}
+\ifvariant{lics27}{%
+  \usepackage[appendix=strip,bibliography=common]{apxproof}
+}{}
+
+\bibliographystyle{plainurl} % the mandatory bibstyle
+
+\title{Symmetric Monoidal Coherence in Homotopy Type Theory} % TODO: title
+
+\author%
+{Vikraman Choudhury}%
+{University of Strathclyde, Glasgow, United Kingdom}%
+{vikraman.choudhury@strath.ac.uk}%
+{https://orcid.org/0000-0003-2030-8056}%
+{}%
+
+\author%
+{Rin Liu}%
+{University of Strathclyde, Glasgow, United Kingdom}%
+{rin.liu@strath.ac.uk}
+{https://orcid.org/0009-0005-8791-2495}%
+{}%
+
+\author%
+{Fredrik Nordvall Forsberg}%
+{University of Strathclyde, Glasgow, United Kingdom}%
+{fredrik.nordvall-forsberg@strath.ac.uk}%
+{https://orcid.org/0000-0001-6157-9288}%
+{}%
+
+\authorrunning{V. Choudhury, R. Liu, and F. Nordvall Forsberg}
+
+\Copyright{Vikraman Choudhury, Rin Liu, and Fredrik Nordvall Forsberg}
+
+\ccsdesc[500]{Theory of computation~Type theory}
+\ccsdesc[500]{Theory of computation~Constructive mathematics}
+
+\keywords{homotopy type theory, univalent foundations, cubical Agda,
+symmetric monoidal groupoids, permutations, formalisation} % TODO: keywords
+
+\category{} %optional, e.g. invited paper
+
+\ifarxiv{}{%
+  \relatedversion{} %optional, e.g. full version hosted on arXiv, HAL, or other respository/website
+  \relatedversiondetails[%
+    linktext={arXiv:XXXX.XXXXX}, % TODO: arxiv id
+  ]{Full version}{https://arxiv.org/abs/XXXX.XXXXX}%
+}
+
+\supplement{}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
+\supplementdetails[%
+  linktext={DesyncTheThird/HoTT},
+]{Formalisation}{https://github.com/DesyncTheThird/HoTT}%
+
+\acknowledgements{} % TODO: acknowledgements
+
+%Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\EventEditors{Pablo Barcel\'{o} and Alexandra Silva}
+\EventNoEds{2}
+\EventLongTitle{42nd Annual ACM/IEEE Symposium on Logic in Computer Science (LICS 2027)}
+\EventShortTitle{LICS 2027}
+\EventAcronym{LICS}
+\EventYear{2027}
+\EventDate{June 21--24, 2027}
+\EventLocation{Montr\'{e}al, Canada}
+\EventLogo{}
+\SeriesVolume{0} % placeholder, assigned by the publisher
+\ArticleNo{0} % placeholder, assigned by the publisher
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% figures
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{afterpage}
+
+%% tikz
+\usepackage{tikz}
+\usepackage{xifthen}
+
+%% math
+\let\Bbbk\relax
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{newtxmath}
+\usepackage{bbold}
+\usepackage{mathpartir}
+\usepackage{stmaryrd}
+\usepackage{quiver}
+\usepackage{ebproof}
+\usepackage{listings}
+
+\lstset{%
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  keepspaces=true,
+  mathescape=true,
+  escapechar=\%,
+}
+
+%% typesetting
+%% fancy quotation
+\usepackage[
+  style=english,
+  english=american,
+  french=guillemets,
+  autopunct=true,
+  csdisplay=true
+]{csquotes}
+%% customize quote margins
+\newenvironment*{innerquote}{%
+  \setlength{\leftmargini}{0.2cm}%
+  \quote
+}{%
+  \endquote
+}
+\SetBlockEnvironment{innerquote}
+
+%% special hyphenation
+\hyphenation{
+  mon-oid
+  mon-oid-al
+  group-oid
+  group-oids
+  comm-ut-ative
+  homo-mor-phism
+}
+%% tweak hyphenation
+\tolerance=9999
+\emergencystretch=10pt
+\hyphenpenalty=10000
+\exhyphenpenalty=100
+
+%% better urls
+\usepackage{xurl}
+
+%% microtypography
+\usepackage{microtype}
+\microtypesetup{
+  activate={true,nocompatibility},
+  final,
+  tracking=true,
+  kerning=all,
+  spacing=true,
+  protrusion=all,
+  factor=1100,
+  stretch=10,
+  shrink=10
+}
+
+%% custom macros
+\usepackage{vc-hott}
+\usepackage{vc-math}
+\usepackage{vc-code}
+\usepackage{vc-macros}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  \input{abstract}
+\end{abstract}
+
+\input{introduction}
+\input{discussion}
+
+% end marker for make check-pages
+\label{body-end}
+
+\renewcommand{\appendixsectionformat}[2]{
+  {Supplementary material for Section~#1 (#2)}
+}
+
+\bibliography{fsmg,references}
+\appendix
+
+\end{document}

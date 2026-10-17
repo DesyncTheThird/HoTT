@@ -1,0 +1,124 @@
+name: papers
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "papers/**"
+      - ".github/workflows/papers.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "papers/**"
+      - ".github/workflows/papers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: papers-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      papers: ${{ steps.list.outputs.papers }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: List papers
+        id: list
+        run: |
+          papers=$(for m in papers/*/Makefile; do [ -f "$m" ] && basename "$(dirname "$m")"; done | jq -Rcs 'split("\n") | map(select(. != ""))')
+          echo "papers=$papers" >> "$GITHUB_OUTPUT"
+          echo "papers: $papers" >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    name: build (${{ matrix.paper }})
+    needs: discover
+    if: needs.discover.outputs.papers != '[]'
+    runs-on: ubuntu-latest
+    env:
+      TEX_FMT_VERSION: "0.5.7"
+    strategy:
+      fail-fast: false
+      matrix:
+        paper: ${{ fromJSON(needs.discover.outputs.papers) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup tex-fmt
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -sSfL "https://github.com/WGUNDERWOOD/tex-fmt/releases/download/v${TEX_FMT_VERSION}/tex-fmt-x86_64-linux.tar.gz" | tar -xz -C "$RUNNER_TEMP/bin"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - name: Check formatting
+        run: make -C papers/${{ matrix.paper }} check-format
+
+      - name: Setup TeX Live
+        uses: zauguin/install-texlive@v4
+        with:
+          packages: scheme-full
+
+      - name: Build
+        run: make -C papers/${{ matrix.paper }} dist DISTDIR="$RUNNER_TEMP/dist" LATEXMKFLAGS="-Werror -interaction=nonstopmode -halt-on-error"
+
+      - name: Upload paper
+        uses: actions/upload-artifact@v7
+        with:
+          name: paper-${{ matrix.paper }}
+          path: ${{ runner.temp }}/dist/*
+          retention-days: 30
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: logs-${{ matrix.paper }}
+          path: |
+            papers/${{ matrix.paper }}/*.log
+            papers/${{ matrix.paper }}/*.blg
+          retention-days: 7
+
+  release:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: papers-release
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Download papers
+        uses: actions/download-artifact@v8
+        with:
+          pattern: paper-*
+          merge-multiple: true
+          path: dist
+
+      - name: Publish release
+        run: |
+          gh release delete papers -R "$GITHUB_REPOSITORY" --cleanup-tag --yes || true
+          gh release create papers dist/* -R "$GITHUB_REPOSITORY" \
+            --prerelease --target "$GITHUB_SHA" --title papers \
+            --notes "Built from $GITHUB_SHA by run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID."
+          {
+            echo "| file | link |"
+            echo "|---|---|"
+            for f in dist/*; do
+              n=$(basename "$f")
+              echo "| $n | $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/papers/$n |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
