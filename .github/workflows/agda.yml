@@ -129,6 +129,15 @@ jobs:
           ${{ matrix.prover }} --html --html-dir=public --highlight-occurrences index.agda
           cp Agda.css public/
 
+      - name: Build dependency graph
+        if: steps.html.outcome == 'success' && matrix.prover == 'agda'
+        continue-on-error: ${{ !matrix.required }}
+        run: |
+          agda --dependency-graph=_build/depgraph.dot --dependency-graph-include=agda-En index.agda
+          pipx run .github/scripts/depgraph.py _build/depgraph.dot public/depgraph.dot | tee -a "$GITHUB_STEP_SUMMARY"
+          sudo apt-get install -y graphviz
+          dot -Tsvg public/depgraph.dot -o public/depgraph.svg
+
       - name: Upload html
         if: steps.html.outcome == 'success'
         uses: actions/upload-artifact@v7

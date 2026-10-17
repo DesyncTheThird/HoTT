@@ -4,3 +4,4 @@
 /_freeze/
 /.luarc.json
 *.agdai
+/_build/
