@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - "_extensions/**"
       - "notes/**"
+      - "papers/**"
       - "theme/**"
       - "README.md"
   pull_request:
@@ -14,6 +15,7 @@ on:
     paths-ignore:
       - "_extensions/**"
       - "notes/**"
+      - "papers/**"
       - "theme/**"
       - "README.md"
   workflow_dispatch:

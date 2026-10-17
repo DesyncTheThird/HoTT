@@ -1,0 +1,55 @@
+% !TeX root = lics27-fsmg.tex
+
+\ProvidesPackage{vc-code}
+
+\RequirePackage{xcolor-solarized}
+\RequirePackage{listings}
+\RequirePackage{vc-hott}
+
+% code listings
+\lstloadlanguages{Haskell}
+\lstdefinelanguage{Agda}{
+  aboveskip        = 0.5\baselineskip,
+  belowskip        = 0.5\baselineskip,
+  language         = Haskell,
+  showstringspaces = false,
+  xleftmargin      = 0.2\parindent,
+  xrightmargin     = 0.2\parindent,
+  columns          = fullflexible,
+  keepspaces       = true,
+  basewidth        = {0em,0em},
+  morekeywords     = {},
+  deletekeywords   = {List},
+  emph             = [1]{List,SList,PList,FSMG,SMC,Perm,hProp,hSet,Bag,Fin,Vec},
+  emph             = [2]{swap,trunc,squash,perm-refl,perm-swap,base,loop,fsuc,fzero},
+  emph             = [3]{i0,i1,hcomp,Nat},
+  alsoletter       = {_,-},
+  escapeinside     = ||,
+  basicstyle       = \ttfamily\color{solarized-base00},
+  keywordstyle     = \bfseries\color{solarized-cyan},
+  emphstyle        = [1]\bfseries\color{solarized-orange},
+  emphstyle        = [2]\bfseries\color{solarized-base01},
+  emphstyle        = [3]\color{solarized-blue},
+  identifierstyle  = \color{solarized-base02},
+  stringstyle      = \color{solarized-orange},
+  commentstyle     = \itshape\color{solarized-cyan},
+  literate         = {->}{{\ensuremath{\rightarrow}}}2
+  {lambda}{{\ensuremath{\lambda\!}}}2
+  {forall}{{\ensuremath{\forall}}}2
+  {Sg}{{\ensuremath{\Sigma}}}2
+  {times}{{\ensuremath{\times}}}2 {plus}{{+}}2 {uplus}{{\ensuremath{\uplus}}}2
+  {==}{{\ensuremath{\id}}}2
+  {nil}{{\color{solarized-base01}[]}}2
+  {cons}{{\color{solarized-base01}\ensuremath{\cons}}}2
+  {concat}{{\color{solarized-base01}\ensuremath{\mult}}}2
+  {append}{{\color{solarized-base01}\ensuremath{\mult}}}2
+  {tensor}{{\color{solarized-base01}⊗}}2
+  {sharp}{{\color{solarized-base01}\ensuremath{^{\text{\#}}}}}2
+  {UU}{{\color{solarized-base01}\ensuremath{\UU}}}2
+  {eqv}{{\color{solarized-base01}\ensuremath{\eqv}}}2
+  {comp}{{\color{solarized-base01}\ensuremath{\comp}}}2
+  {quot}{{\color{solarized-base01}\ensuremath{\sslash}}}2
+}
+\lstnewenvironment{code}{\lstset{language=Agda}}{}
+%% just use term font for inline code
+\newcommand{\inline}[1]{\ensuremath{\term{#1}}}
