@@ -1,6 +1,7 @@
 module En.Prelude where
 
 open import En.Prelude.Base public
+open import En.Prelude.Except public
 open import En.Prelude.Ap public
 open import En.Prelude.Squares public
 open import En.Prelude.Coherence public
@@ -243,7 +244,6 @@ cornerComp {p = p} {q} {r} {s} {t} {u} P Q R i j =
 
 private
   variable
-    ℓ : Level
     A B C D E F G H : Type ℓ
 
 triple-⊗-leftHom : {_⊗A_ : A → A → A} {_⊗B_ : B → B → B} {h : A → B} {X Y Z : A} {X' Y' Z' : B}

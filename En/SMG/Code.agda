@@ -4,10 +4,6 @@ open import En.Prelude
 open import Cubical.Foundations.Equiv.Properties
 import En.SMG as S hiding ( SMG* ; SMG*Fun )
 
-private
-  variable
-    ℓ ℓ' : Level
-
 -- SMG via path codes
 
 module CodeSMG {El : Type ℓ}

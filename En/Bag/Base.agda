@@ -6,10 +6,6 @@ open import Cubical.Data.FinSet.Constructors
 open import En.Univ.Fam
 open import En.UFin.Base
 
-private
-  variable
-    ℓ ℓ' : Level
-
 -- homotopy finite multisets
 
 Bag : Type ℓ → Type (ℓ-max (ℓ-suc ℓ-zero) ℓ)

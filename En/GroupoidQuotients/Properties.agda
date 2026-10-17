@@ -106,3 +106,16 @@ module KernelPair {A : Type ℓA} {B : Type ℓB} {R : A → A → Type ℓR}
 
     quotSurjectionEquiv : A // isTransR ≃ B
     quotSurjectionEquiv = rec// , isEmbedding×isSurjection→isEquiv (isEmbeddingRec// , isSurjectionRec//)
+
+-- groupoid quotients are functorial in relations
+
+module _ {A : Type ℓA} {R S : A → A → Type ℓR}
+  (isTransR : BinaryRelation.isTrans R) (isTransS : BinaryRelation.isTrans S)
+  (e : {a b : A} → R a b ≃ S a b)
+  (e-trans : {a b c : A} (r : R a b) (s : R b c) → –> e (isTransR a b c r s) ≡ isTransS a b c (–> e r) (–> e s))
+  where
+
+  //-cong : A // isTransR ≃ A // isTransS
+  //-cong = sorry
+    -- TODO: functoriality of groupoid quotients (//-cong)
+    --  groupoid quotients are functorial in relations; by GQ.rec both ways

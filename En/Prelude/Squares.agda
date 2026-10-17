@@ -4,7 +4,6 @@ open import En.Prelude.Base public
 
 private
   variable
-    ℓ ℓ' : Level
     A B C D E F G H : Type ℓ
 
 -- postulate

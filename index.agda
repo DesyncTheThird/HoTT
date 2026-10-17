@@ -12,7 +12,16 @@ open import En.FSMG
 -- spicy lists
 open import En.SList
 
--- spicier lists
+-- group actions
+open import En.GroupAction
+
+-- group presentations
+open import En.GroupPresentation
+
+-- lehmer codes
+open import En.LehmerCode
+
+-- presentations of the symmetric group
 open import En.Sn
 
 -- univalent universes
@@ -20,6 +29,9 @@ open import En.Univ
 
 -- deloopings of automorphism groups
 open import En.BAut
+
+-- higher and concrete groups
+open import En.HigherGroup
 
 -- universe of finite types
 open import En.UFin
@@ -29,6 +41,9 @@ open import En.Bag
 
 -- lists up to permutation
 open import En.PList
+
+-- equivalences from FSMG to Bag
+open import En.Equiv
 
 -- all modules
 open import En.Everything

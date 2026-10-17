@@ -9,10 +9,6 @@ import En.SMG as S hiding ( SMG* ; SMG*Fun )
 open import En.SMG.Code
 open import Cubical.HITs.Truncation as Trunc
 
-private
-  variable
-    ℓ : Level
-
 module _ {A : Type ℓ} where
 
   open FamPath UFinSub A public

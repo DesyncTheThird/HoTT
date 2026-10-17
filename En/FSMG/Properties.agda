@@ -217,10 +217,12 @@ module _ {ℓ} (A : Type ℓ) where
 
   private
     to : FSMG A → FSMG (∥ A ∥ 3)
-    to = Univ._♯ A _ (FSMG* _) (η ∘ ∣_∣)
+    to = (η ∘ ∣_∣) ♯
+      where open Univ A _ (FSMG* _)
 
     from : FSMG (∥ A ∥ 3) → FSMG A
-    from = Univ._♯ (∥ A ∥ 3) _ (FSMG* A) (Trunc.rec is-groupoid η)
+    from = Trunc.rec is-groupoid η ♯
+      where open Univ (∥ A ∥ 3) _ (FSMG* A)
 
     to-from : (X : FSMG (∥ A ∥ 3)) → to (from X) ≡ X
     to-from = FSMG*Elim*Set.elim (∥ A ∥ 3)

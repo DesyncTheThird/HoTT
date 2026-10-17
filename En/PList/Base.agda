@@ -1,15 +1,11 @@
 module En.PList.Base where
 
 open import En.Prelude
-open SumFin
+open FS
 open import Cubical.HITs.GroupoidQuotients.Base public
 open import En.Univ.Fam
 open import En.UFin.Base
 open import En.Bag.Base
-
-private
-  variable
-    ℓ : Level
 
 -- finite vectors
 
