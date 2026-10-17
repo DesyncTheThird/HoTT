@@ -1,0 +1,5 @@
+wrap = false
+tabsize = 2
+tabchar = "space"
+format-tables = true
+verbatims = ["code"]

@@ -1,0 +1,4 @@
+$pdf_mode = 1;
+$recorder = 1;
+$bibtex_use = 2;
+$clean_ext = 'axp vtc';

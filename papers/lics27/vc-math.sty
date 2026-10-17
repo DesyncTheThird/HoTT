@@ -1,0 +1,65 @@
+% !TeX root = lics27-fsmg.tex
+
+\ProvidesPackage{vc-math}
+
+\RequirePackage{amsmath,amsfonts,amsthm,amssymb}
+\RequirePackage{stmaryrd}
+\RequirePackage{etoolbox}
+\RequirePackage{perfectcut}
+
+%% colons
+\makeatletter
+\mathchardef\normalcolon=\mathcode`:
+\def\colon{%
+  \noexpand\nobreak
+  \mskip 2mu
+  \mathpunct{}
+  \nonscript\mkern -\thinmuskip
+  {\normalcolon}%
+  \mskip 6muplus1mu
+  \relax
+}
+% tex-fmt: off
+\@ifpackagewith{babel}{french}{% french babel makes : active
+  \declare@shorthand{french}{:}{%
+    \ifmmode % <--- added
+      \colon % <--- added
+    \else % <--- added
+      \ifFB@spacing
+        \ifhmode
+          \ifdim\lastskip>1sp
+            \unskip\penalty\@M\FBcolonspace
+          \else
+            \FDP@colonspace
+          \fi
+        \fi
+      \fi
+      \string:%
+    \fi % <--- added
+  }%
+}{%
+  \begingroup\lccode`\~=`\:\lowercase{\endgroup\let~}\colon
+  \mathcode`\:=\string"8000
+}
+% tex-fmt: on
+\makeatother
+
+%% parentheses
+\let\ps\perfectparens%
+
+% math
+\newcommand{\xto}[1]{\xrightarrow{#1}}
+
+% monoids
+\newcommand{\Mon}{\type{Mon}}
+\newcommand{\CMon}{\type{CMon}}
+
+% category theory
+\newcommand{\natto}{\Rightarrow}
+
+% free extension
+\newcommand{\ext}[1]{{#1}^{\sharp}}
+
+% sets and bags
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\bag}[1]{{\lbag}{#1}{\rbag}}

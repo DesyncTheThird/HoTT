@@ -3,9 +3,13 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "papers/**"
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "papers/**"
   workflow_dispatch:
 
 permissions:
