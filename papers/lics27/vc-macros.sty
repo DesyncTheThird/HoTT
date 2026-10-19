@@ -27,13 +27,11 @@
 \newcommand{\fnf}[1]{\textcolor{solarized-cyan}{FNF: #1}}
 
 % references
-\makeatletter
 \newcommand{\crefnames}[3]{%
   \@for\next:=#1\do{%
     \expandafter\crefname\expandafter{\next}{#2}{#3}%
   }%
 }
-\makeatother
 %% shorten cref names
 \crefnames{part,chapter,section,subsection}{\S}{\S\S}
 \crefnames{paragraph}{\P}{\P\P}
@@ -65,5 +63,21 @@
 \newcommand{\FSMG}{\term{FSMG}}
 
 % apxproof
+\newtheoremrep{theorem}{Theorem}
 \newtheoremrep{proposition}[theorem]{Proposition}
 \newtheoremrep{lemma}[theorem]{Lemma}
+\newtheoremrep{corollary}[theorem]{Corollary}
+
+% cleveref names for lipics theorems
+\crefname{claim}{Claim}{Claims}
+\crefname{observation}{Observation}{Observations}
+\crefname{conjecture}{Conjecture}{Conjectures}
+\crefname{exercise}{Exercise}{Exercises}
+
+\@for\vc@env:=lemma,proposition,corollary,claim,definition,example,remark,observation,conjecture,exercise,note\do{%
+  \edef\vc@next{\noexpand\AddToHook{env/\vc@env/begin}{\noexpand\crefalias{theorem}{\vc@env}}}%
+  \vc@next
+}
+
+% stray comma
+\def\creflastgroupconjunction{, and\nobreakspace}
