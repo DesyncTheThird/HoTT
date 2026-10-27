@@ -156,37 +156,38 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
                                             ∙ ap (ap (z ::_)) p ∙
                                             ap-∙∙ (z ::_) (swap x y (zs ++ xs)) (ap (y ::_) (++-:: x zs xs)) (++-:: y zs (x :: xs))
 
-++-β-aux : (x y : A) (xs ys : SList A)
-  → (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
-  ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
 
-++-β-aux {A = A} x y xs ys = SListElim2Paths.elim (λ _ → SList A)
-  (λ ys → x :: y :: ys ++ xs)
-  (λ ys → ys ++ y :: x :: xs)
-  (λ ys → (ap (_::_ x) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙
-        ap (_++_ ys) (swap x y xs)))
-  (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
-        ++-:: y ys (x :: xs)))
-  (
-    refl ∙ (swap x y (nil ++ xs))
-      ≡⟨ sym (lUnit (swap x y (nil ++ xs))) ⟩
-    (swap x y (nil ++ xs))
-      ≡⟨ (rUnit _ ∙ rUnit _)⟩
-    (swap x y (nil ++ xs) ∙ refl) ∙ refl
-      ≡⟨ sym (assoc (swap x y (nil ++ xs)) refl refl) ⟩
-    (swap x y (nil ++ xs) ∙ refl ∙ refl)
-      ≡⟨ sym (doubleCompPath≡compPath (swap x y (nil ++ xs)) refl refl) ⟩
-    (swap x y (nil ++ xs) ∙∙ refl ∙∙ refl)
-    ∎
-  )
-  (λ z {zs} p → doubleCompPath≡compPath (ap (x ::_) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs))(ap (z :: zs ++_ ) (swap x y xs))
-              ∙ ((assoc (ap (x ::_ ) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs)) (ap (z :: zs ++_) (swap x y xs))) ∙ sym (Square→compPath (E x y xs ys z zs p)))
-              ∙ sym (doubleCompPath≡compPath (swap x y (z :: zs ++ xs)) (ap (y ::_) (++-:: x (z :: zs) xs)) (++-:: y (z :: zs) (x :: xs))))
-  (λ _ → is-groupoid)
-  ys
 
 module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys ++ xs) where
   abstract
+    ++-β-aux : (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
+      ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
+    ++-β-aux = SListElim2Paths.elim
+      (λ _ → SList A)
+      (λ ys → x :: y :: ys ++ xs)
+      (λ ys → ys ++ y :: x :: xs)
+      (λ ys → (ap (_::_ x) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙
+             ap (_++_ ys) (swap x y xs)))
+      (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
+            ++-:: y ys (x :: xs)))
+      (
+        refl ∙ (swap x y (nil ++ xs))
+          ≡⟨ sym (lUnit (swap x y (nil ++ xs))) ⟩
+        (swap x y (nil ++ xs))
+          ≡⟨ (rUnit _ ∙ rUnit _)⟩
+        (swap x y (nil ++ xs) ∙ refl) ∙ refl
+          ≡⟨ sym (assoc (swap x y (nil ++ xs)) refl refl) ⟩
+        (swap x y (nil ++ xs) ∙ refl ∙ refl)
+          ≡⟨ sym (doubleCompPath≡compPath (swap x y (nil ++ xs)) refl refl) ⟩
+        (swap x y (nil ++ xs) ∙∙ refl ∙∙ refl)
+        ∎
+      )
+      (λ z {zs} p → doubleCompPath≡compPath (ap (x ::_) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs)) (ap (z :: zs ++_ ) (swap x y xs))
+                  ∙ ((assoc (ap (x ::_ ) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs)) (ap (z :: zs ++_) (swap x y xs))) ∙ sym (Square→compPath (E x y xs ys z zs p)))
+                  ∙ sym (doubleCompPath≡compPath (swap x y (z :: zs ++ xs)) (ap (y ::_) (++-:: x (z :: zs) xs)) (++-:: y (z :: zs) (x :: xs))))
+      (λ _ → is-groupoid)
+      ys
+
     β-boundary :
       (ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs) ∙ ++-:: x ys (y :: xs)) ∙ ap (ys ++_) (swap x y xs)
       ≡
@@ -214,7 +215,7 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
       (A ∙ B) ∙ (C ∙ D)
         ≡⟨ sym (assoc _ _ _) ⟩
       A ∙ (B ∙ (C ∙ D))
-        ≡⟨ ap (A ∙_) (doubleCompPathEq→compPathEq ((++-β-aux x y xs ys))) ⟩
+        ≡⟨ ap (A ∙_) (doubleCompPathEq→compPathEq ++-β-aux) ⟩
       A ∙ (E ∙ (F ∙ G))
         ≡⟨ assoc _ _ _ ⟩
       (A ∙ E) ∙ (F ∙ G)
@@ -229,14 +230,6 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
         ≡⟨ refl ⟩
       U ∙ (R ∙ G) ∎
 
-    P : x :: y :: (xs ++ ys) ≡ ys ++ x :: y :: xs
-    P = ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs)
-          ∙ ++-:: x ys (y :: xs)
-
-    Q : y :: x :: (xs ++ ys) ≡ ys ++ y :: x :: xs
-    Q = ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs)
-          ∙ ++-:: y ys (x :: xs)
-
     β-swap :
       PathP (λ i → swap x y xs i ++ ys ≡ ys ++ swap x y xs i)
         (ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs) ∙ ++-:: x ys (y :: xs))
@@ -244,25 +237,27 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
     β-swap = let
       A = ap (ys ++_) (swap x y xs)
       B = ap (_++ ys) (swap x y xs)
+      P = ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs) ∙ ++-:: x ys (y :: xs)
+      Q = ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs)
       in
       compPathR→PathP (
-      ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs) ∙ ++-:: x ys (y :: xs)
-        ≡⟨ refl ⟩
-      P
-        ≡⟨ rUnit _ ⟩
-      P ∙ refl
-        ≡⟨ ap (P ∙_) (sym (rCancel A)) ⟩
-      P ∙ A ∙ sym A
-        ≡⟨ assoc _ _ _ ⟩
-      (P ∙ A) ∙ sym A
-        ≡⟨ ap (_∙ sym A) β-boundary ⟩
-      (ap (_++ ys) (swap x y xs) ∙ ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs)) ∙ sym A
-        ≡⟨ refl ⟩
-      (B ∙ Q) ∙ sym A
-        ≡⟨ sym (assoc _ _ _) ⟩
-      B ∙ Q ∙ (sym A)
-        ≡⟨ refl ⟩
-      ap (_++ ys) (swap x y xs) ∙ (ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs)) ∙ sym (ap (ys ++_) (swap x y xs)) ∎
+        ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs) ∙ ++-:: x ys (y :: xs)
+          ≡⟨ refl ⟩
+        P
+          ≡⟨ rUnit _ ⟩
+        P ∙ refl
+          ≡⟨ ap (P ∙_) (sym (rCancel A)) ⟩
+        P ∙ A ∙ sym A
+          ≡⟨ assoc _ _ _ ⟩
+        (P ∙ A) ∙ sym A
+          ≡⟨ ap (_∙ sym A) β-boundary ⟩
+        (ap (_++ ys) (swap x y xs) ∙ ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs)) ∙ sym A
+          ≡⟨ refl ⟩
+        (B ∙ Q) ∙ sym A
+          ≡⟨ sym (assoc _ _ _) ⟩
+        B ∙ Q ∙ (sym A)
+          ≡⟨ refl ⟩
+        ap (_++ ys) (swap x y xs) ∙ (ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs)) ∙ sym (ap (ys ++_) (swap x y xs)) ∎
       )
 
 ++-β : (xs ys : SList A) → xs ++ ys ≡ ys ++ xs
