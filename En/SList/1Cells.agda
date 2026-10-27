@@ -211,19 +211,19 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
       (ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs) ∙ ++-:: x ys (y :: xs)) ∙ ap (ys ++_) (swap x y xs)
         ≡⟨ ap (λ a → (a ∙ ++-:: x ys (y :: xs)) ∙ ap (ys ++_) (swap x y xs)) (ap-∙ (x ::_) (ap (y ::_ ) p) (++-:: y ys xs))  ⟩
       ((A ∙ B) ∙ C) ∙ D
-        ≡⟨ sym (assoc _ _ _) ⟩
+        ≡⟨ sym (assoc (A ∙ B) C D) ⟩
       (A ∙ B) ∙ (C ∙ D)
-        ≡⟨ sym (assoc _ _ _) ⟩
+        ≡⟨ sym (assoc A B (C ∙ D)) ⟩
       A ∙ (B ∙ (C ∙ D))
         ≡⟨ ap (A ∙_) (doubleCompPathEq→compPathEq ++-β-aux) ⟩
       A ∙ (E ∙ (F ∙ G))
-        ≡⟨ assoc _ _ _ ⟩
+        ≡⟨ assoc A E (F ∙ G) ⟩
       (A ∙ E) ∙ (F ∙ G)
         ≡⟨ ap (_∙ F ∙ G) (sym (homotopyNatural (swap x y) p)) ⟩
       (S ∙ T) ∙ (F ∙ G)
-        ≡⟨ sym (assoc _ _ _) ⟩
+        ≡⟨ sym (assoc S T (F ∙ G)) ⟩
       S ∙ (T ∙ (F ∙ G))
-        ≡⟨ ap (S ∙_) (assoc _ _ _) ⟩
+        ≡⟨ ap (S ∙_) (assoc T F G) ⟩
       S ∙ ((T ∙ F) ∙ G)
         ≡⟨ ap (λ a → S ∙ (a ∙ G)) (sym (ap-∙ (y ::_) (ap (x ::_) p) (++-:: x ys xs))) ⟩
       S ∙ (R ∙ G)
@@ -248,13 +248,13 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
         P ∙ refl
           ≡⟨ ap (P ∙_) (sym (rCancel A)) ⟩
         P ∙ A ∙ sym A
-          ≡⟨ assoc _ _ _ ⟩
+          ≡⟨ assoc P A (sym A) ⟩
         (P ∙ A) ∙ sym A
           ≡⟨ ap (_∙ sym A) β-boundary ⟩
         (ap (_++ ys) (swap x y xs) ∙ ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs)) ∙ sym A
           ≡⟨ refl ⟩
         (B ∙ Q) ∙ sym A
-          ≡⟨ sym (assoc _ _ _) ⟩
+          ≡⟨ sym (assoc B Q (sym A)) ⟩
         B ∙ Q ∙ (sym A)
           ≡⟨ refl ⟩
         ap (_++ ys) (swap x y xs) ∙ (ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs)) ∙ sym (ap (ys ++_) (swap x y xs)) ∎
