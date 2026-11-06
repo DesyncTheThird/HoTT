@@ -62,6 +62,7 @@ record SMG*Fun {ℓ₁ ℓ₂}
 open SMG*Fun public
 
 record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
+  no-eta-equality
   constructor smg*sq
   field
     𝕀 : El
@@ -93,10 +94,10 @@ record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
     is-groupoid : isGroupoid El
 
   Λ-nat*sq : {X Y : El} (p : X ≡ Y) → Square (Λ X) (Λ Y) (ap (𝕀 ⊗_) p) p
-  Λ-nat*sq p = flipSquare (compPath→Square (homotopyNatural Λ p))
+  Λ-nat*sq p = homotopyNaturalSq Λ p
 
   ρ-nat*sq : {X Y : El} (p : X ≡ Y) → Square (ρ X) (ρ Y) (ap (_⊗ 𝕀) p) p
-  ρ-nat*sq p = flipSquare (compPath→Square (homotopyNatural ρ p))
+  ρ-nat*sq p = homotopyNaturalSq ρ p
 
   ⊗-bi : {X X' Y Y' : El} (p : X ≡ X') (q : Y ≡ Y')
     → Square (ap (_⊗ Y) p) (ap (_⊗ Y') p) (ap (X ⊗_) q) (ap (X' ⊗_) q)
@@ -253,7 +254,7 @@ module _ {ℓ ℓ'}
                ; (j = i0) → nat-⊗ (X A.⊗ Y) Z i k
                ; (j = i1) → nat-⊗ X (Y A.⊗ Z) i k
                } )
-      (compPath→Square (homotopyNatural nat (A.α X Y Z)) i j)
+      (homotopyNaturalSq nat (A.α X Y Z) j i)
 
   lemma (smg*nat*sq nat nat-𝕀 nat-⊗) k .-α₁ X Y Z i j =
     isGroupoid→Cube
@@ -264,7 +265,7 @@ module _ {ℓ ℓ'}
              ; k₁ (j = i0) → nat-⊗ (X A.⊗ Y) Z k k₁
              ; k₁ (j = i1) → nat-⊗ X (Y A.⊗ Z) k k₁
              })
-          (compPath→Square (homotopyNatural nat (A.α X Y Z)) k j))
+          (homotopyNaturalSq nat (A.α X Y Z) j k))
       (λ i k → nat-⊗ (X A.⊗ Y) Z k i)
       (λ i k → nat-⊗ X (Y A.⊗ Z) k i)
       (f* .-α₁ X Y Z) (g* .-α₁ X Y Z) B.is-groupoid i j k
@@ -277,7 +278,7 @@ module _ {ℓ ℓ'}
              ; k₁ (j = i0) → nat-⊗ (X A.⊗ Y) Z k k₁
              ; k₁ (j = i1) → nat-⊗ X (Y A.⊗ Z) k k₁
              })
-          (compPath→Square (homotopyNatural nat (A.α X Y Z)) k j))
+          (homotopyNaturalSq nat (A.α X Y Z) j k))
       (λ j k → B.α (nat X k) (nat Y k) (nat Z k) j)
       (λ i k → nat-⊗ X Y k i B.⊗ nat Z k)
       (λ i k → nat X k B.⊗ nat-⊗ Y Z k i)

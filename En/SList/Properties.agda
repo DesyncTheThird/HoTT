@@ -4,6 +4,7 @@ open import En.Prelude
 open import En.SList.Base
 open import En.SList.0Cells
 open import En.SList.1Cells
+open import En.SList.2Cells
 import En.SMG as S hiding (SMG* ; SMG*Fun)
 
 private
@@ -17,7 +18,7 @@ SList* A .S.α = ++-α
 SList* A .S.Λ = ++-Λ
 SList* A .S.ρ = ++-ρ
 SList* A .S.β = ++-β
-SList* A .S.▽ = sorry -- TODO: triangle ▽ for SList*
+SList* A .S.▽ = ++-▽
 SList* A .S.⬠₌ = sorry -- TODO: pentagon ⬠₌ for SList*
 SList* A .S.⬠₁ = sorry -- TODO: pentagon ⬠₁ for SList*
 SList* A .S.⬠₂ = sorry -- TODO: pentagon ⬠₂ for SList*
@@ -25,7 +26,7 @@ SList* A .S.⬡₌ = sorry -- TODO: hexagon ⬡₌ for SList*
 SList* A .S.⬡₁ = sorry -- TODO: hexagon ⬡₁ for SList*
 SList* A .S.⬡₂ = sorry -- TODO: hexagon ⬡₂ for SList*
 SList* A .S.β² = sorry -- TODO: symmetry involution β² for SList*
-SList* A .S.is-groupoid = sorry -- TODO: is-groupoid for SList*
+SList* A .S.is-groupoid = is-groupoid
 
 
 -- module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B) where
