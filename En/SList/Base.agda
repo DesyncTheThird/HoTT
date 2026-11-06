@@ -20,6 +20,31 @@ data SList {ℓ} (A : Type ℓ) : Type ℓ where
 
     is-groupoid : isGroupoid (SList A)
 
+SList-⬡ : {A : Type ℓ} (x y z : A) (xs : SList A) →
+    Square
+    (sym (swap x y (z :: xs)) ∙ ap (x ::_) (swap y z xs))
+    (swap y z (x :: xs) ∙ sym (ap (z ::_) (swap x y xs)))
+    (ap (y ::_) (swap x z xs))
+    (swap x z (y :: xs))
+SList-⬡ x y z xs = Hexagon→Square (hexagon (⬡₌ x y z xs) (⬡₁ x y z xs) (⬡₂ x y z xs))
+
+SList-⬡' : {A : Type ℓ} (x y z : A) (xs : SList A) →
+    Square
+    (swap y x (z :: xs) ∙ ap (x ::_) (swap y z xs))
+    (swap y z (x :: xs) ∙ (ap (z ::_) (swap y x xs)))
+    (ap (y ::_) (swap x z xs))
+    (swap x z (y :: xs))
+SList-⬡' x y z xs = tpt2
+    (λ a b → Square
+        (a ∙ ap (x ::_) (swap y z xs))
+        (swap y z (x :: xs) ∙ ap (z ::_) b)
+        (ap (y ::_) (swap x z xs))
+        (swap x z (y :: xs)))
+    (sym (swap² y x (z :: xs)))
+    (sym (swap² y x xs))
+    (SList-⬡ x y z xs)
+
+
 module SListElim {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
     (nil* : P nil)
     (_::*_ : (x : A) {xs : SList A} → (xs* : P xs) → P (x :: xs))
@@ -116,7 +141,6 @@ module SListElimPathsSet {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ') (
     elim : (xs : SList A) → f xs ≡ g xs
     elim =
       SListElimProp.elim (λ xs → f xs ≡ g xs) nil* _::*_ (λ xs → is-set* xs (f xs) (g xs))
-
 
 module SListElim2Paths {ℓ ℓ'} {A : Type ℓ} (P : SList A → Type ℓ')
     (f g : (xs : SList A) → P xs)

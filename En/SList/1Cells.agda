@@ -18,7 +18,7 @@ private
     (λ xs → xs ++ nil ≡ xs)
     refl
     (λ x → ap (x ::_))
-    (λ x y p → compPath→Square (homotopyNatural (swap x y) p))
+    (λ x y p i j → homotopyNaturalSq (swap x y) p j i)
     (λ xs → is-groupoid (xs ++ nil) xs)
 
 ++-α : (xs ys zs : SList A) → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs)
@@ -26,7 +26,7 @@ private
   SListElimSet.elim (λ xs → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs))
     refl
     (λ x → ap (x ::_))
-    (λ x y p → compPath→Square (homotopyNatural (swap x y) p))
+    (λ x y p i j → homotopyNaturalSq (swap x y) p j i)
     (λ xs → is-groupoid ((xs ++ ys) ++ zs) (xs ++ ys ++ zs)) xs
 
 ++-:: : (x : A) (xs ys : SList A) → (x :: xs) ++ ys ≡ xs ++ (x :: ys)
@@ -35,7 +35,7 @@ private
     refl
     (λ y {xs} p → swap x y (xs ++ ys) ∙ ap (y ::_) p)
     (λ y z {xs} p →
-      let S = (compPath→Square (homotopyNatural (swap y z) p))
+      let S i j = homotopyNaturalSq (swap y z) p j i
           T = invSquarev (compPath→Triangle₀ (sym (ap-∙ (y ::_) (swap x z (xs ++ ys)) (ap (z ::_) p))))
           U = invSquareh (compPath→Triangle₀ (sym (ap-∙ (z ::_) (swap x y (xs ++ ys)) (ap (y ::_) p))))
           V = T ∙h ⬡₁ x y z (xs ++ ys) ∙h ⬡₂ x y z (xs ++ ys)
@@ -70,7 +70,7 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
           (swap z x (zs ++ y :: xs))
           (ap (λ a → z :: x :: a) (++-:: y zs xs))
           (ap (λ a → x :: z :: a) (++-:: y zs xs))
-      T = flipSquare (compPath→Square (homotopyNatural (swap z x) (++-:: y zs xs)))
+      T = homotopyNaturalSq (swap z x) (++-:: y zs xs)
       U : Square
           (ap (x ::_) (swap z y (zs ++ xs)))
           refl
@@ -91,7 +91,7 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
           (swap z y (zs ++ x :: xs))
           (ap (λ a → z :: y :: a) (++-:: x zs xs))
           (ap (λ a → y :: z :: a) (++-:: x zs xs))
-      T' = flipSquare (compPath→Square (homotopyNatural (swap z y) (++-:: x zs xs)))
+      T' = homotopyNaturalSq (swap z y) (++-:: x zs xs)
       U' : Square
           (ap (y ::_) (swap z x (zs ++ xs)))
           refl

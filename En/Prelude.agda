@@ -285,24 +285,6 @@ forceSquare :
   → Square p q (q ⁻¹) (p ⁻¹) → Square refl q ((q ∙ p) ⁻¹) (p ⁻¹)
 forceSquare {p = p} {q} sq = (invSquareh (compPath→Square (sym (rUnit (q ∙ p)))))
 
--- homotopyNatural2 :
---   ∀ {ℓ ℓ₁ ℓ₂ ℓ₃ ℓ₃}
---   {A : Type ℓ} {B : Type ℓ'} {C : Type ℓ''}
---   {_⊗_ : A → B → C}
---   {f g : A → B → C}
---   (H : ∀ a b → f a b ≡ g a b)
---   {x x' y y' : A}
---   (p : x ≡ x')
---   (q : y ≡ y')
---   → H x y ∙ ap₂ g p q ≡ ap₂ f p ∙ H x' y'
--- homotopyNatural2 = {!!}
--- -- homotopyNatural2 {f = f} {g = g} H {x} {y} p i j =
--- --     hcomp (λ k → λ { (i = i0) → compPath-filler (H x) (cong g p) k j
--- --                    ; (i = i1) → compPath-filler' (cong f p) (H y) k j
--- --                    ; (j = i0) → cong f p (i ∧ ~ k)
--- --                    ; (j = i1) → cong g p (i ∨ k) })
--- --           (H (p i) j)
-
 aMorphSquare :
   ∀ {ℓ}
   {A : Type ℓ}
@@ -361,3 +343,7 @@ yaaMorphSquare
 tpt3 : ∀ {ℓ' ℓ'' ℓ'''} {B : Type ℓ'} {C : Type ℓ''} {x y : A} {z w : B} {s t : C} (D : A → B → C → Type ℓ''')
         (p : x ≡ y) (q : z ≡ w) (r : s ≡ t) → D x z s → D y w t
 tpt3 B p q r b = transport (λ i → B (p i) (q i) (r i)) b
+
+tpt2 : ∀ {ℓ' ℓ''} {B : Type ℓ'} {x y : A} {z w : B} (D : A → B → Type ℓ'')
+        (p : x ≡ y) (q : z ≡ w) → D x z → D y w
+tpt2 B p q b = transport (λ i → B (p i) (q i)) b
