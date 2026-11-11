@@ -156,7 +156,31 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
                                             ∙ ap (ap (z ::_)) p ∙
                                             ap-∙∙ (z ::_) (swap x y (zs ++ xs)) (ap (y ::_) (++-:: x zs xs)) (++-:: y zs (x :: xs))
 
+-- this is the generalised path algebra used in β-boundary
+-- if inlined it causes agda to run out of memory
 
+β-chain : {X : Type ℓ} {a a' b c d e f g : X}
+  {A : a ≡ b} {B : b ≡ c} {C : c ≡ d} {D : d ≡ e} {E : b ≡ f} {F : f ≡ g} {G : g ≡ e}
+  {S : a ≡ a'} {T : a' ≡ f}
+  → B ∙ C ∙ D ≡ E ∙ F ∙ G
+  → A ∙ E ≡ S ∙ T
+  → ((A ∙ B) ∙ C) ∙ D ≡ S ∙ ((T ∙ F) ∙ G)
+β-chain {A = A} {B} {C} {D} {E} {F} {G} {S} {T} H N =
+  ((A ∙ B) ∙ C) ∙ D
+    ≡⟨ sym (assoc (A ∙ B) C D) ⟩
+  (A ∙ B) ∙ (C ∙ D)
+    ≡⟨ sym (assoc A B (C ∙ D)) ⟩
+  A ∙ (B ∙ (C ∙ D))
+    ≡⟨ ap (A ∙_) H ⟩
+  A ∙ (E ∙ (F ∙ G))
+    ≡⟨ assoc A E (F ∙ G) ⟩
+  (A ∙ E) ∙ (F ∙ G)
+    ≡⟨ ap (_∙ F ∙ G) N ⟩
+  (S ∙ T) ∙ (F ∙ G)
+    ≡⟨ sym (assoc S T (F ∙ G)) ⟩
+  S ∙ (T ∙ (F ∙ G))
+    ≡⟨ ap (S ∙_) (assoc T F G) ⟩
+  S ∙ ((T ∙ F) ∙ G) ∎
 
 module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys ++ xs) where
   abstract
@@ -188,47 +212,35 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
       (λ _ → is-groupoid)
       ys
 
+    β-ap-∙₁ : ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs)
+      ≡ ap (x ::_) (ap (y ::_) p) ∙ ap (x ::_) (++-:: y ys xs)
+    β-ap-∙₁ = ap-∙ (x ::_) (ap (y ::_) p) (++-:: y ys xs)
+
+    β-aux' : ap (x ::_) (++-:: y ys xs) ∙ ++-:: x ys (y :: xs) ∙ ap (ys ++_) (swap x y xs)
+      ≡ swap x y (ys ++ xs) ∙ ap (y ::_) (++-:: x ys xs) ∙ ++-:: y ys (x :: xs)
+    β-aux' = doubleCompPathEq→compPathEq ++-β-aux
+
+    β-nat : ap (x ::_) (ap (y ::_) p) ∙ swap x y (ys ++ xs)
+      ≡ swap x y (xs ++ ys) ∙ ap (y ::_) (ap (x ::_) p)
+    β-nat = sym (homotopyNatural (swap x y) p)
+
+    β-ap-∙₂ : ap (y ::_) (ap (x ::_) p) ∙ ap (y ::_) (++-:: x ys xs)
+      ≡ ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs)
+    β-ap-∙₂ = sym (ap-∙ (y ::_) (ap (x ::_) p) (++-:: x ys xs))
+
     β-boundary :
       (ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs) ∙ ++-:: x ys (y :: xs)) ∙ ap (ys ++_) (swap x y xs)
       ≡
       ap (_++ ys) (swap x y xs) ∙ (ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs))
-    β-boundary = let
-      A = ap (x ::_) (ap (y ::_) p)
-      B = ap (x ::_) (++-:: y ys xs)
-      C = ++-:: x ys (y :: xs)
-      D = ap (ys ++_) (swap x y xs)
-
-      E = swap x y (ys ++ xs)
-      F = ap (y ::_) (++-:: x ys xs)
-      G = ++-:: y ys (x :: xs)
-
-      S = swap x y (xs ++ ys)
-      T = ap (y ::_) (ap (x ::_) p)
-      U = ap (_++ ys) (swap x y xs)
-      R = ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs)
-      in
-
-      (ap (x ::_) (ap (y ::_) p ∙ ++-:: y ys xs) ∙ ++-:: x ys (y :: xs)) ∙ ap (ys ++_) (swap x y xs)
-        ≡⟨ ap (λ a → (a ∙ ++-:: x ys (y :: xs)) ∙ ap (ys ++_) (swap x y xs)) (ap-∙ (x ::_) (ap (y ::_ ) p) (++-:: y ys xs))  ⟩
-      ((A ∙ B) ∙ C) ∙ D
-        ≡⟨ sym (assoc (A ∙ B) C D) ⟩
-      (A ∙ B) ∙ (C ∙ D)
-        ≡⟨ sym (assoc A B (C ∙ D)) ⟩
-      A ∙ (B ∙ (C ∙ D))
-        ≡⟨ ap (A ∙_) (doubleCompPathEq→compPathEq ++-β-aux) ⟩
-      A ∙ (E ∙ (F ∙ G))
-        ≡⟨ assoc A E (F ∙ G) ⟩
-      (A ∙ E) ∙ (F ∙ G)
-        ≡⟨ ap (_∙ F ∙ G) (sym (homotopyNatural (swap x y) p)) ⟩
-      (S ∙ T) ∙ (F ∙ G)
-        ≡⟨ sym (assoc S T (F ∙ G)) ⟩
-      S ∙ (T ∙ (F ∙ G))
-        ≡⟨ ap (S ∙_) (assoc T F G) ⟩
-      S ∙ ((T ∙ F) ∙ G)
-        ≡⟨ ap (λ a → S ∙ (a ∙ G)) (sym (ap-∙ (y ::_) (ap (x ::_) p) (++-:: x ys xs))) ⟩
-      S ∙ (R ∙ G)
-        ≡⟨ refl ⟩
-      U ∙ (R ∙ G) ∎
+    β-boundary =
+      ap (λ a → (a ∙ ++-:: x ys (y :: xs)) ∙ ap (ys ++_) (swap x y xs)) β-ap-∙₁
+      ∙ β-chain
+          {A = ap (x ::_) (ap (y ::_) p)} {B = ap (x ::_) (++-:: y ys xs)}
+          {C = ++-:: x ys (y :: xs)} {D = ap (ys ++_) (swap x y xs)}
+          {E = swap x y (ys ++ xs)} {F = ap (y ::_) (++-:: x ys xs)} {G = ++-:: y ys (x :: xs)}
+          {S = swap x y (xs ++ ys)} {T = ap (y ::_) (ap (x ::_) p)}
+          β-aux' β-nat
+      ∙ ap (λ a → swap x y (xs ++ ys) ∙ (a ∙ ++-:: y ys (x :: xs))) β-ap-∙₂
 
     β-swap :
       PathP (λ i → swap x y xs i ++ ys ≡ ys ++ swap x y xs i)
