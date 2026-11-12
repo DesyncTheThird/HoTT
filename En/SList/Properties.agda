@@ -11,22 +11,26 @@ private
   variable
     A : Type ℓ
 
+-- using copatterns here makes typechecking very very slow
+
 SList* : ∀ {ℓ} (A : Type ℓ) → S.SMG*Sq (SList A)
-SList* A .S.𝕀 = nil
-SList* A .S._⊗_ = _++_
-SList* A .S.α = ++-α
-SList* A .S.Λ = ++-Λ
-SList* A .S.ρ = ++-ρ
-SList* A .S.β = ++-β
-SList* A .S.▽ = ++-▽
-SList* A .S.⬠₌ = ++-⬠₌
-SList* A .S.⬠₁ = ++-⬠₁
-SList* A .S.⬠₂ = ++-⬠₂
-SList* A .S.⬡₌ = sorry -- TODO: hexagon ⬡₌ for SList*
-SList* A .S.⬡₁ = sorry -- TODO: hexagon ⬡₁ for SList*
-SList* A .S.⬡₂ = sorry -- TODO: hexagon ⬡₂ for SList*
-SList* A .S.β² = sorry -- TODO: symmetry involution β² for SList*
-SList* A .S.is-groupoid = is-groupoid
+SList* A = record
+  { 𝕀 = nil
+  ; _⊗_ = _++_
+  ; α = ++-α
+  ; Λ = ++-Λ
+  ; ρ = ++-ρ
+  ; β = ++-β
+  ; ▽ = ++-▽
+  ; ⬠₌ = ++-⬠₌
+  ; ⬠₁ = ++-⬠₁
+  ; ⬠₂ = ++-⬠₂
+  ; ⬡₌ = sorry -- TODO: hexagon ⬡₌ for SList*
+  ; ⬡₁ = sorry -- TODO: hexagon ⬡₁ for SList*
+  ; ⬡₂ = sorry -- TODO: hexagon ⬡₂ for SList*
+  ; β² = sorry -- TODO: symmetry involution β² for SList*
+  ; is-groupoid = is-groupoid
+  }
 
 
 -- module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B) where
