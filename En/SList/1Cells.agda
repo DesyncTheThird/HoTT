@@ -21,13 +21,14 @@ private
     (λ x y p i j → homotopyNaturalSq (swap x y) p j i)
     (λ xs → is-groupoid (xs ++ nil) xs)
 
-++-α : (xs ys zs : SList A) → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs)
-++-α xs ys zs =
-  SListElimSet.elim (λ xs → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs))
-    refl
-    (λ x → ap (x ::_))
-    (λ x y p i j → homotopyNaturalSq (swap x y) p j i)
-    (λ xs → is-groupoid ((xs ++ ys) ++ zs) (xs ++ ys ++ zs)) xs
+opaque
+  ++-α : (xs ys zs : SList A) → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs)
+  ++-α xs ys zs =
+    SListElimSet.elim (λ xs → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs))
+      refl
+      (λ x → ap (x ::_))
+      (λ x y p i j → homotopyNaturalSq (swap x y) p j i)
+      (λ xs → is-groupoid ((xs ++ ys) ++ zs) (xs ++ ys ++ zs)) xs
 
 ++-:: : (x : A) (xs ys : SList A) → (x :: xs) ++ ys ≡ xs ++ (x :: ys)
 ++-:: x xs ys =
