@@ -170,34 +170,19 @@ module FSMG*Elim*Set {ℓ ℓ'} (A : Type ℓ) {P : FSMG A → Type ℓ'}
     private
       ⬠₌* : {W X Y Z : FSMG A} (W* : P W) (X* : P X) (Y* : P Y) (Z* : P Z)
            → PathP (λ i → P (⬠₌ W X Y Z i)) (((W* ⊗* X*) ⊗* Y*) ⊗* Z*) (W* ⊗* (X* ⊗* (Y* ⊗* Z*)))
-      ⬠₌* {W = W} {X} {Y} {Z} W* X* Y* Z* =
-        transport
-          (ap {A = Path (FSMG A) (((W ⊗ X) ⊗ Y) ⊗ Z) (W ⊗ (X ⊗ (Y ⊗ Z)))}
-              {x = α (W ⊗ X) Y Z ∙ α W X (Y ⊗ Z)} {y = ⬠₌ W X Y Z}
-              (λ r → PathP (λ i → P (r i)) (((W* ⊗* X*) ⊗* Y*) ⊗* Z*) (W* ⊗* (X* ⊗* (Y* ⊗* Z*))))
-              ( ap (α (W ⊗ X) Y Z ∙_) (Triangle→compPath₂ (⬠₁ W X Y Z))
-              ∙ assoc (α (W ⊗ X) Y Z) (sym (α (W ⊗ X) Y Z)) (⬠₌ W X Y Z)
-              ∙ ap (_∙ ⬠₌ W X Y Z) (rCancel (α (W ⊗ X) Y Z))
-              ∙ sym (lUnit (⬠₌ W X Y Z))))
-          (compPathP' {B = P}
-                      {x' = ((W* ⊗* X*) ⊗* Y*) ⊗* Z*} {y' = (W* ⊗* X*) ⊗* (Y* ⊗* Z*)} {z' = W* ⊗* (X* ⊗* (Y* ⊗* Z*))}
-                      {p = α (W ⊗ X) Y Z} {q = α W X (Y ⊗ Z)}
-                      (α* (W* ⊗* X*) Y* Z*) (α* W* X* (Y* ⊗* Z*)))
+      ⬠₌* {W = W} {X} {Y} {Z} W* X* Y* Z* i =
+        comp (λ j → P (⬠₁ W X Y Z i j))
+          (λ j → λ { (i = i0) → symP (α* (W* ⊗* X*) Y* Z*) j
+                   ; (i = i1) → α* W* X* (Y* ⊗* Z*) j })
+          ((W* ⊗* X*) ⊗* (Y* ⊗* Z*))
 
-    private
       ⬡₌* : {X Y Z : FSMG A} (X* : P X) (Y* : P Y) (Z* : P Z)
          → PathP (λ i → P (⬡₌ X Y Z i)) ((X* ⊗* Y*) ⊗* Z*) (Y* ⊗* (Z* ⊗* X*))
-      ⬡₌* {X = X} {Y} {Z} X* Y* Z* =
-        transport
-          (ap {A = Path (FSMG A) ((X ⊗ Y) ⊗ Z) (Y ⊗ (Z ⊗ X))}
-              {x = α X Y Z ∙∙ β X (Y ⊗ Z) ∙∙ α Y Z X} {y = ⬡₌ X Y Z}
-              (λ r → PathP (λ i → P (r i)) ((X* ⊗* Y*) ⊗* Z*) (Y* ⊗* (Z* ⊗* X*)))
-              (equivFun (Square≃doubleComp (β X (Y ⊗ Z)) (⬡₌ X Y Z) (sym (α X Y Z)) (α Y Z X)) (flipSquare (⬡₁ X Y Z))))
-        (doubleCompPathP
-          {B = P}
-          {x* = (X* ⊗* Y*) ⊗* Z*} {y* = X* ⊗* (Y* ⊗* Z*)} {z* = (Y* ⊗* Z*) ⊗* X*}
-          {p = α X Y Z} {q = β X (Y ⊗ Z)} {r = α Y Z X}
-          (α* X* Y* Z*) (β* X* (Y* ⊗* Z*)) (α* Y* Z* X*))
+      ⬡₌* {X = X} {Y} {Z} X* Y* Z* i =
+        comp (λ j → P (⬡₁ X Y Z i j))
+          (λ j → λ { (i = i0) → symP (α* X* Y* Z*) j
+                   ; (i = i1) → α* Y* Z* X* j })
+          (β* X* (Y* ⊗* Z*) i)
 
     elim : (xs : FSMG A) → P xs
     elim (η x) = η* x
@@ -269,13 +254,6 @@ module FSMG*Rec*Set {ℓ ℓ'} (A : Type ℓ) {P : Type ℓ'}
 
     (is-set* : isSet P)
     where
-
-    private
-      ⬠₌* : (W* X* Y* Z* : P)
-          → ((W* ⊗* X*) ⊗* Y*) ⊗* Z* ≡ W* ⊗* (X* ⊗* (Y* ⊗* Z*))
-      ⬠₌* W* X* Y* Z* i = hcomp (λ j → λ { (i = i0) → α* (W* ⊗* X*) (Y*) (Z*) (~ j)
-                                        ; (i = i1) → α* (W*) (X*) (Y* ⊗* Z*) j })
-                            ((W* ⊗* X*) ⊗* (Y* ⊗* Z*))
 
     rec : FSMG A → P
     rec = FSMG*Elim*Set.elim A {P = λ _ → P} η* 𝕀* _⊗*_ α* Λ* ρ* β* (λ _ → is-set*)
