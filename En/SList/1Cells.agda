@@ -51,14 +51,20 @@ opaque
       (λ xs → is-groupoid)
       xs
 
+opaque
+  unfolding ++-::
+  ++-::-nil : (x : A) (ys : SList A) → ++-:: x nil ys ≡ refl
+  ++-::-nil x ys = refl
 
+  ++-::-cons : (x z : A) (zs ys : SList A)
+    → ++-:: x (z :: zs) ys ≡ swap x z (zs ++ ys) ∙ ap (z ::_) (++-:: x zs ys)
+  ++-::-cons x z zs ys = refl
 
 swap²-++-:: : (x y : A) (xs ys : SList A) → swap x y (xs ++ ys) ∙ swap y x (xs ++ ys) ≡ refl
 swap²-++-:: x y xs ys = ap ((swap x y (xs ++ ys)) ∙_) (swap² y x (xs ++ ys)) ∙ rCancel (swap x y (xs ++ ys))
 
 module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
   opaque
-    unfolding ++-::
     private
       S : Square
           (swap z x (zs ++ y :: xs))
@@ -67,6 +73,7 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
           (++-:: x (z :: zs) (y :: xs))
       S = compPath→Square (sym (rUnit (ap (z ::_) (++-:: x zs (y :: xs))))
           ∙ lUnit (ap (z ::_) (++-:: x zs (y :: xs))) ∙ (ap ( _∙ (ap (z ::_) (++-:: x zs (y :: xs)))) (sym (swap²-++-:: z x zs (y :: xs)))) ∙ sym (assoc (swap z x (zs ++ y :: xs)) (swap x z (zs ++ y :: xs)) (ap (z ::_) (++-:: x zs (y :: xs))))
+          ∙ ap (swap z x (zs ++ y :: xs) ∙_) (sym (++-::-cons x z zs (y :: xs)))
           )
       T : Square
           (swap z x (y :: zs ++ xs))
@@ -81,14 +88,16 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
           (ap (x ::_) (++-:: y (z :: zs) xs))
       U = compPath→Square (sym ((rUnit (ap (λ a → x :: z :: a) (++-:: y zs xs))))
           ∙ ap (ap (x ::_)) (lUnit _ ∙ ap (_∙ (ap (z ::_) (++-:: y zs xs))) (sym (swap²-++-:: z y zs xs))
-          ∙ sym (assoc (swap z y (zs ++ xs)) (swap y z (zs ++ xs)) (ap (z ::_) (++-:: y zs xs))))
+          ∙ sym (assoc (swap z y (zs ++ xs)) (swap y z (zs ++ xs)) (ap (z ::_) (++-:: y zs xs)))
+          ∙ ap (swap z y (zs ++ xs) ∙_) (sym (++-::-cons y z zs xs)))
           ∙ ap-∙ (x ::_) (swap z y (zs ++ xs)) (++-:: y (z :: zs) xs))
       S' : Square
           (swap z y (zs ++ x :: xs))
           refl
           (ap (z ::_) (++-:: y zs (x :: xs)))
           (++-:: y (z :: zs) (x :: xs))
-      S' = compPath→Square ((sym (rUnit (ap (z ::_) (++-:: y zs (x :: xs))))) ∙ lUnit (ap (z ::_) (++-:: y zs (x :: xs))) ∙ (ap ( _∙ (ap (z ::_) (++-:: y zs (x :: xs)))) (sym (swap²-++-:: z y zs (x :: xs)))) ∙ sym (assoc (swap z y (zs ++ x :: xs)) (swap y z (zs ++ x :: xs)) (ap (z ::_) (++-:: y zs (x :: xs)))))
+      S' = compPath→Square ((sym (rUnit (ap (z ::_) (++-:: y zs (x :: xs))))) ∙ lUnit (ap (z ::_) (++-:: y zs (x :: xs))) ∙ (ap ( _∙ (ap (z ::_) (++-:: y zs (x :: xs)))) (sym (swap²-++-:: z y zs (x :: xs)))) ∙ sym (assoc (swap z y (zs ++ x :: xs)) (swap y z (zs ++ x :: xs)) (ap (z ::_) (++-:: y zs (x :: xs))))
+           ∙ ap (swap z y (zs ++ x :: xs) ∙_) (sym (++-::-cons y z zs (x :: xs))))
       T' : Square
           (swap z y (x :: zs ++ xs))
           (swap z y (zs ++ x :: xs))
@@ -101,7 +110,8 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
           (ap (λ a → y :: z :: a) (++-:: x zs xs))
           (ap (y ::_) (++-:: x (z :: zs) xs))
       U' = compPath→Square (sym (rUnit (ap (λ a → y :: z :: a) (++-:: x zs xs)))
-           ∙ ap (ap (y ::_)) (lUnit _ ∙ ap (_∙ (ap (z ::_) (++-:: x zs xs))) (sym (swap²-++-:: z x zs xs)) ∙ sym (assoc (swap z x (zs ++ xs)) (swap x z (zs ++ xs)) (ap (z ::_) (++-:: x zs xs))))
+           ∙ ap (ap (y ::_)) (lUnit _ ∙ ap (_∙ (ap (z ::_) (++-:: x zs xs))) (sym (swap²-++-:: z x zs xs)) ∙ sym (assoc (swap z x (zs ++ xs)) (swap x z (zs ++ xs)) (ap (z ::_) (++-:: x zs xs)))
+           ∙ ap (swap z x (zs ++ xs) ∙_) (sym (++-::-cons x z zs xs)))
            ∙ ap-∙ (y ::_) (swap z x (zs ++ xs)) (++-:: x (z :: zs) xs))
       V : Hexagon (sym (ap (z ::_) (swap x y (zs ++ xs)))) (swap z x (y :: zs ++ xs)) (ap (x ::_) (swap z y (zs ++ xs))) (swap z y (x :: zs ++ xs)) (ap (y ::_) (swap z x (zs ++ xs))) (sym (swap x y (z :: zs ++ xs)))
       V = HexagonRotate⁻ (hexagon (⬡₌ z x y (zs ++ xs)) (⬡₁ z x y (zs ++ xs)) (⬡₂ z x y (zs ++ xs)))
@@ -188,7 +198,6 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
 
 module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys ++ xs) where
   opaque
-    unfolding ++-::
     ++-β-aux : (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
       ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
     ++-β-aux = SListElim2Paths.elim
@@ -199,7 +208,8 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
              ap (_++_ ys) (swap x y xs)))
       (λ ys → (swap x y (ys ++ xs) ∙∙ ap (_::_ y) (++-:: x ys xs) ∙∙
             ++-:: y ys (x :: xs)))
-      (
+      ((λ i → ap (x ::_) (++-::-nil y xs i) ∙∙ ++-::-nil x (y :: xs) i ∙∙ ap (nil ++_) (swap x y xs))
+      ∙ (
         refl ∙ (swap x y (nil ++ xs))
           ≡⟨ sym (lUnit (swap x y (nil ++ xs))) ⟩
         (swap x y (nil ++ xs))
@@ -211,6 +221,7 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
         (swap x y (nil ++ xs) ∙∙ refl ∙∙ refl)
         ∎
       )
+      ∙ (λ i → swap x y (nil ++ xs) ∙∙ ap (y ::_) (++-::-nil x xs (~ i)) ∙∙ ++-::-nil y (x :: xs) (~ i)))
       (λ z {zs} p → doubleCompPath≡compPath (ap (x ::_) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs)) (ap (z :: zs ++_ ) (swap x y xs))
                   ∙ ((assoc (ap (x ::_ ) (++-:: y (z :: zs) xs)) (++-:: x (z :: zs) (y :: xs)) (ap (z :: zs ++_) (swap x y xs))) ∙ sym (Square→compPath (E x y xs ys z zs p)))
                   ∙ sym (doubleCompPath≡compPath (swap x y (z :: zs ++ xs)) (ap (y ::_) (++-:: x (z :: zs) xs)) (++-:: y (z :: zs) (x :: xs))))
