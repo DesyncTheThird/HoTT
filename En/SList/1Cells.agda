@@ -1,3 +1,5 @@
+{-# OPTIONS --lossy-unification #-}
+
 module En.SList.1Cells where
 
 open import En.Prelude
@@ -9,31 +11,32 @@ private
   variable
     A : Type ℓ
 
-++-Λ : (xs : SList A) → nil ++ xs ≡ xs
-++-Λ xs = refl
-
-++-ρ : (xs : SList A) → xs ++ nil ≡ xs
-++-ρ =
-  SListElimSet.elim
-    (λ xs → xs ++ nil ≡ xs)
-    refl
-    (λ x → ap (x ::_))
-    (λ x y p i j → homotopyNaturalSq (swap x y) p j i)
-    (λ xs → is-groupoid (xs ++ nil) xs)
 
 opaque
+  ++-Λ : (xs : SList A) → nil ++ xs ≡ xs
+  ++-Λ xs = refl
+
+  ++-ρ : (xs : SList A) → xs ++ nil ≡ xs
+  ++-ρ =
+    SListElimSet.elim
+      (λ xs → xs ++ nil ≡ xs)
+      refl
+      (λ x → ap (x ::_))
+      (λ x y p i j → homotopyNaturalSq (swap x y) p j i)
+      (λ xs → is-groupoid (xs ++ nil) xs)
+
   ++-α : (xs ys zs : SList A) → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs)
   ++-α xs ys zs =
     SListElimSet.elim (λ xs → (xs ++ ys) ++ zs ≡ xs ++ (ys ++ zs))
       refl
       (λ x → ap (x ::_))
       (λ x y p i j → homotopyNaturalSq (swap x y) p j i)
-      (λ xs → is-groupoid ((xs ++ ys) ++ zs) (xs ++ ys ++ zs)) xs
+      (λ xs → is-groupoid ((xs ++ ys) ++ zs) (xs ++ ys ++ zs))
+      xs
 
-opaque
   ++-:: : (x : A) (xs ys : SList A) → (x :: xs) ++ ys ≡ xs ++ (x :: ys)
   ++-:: x xs ys =
-    SListElimPaths.elim (λ _ → SList _) (λ xs → (x :: xs) ++ ys) (λ xs → xs ++ (x :: ys))
+      SListElimPaths.elim (λ _ → SList _) (λ xs → (x :: xs) ++ ys) (λ xs → xs ++ (x :: ys))
       refl
       (λ y {xs} p → swap x y (xs ++ ys) ∙ ap (y ::_) p)
       (λ y z {xs} p →
@@ -51,20 +54,12 @@ opaque
       (λ xs → is-groupoid)
       xs
 
-opaque
-  unfolding ++-::
-  ++-::-nil : (x : A) (ys : SList A) → ++-:: x nil ys ≡ refl
-  ++-::-nil x ys = refl
-
-  ++-::-cons : (x z : A) (zs ys : SList A)
-    → ++-:: x (z :: zs) ys ≡ swap x z (zs ++ ys) ∙ ap (z ::_) (++-:: x zs ys)
-  ++-::-cons x z zs ys = refl
-
-swap²-++-:: : (x y : A) (xs ys : SList A) → swap x y (xs ++ ys) ∙ swap y x (xs ++ ys) ≡ refl
-swap²-++-:: x y xs ys = ap ((swap x y (xs ++ ys)) ∙_) (swap² y x (xs ++ ys)) ∙ rCancel (swap x y (xs ++ ys))
+  swap²-++-:: : (x y : A) (xs ys : SList A) → swap x y (xs ++ ys) ∙ swap y x (xs ++ ys) ≡ refl
+  swap²-++-:: x y xs ys = ap ((swap x y (xs ++ ys)) ∙_) (swap² y x (xs ++ ys)) ∙ rCancel (swap x y (xs ++ ys))
 
 module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
   opaque
+    unfolding ++-::
     private
       S : Square
           (swap z x (zs ++ y :: xs))
@@ -151,53 +146,55 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
                   ((T' ∙v S') ∙h (U' ∙v (λ i j → (++-:: y (z :: zs) (x :: xs) ) i)))
 
 
-    E : (p : ((λ i → x :: ++-:: y zs xs i) ∙∙ ++-:: x zs (y :: xs) ∙∙ (λ i → zs ++ swap x y xs i))
-          ≡ (swap x y (zs ++ xs) ∙∙ (λ i → y :: ++-:: x zs xs i) ∙∙ ++-:: y zs (x :: xs)))
-      → Square
+  module _ (p : ((λ i → x :: ++-:: y zs xs i) ∙∙ ++-:: x zs (y :: xs) ∙∙ (λ i → zs ++ swap x y xs i))
+                ≡ (swap x y (zs ++ xs) ∙∙ (λ i → y :: ++-:: x zs xs i) ∙∙ ++-:: y zs (x :: xs))) where
+    E : Square
         (ap (x ::_) (++-:: y (z :: zs) xs) ∙ ++-:: x (z :: zs) (y :: xs))
         (ap (y ::_) (++-:: x (z :: zs) xs) ∙ ++-:: y (z :: zs) (x :: xs))
         (swap x y (z :: zs ++ xs))
         (ap (z :: zs ++_) (swap x y xs))
 
-    E p i j =
-      let P = sym (ap-∙∙ (z ::_) ((λ i → x :: ++-:: y zs xs i)) (++-:: x zs (y :: xs)) (ap (zs ++_) (swap x y xs)))
-            ∙ ap (ap (z ::_)) p
-            ∙ ap-∙∙ (z ::_) (swap x y (zs ++ xs)) (ap (y ::_) (++-:: x zs xs)) (++-:: y zs (x :: xs))
-      in hcomp ((λ k → (λ
-            { (i = i0) → left j k
-            ; (i = i1) → right j k
-            ; (j = i0) → down i k
-            ; (j = i1) → ap (z :: zs ++_) (swap x y xs) i
-            }))) ((compPath→Square ((lUnit _) ∙ Square→compPath (doubleCompPathEq→compPathEq P) ∙ sym (rUnit _) ∙ assoc _ _ _)) i j)
+    E i j = hcomp ((λ k → (λ
+          { (i = i0) → left j k
+          ; (i = i1) → right j k
+          ; (j = i0) → down i k
+          ; (j = i1) → ap (z :: zs ++_) (swap x y xs) i
+          }))) ((compPath→Square ((lUnit _) ∙ Square→compPath (doubleCompPathEq→compPathEq P) ∙ sym (rUnit _) ∙ assoc _ _ _)) i j)
+              where P = sym (ap-∙∙ (z ::_) ((λ i → x :: ++-:: y zs xs i)) (++-:: x zs (y :: xs)) (ap (zs ++_) (swap x y xs)))
+                                          ∙ ap (ap (z ::_)) p ∙
+                                          ap-∙∙ (z ::_) (swap x y (zs ++ xs)) (ap (y ::_) (++-:: x zs xs)) (++-:: y zs (x :: xs))
 
 -- this is the generalised path algebra used in β-boundary
 -- if inlined it causes agda to run out of memory
 
-β-chain : {X : Type ℓ} {a a' b c d e f g : X}
-  {A : a ≡ b} {B : b ≡ c} {C : c ≡ d} {D : d ≡ e} {E : b ≡ f} {F : f ≡ g} {G : g ≡ e}
-  {S : a ≡ a'} {T : a' ≡ f}
-  → B ∙ C ∙ D ≡ E ∙ F ∙ G
-  → A ∙ E ≡ S ∙ T
-  → ((A ∙ B) ∙ C) ∙ D ≡ S ∙ ((T ∙ F) ∙ G)
-β-chain {A = A} {B} {C} {D} {E} {F} {G} {S} {T} H N =
-  ((A ∙ B) ∙ C) ∙ D
-    ≡⟨ sym (assoc (A ∙ B) C D) ⟩
-  (A ∙ B) ∙ (C ∙ D)
-    ≡⟨ sym (assoc A B (C ∙ D)) ⟩
-  A ∙ (B ∙ (C ∙ D))
-    ≡⟨ ap (A ∙_) H ⟩
-  A ∙ (E ∙ (F ∙ G))
-    ≡⟨ assoc A E (F ∙ G) ⟩
-  (A ∙ E) ∙ (F ∙ G)
-    ≡⟨ ap (_∙ F ∙ G) N ⟩
-  (S ∙ T) ∙ (F ∙ G)
-    ≡⟨ sym (assoc S T (F ∙ G)) ⟩
-  S ∙ (T ∙ (F ∙ G))
-    ≡⟨ ap (S ∙_) (assoc T F G) ⟩
-  S ∙ ((T ∙ F) ∙ G) ∎
+private
+  β-chain : {X : Type ℓ} {a a' b c d e f g : X}
+    {A : a ≡ b} {B : b ≡ c} {C : c ≡ d} {D : d ≡ e} {E : b ≡ f} {F : f ≡ g} {G : g ≡ e}
+    {S : a ≡ a'} {T : a' ≡ f}
+    → B ∙ C ∙ D ≡ E ∙ F ∙ G
+    → A ∙ E ≡ S ∙ T
+    → ((A ∙ B) ∙ C) ∙ D ≡ S ∙ ((T ∙ F) ∙ G)
+  β-chain {A = A} {B} {C} {D} {E} {F} {G} {S} {T} H N =
+    ((A ∙ B) ∙ C) ∙ D
+      ≡⟨ sym (assoc (A ∙ B) C D) ⟩
+    (A ∙ B) ∙ (C ∙ D)
+      ≡⟨ sym (assoc A B (C ∙ D)) ⟩
+    A ∙ (B ∙ (C ∙ D))
+      ≡⟨ ap (A ∙_) H ⟩
+    A ∙ (E ∙ (F ∙ G))
+      ≡⟨ assoc A E (F ∙ G) ⟩
+    (A ∙ E) ∙ (F ∙ G)
+      ≡⟨ ap (_∙ F ∙ G) N ⟩
+    (S ∙ T) ∙ (F ∙ G)
+      ≡⟨ sym (assoc S T (F ∙ G)) ⟩
+    S ∙ (T ∙ (F ∙ G))
+      ≡⟨ ap (S ∙_) (assoc T F G) ⟩
+    S ∙ ((T ∙ F) ∙ G) ∎
 
 module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys ++ xs) where
   opaque
+    unfolding ++-::
+
     ++-β-aux : (ap (x ::_) (++-:: y ys xs) ∙∙ ++-:: x ys (y :: xs) ∙∙ ap (ys ++_) (swap x y xs))
       ≡ (swap x y (ys ++ xs) ∙∙ ap (y ::_) (++-:: x ys xs) ∙∙ ++-:: y ys (x :: xs))
     ++-β-aux = SListElim2Paths.elim
@@ -289,11 +286,12 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
         ap (_++ ys) (swap x y xs) ∙ (ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs) ∙ ++-:: y ys (x :: xs)) ∙ sym (ap (ys ++_) (swap x y xs)) ∎
       )
 
-++-β : (xs ys : SList A) → xs ++ ys ≡ ys ++ xs
-++-β xs ys =
-  SListElimPaths.elim (λ _ → SList _) (_++ ys) (ys ++_)
-    (sym (++-ρ ys))
-    (λ x {xs} p → ap (x ::_) p ∙ ++-:: x ys xs)
-    (λ x y {xs} p → β-swap x y xs ys x ys p)
-    (λ _ → is-groupoid)
-    xs
+opaque
+  ++-β : (xs ys : SList A) → xs ++ ys ≡ ys ++ xs
+  ++-β xs ys =
+    SListElimPaths.elim (λ _ → SList _) (_++ ys) (ys ++_)
+      (sym (++-ρ ys))
+      (λ x {xs} p → ap (x ::_) p ∙ ++-:: x ys xs)
+      (λ x y {xs} p → β-swap x y xs ys x ys p)
+      (λ _ → is-groupoid)
+      xs

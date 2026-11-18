@@ -63,16 +63,14 @@ open SMG*Fun public
 
 record SMG*Sq {ℓ} (El : Type ℓ) : Type ℓ where
   no-eta-equality
-  constructor smg*sq
+  -- constructor smg*sq
   field
     𝕀 : El
     _⊗_ : El → El → El
-  field
     α : (X Y Z : El) → (X ⊗ Y) ⊗ Z ≡ X ⊗ (Y ⊗ Z)
     Λ : (X : El) → 𝕀 ⊗ X ≡ X
     ρ : (X : El) → X ⊗ 𝕀 ≡ X
     β : (X Y : El) → X ⊗ Y ≡ Y ⊗ X
-  field
     ▽ : (X Y : El) → Square (ap (X ⊗_) (Λ Y)) (ap (_⊗ Y) (ρ X)) (sym (α X 𝕀 Y)) refl
 
     ⬠₌ : (W X Y Z : El)

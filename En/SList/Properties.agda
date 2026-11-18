@@ -1,3 +1,5 @@
+-- {-# OPTIONS --lossy-unification #-}
+
 module En.SList.Properties where
 
 open import En.Prelude
@@ -13,22 +15,23 @@ private
     A : Type ℓ
 
 SList* : ∀ {ℓ} (A : Type ℓ) → S.SMG*Sq (SList A)
-SList* A .S.𝕀 = nil
-SList* A .S._⊗_ = _++_
-SList* A .S.α = ++-α
-SList* A .S.Λ = ++-Λ
-SList* A .S.ρ = ++-ρ
-SList* A .S.β = ++-β
-SList* A .S.▽ = ++-▽
-SList* A .S.⬠₌ = ++-⬠₌
-SList* A .S.⬠₁ = ++-⬠₁
-SList* A .S.⬠₂ = ++-⬠₂
-SList* A .S.⬡₌ = sorry -- TODO: hexagon ⬡₌ for SList*
-SList* A .S.⬡₁ = sorry -- TODO: hexagon ⬡₁ for SList*
-SList* A .S.⬡₂ = sorry -- TODO: hexagon ⬡₂ for SList*
-SList* A .S.β² = sorry -- TODO: symmetry involution β² for SList*
-SList* A .S.is-groupoid = is-groupoid
-
+SList* A = record
+  { 𝕀 = nil
+  ; _⊗_ = _++_
+  ; α = ++-α
+  ; Λ = ++-Λ
+  ; ρ = ++-ρ
+  ; β = ++-β
+  ; ▽ = ++-▽
+  ; ⬠₌ = ++-⬠₌
+  ; ⬠₁ = ++-⬠₁
+  ; ⬠₂ = ++-⬠₂
+  ; ⬡₌ = ++-⬡₌
+  ; ⬡₁ = ++-⬡₁
+  ; ⬡₂ = ++-⬡₂
+  ; β² = {!++-β²!} -- TODO: symmetry involution β² for SList*
+  ; is-groupoid = is-groupoid
+ }
 
 -- singletons
 
