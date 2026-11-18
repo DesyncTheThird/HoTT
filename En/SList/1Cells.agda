@@ -173,28 +173,29 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) where
 -- this is the generalised path algebra used in β-boundary
 -- if inlined it causes agda to run out of memory
 
-β-chain : {X : Type ℓ} {a a' b c d e f g : X}
-  {A : a ≡ b} {B : b ≡ c} {C : c ≡ d} {D : d ≡ e} {E : b ≡ f} {F : f ≡ g} {G : g ≡ e}
-  {S : a ≡ a'} {T : a' ≡ f}
-  → B ∙ C ∙ D ≡ E ∙ F ∙ G
-  → A ∙ E ≡ S ∙ T
-  → ((A ∙ B) ∙ C) ∙ D ≡ S ∙ ((T ∙ F) ∙ G)
-β-chain {A = A} {B} {C} {D} {E} {F} {G} {S} {T} H N =
-  ((A ∙ B) ∙ C) ∙ D
-    ≡⟨ sym (assoc (A ∙ B) C D) ⟩
-  (A ∙ B) ∙ (C ∙ D)
-    ≡⟨ sym (assoc A B (C ∙ D)) ⟩
-  A ∙ (B ∙ (C ∙ D))
-    ≡⟨ ap (A ∙_) H ⟩
-  A ∙ (E ∙ (F ∙ G))
-    ≡⟨ assoc A E (F ∙ G) ⟩
-  (A ∙ E) ∙ (F ∙ G)
-    ≡⟨ ap (_∙ F ∙ G) N ⟩
-  (S ∙ T) ∙ (F ∙ G)
-    ≡⟨ sym (assoc S T (F ∙ G)) ⟩
-  S ∙ (T ∙ (F ∙ G))
-    ≡⟨ ap (S ∙_) (assoc T F G) ⟩
-  S ∙ ((T ∙ F) ∙ G) ∎
+private
+  β-chain : {X : Type ℓ} {a a' b c d e f g : X}
+    {A : a ≡ b} {B : b ≡ c} {C : c ≡ d} {D : d ≡ e} {E : b ≡ f} {F : f ≡ g} {G : g ≡ e}
+    {S : a ≡ a'} {T : a' ≡ f}
+    → B ∙ C ∙ D ≡ E ∙ F ∙ G
+    → A ∙ E ≡ S ∙ T
+    → ((A ∙ B) ∙ C) ∙ D ≡ S ∙ ((T ∙ F) ∙ G)
+  β-chain {A = A} {B} {C} {D} {E} {F} {G} {S} {T} H N =
+    ((A ∙ B) ∙ C) ∙ D
+      ≡⟨ sym (assoc (A ∙ B) C D) ⟩
+    (A ∙ B) ∙ (C ∙ D)
+      ≡⟨ sym (assoc A B (C ∙ D)) ⟩
+    A ∙ (B ∙ (C ∙ D))
+      ≡⟨ ap (A ∙_) H ⟩
+    A ∙ (E ∙ (F ∙ G))
+      ≡⟨ assoc A E (F ∙ G) ⟩
+    (A ∙ E) ∙ (F ∙ G)
+      ≡⟨ ap (_∙ F ∙ G) N ⟩
+    (S ∙ T) ∙ (F ∙ G)
+      ≡⟨ sym (assoc S T (F ∙ G)) ⟩
+    S ∙ (T ∙ (F ∙ G))
+      ≡⟨ ap (S ∙_) (assoc T F G) ⟩
+    S ∙ ((T ∙ F) ∙ G) ∎
 
 module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys ++ xs) where
   opaque

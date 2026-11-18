@@ -22,9 +22,9 @@ SList* A .S.▽ = ++-▽
 SList* A .S.⬠₌ = ++-⬠₌
 SList* A .S.⬠₁ = ++-⬠₁
 SList* A .S.⬠₂ = ++-⬠₂
-SList* A .S.⬡₌ = sorry -- TODO: hexagon ⬡₌ for SList*
-SList* A .S.⬡₁ = sorry -- TODO: hexagon ⬡₁ for SList*
-SList* A .S.⬡₂ = sorry -- TODO: hexagon ⬡₂ for SList*
+SList* A .S.⬡₌ = ++-⬡₌
+SList* A .S.⬡₁ = ++-⬡₁
+SList* A .S.⬡₂ = ++-⬡₂
 SList* A .S.β² = sorry -- TODO: symmetry involution β² for SList*
 SList* A .S.is-groupoid = is-groupoid
 
