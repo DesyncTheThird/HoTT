@@ -7,6 +7,7 @@ import Cubical.Data.Sum as ⊎
 import Cubical.Data.Empty as ⊥
 open import Cubical.HITs.GroupoidQuotients as GQ using ( _//_ ; [_] ; squash// )
 open import Cubical.Algebra.Group.Morphisms
+open import Cubical.Algebra.Group.Properties using ( module GroupTheory )
 open import En.SList.Base
 open import En.SList.1Cells using ( swap-nat )
 open import En.Sn.Base hiding ( nil ; _::_ ; [_] )
@@ -166,6 +167,13 @@ module _ {A : Type ℓ} where
   relabel→PathP v e e' {q = q} pq =
     (pq ∙ ap (λ r → q ∙ sym r) (relabel-uniq v e' e)) ◁ symP (compPath-filler q (sym (relabel v e)))
 
+  PathP→relabel : {m : ℕ} {g h : FS.Fin m → FS.Fin m} (v : FS.Fin m → A) (e e' : g ≡ h)
+    {x : SList A} {p : x ≡ FinVec→SList (v ∘ g)} {q : x ≡ FinVec→SList (v ∘ h)}
+    → PathP (λ i → x ≡ relabel v e i) p q
+    → p ≡ q ∙ sym (relabel v e')
+  PathP→relabel v e e' {q = q} P =
+    PathP→compPathR P ∙ sym (lUnit _) ∙ ap (λ r → q ∙ sym r) (relabel-uniq v e e')
+
   -- swaps are natural in relabellings
 
   swapAt-relabel : {n : ℕ} (k : Fin n) {g h : FS.Fin (suc n) → FS.Fin (suc n)} (v : FS.Fin (suc n) → A) (e : g ≡ h)
@@ -254,6 +262,10 @@ module _ {A : Type ℓ} where
             (((f v ∙ swapAt k (v ∘ ρ)) ∙ swapAt l (v ∘ ρ ∘ τ k)) ∙ swapAt k (v ∘ ρ ∘ τ k ∘ τ l)) ∙ s
               ∎
 
+  permute-nat : {n : ℕ} (σ : Sym n) {v w : FS.Fin (suc n) → A} (l : v ≡ w)
+    → permute σ v ∙ ap FinVec→SList (ap (_∘ –> (Sym→Aut σ)) l) ≡ ap FinVec→SList l ∙ permute σ w
+  permute-nat σ = homotopyNatural (permute σ)
+
   permute-++ : {n : ℕ} (σ ρ : Sym n) (v : FS.Fin (suc n) → A)
     → PathP (λ i → FinVec→SList v ≡ FinVec→SList (v ∘ –> (IsGroupHom.pres· (Sym→AutHom .snd) σ ρ i)))
         (permute (σ ++ ρ) v) (permute ρ v ∙ permute σ (v ∘ –> (Sym→Aut ρ)))
@@ -307,16 +319,73 @@ module _ {A : Type ℓ} where
   FinVecRel→Path zero _ = refl
   FinVecRel→Path (suc n) {v} (σ , l) = permute (rev σ) v ∙ ap FinVec→SList l
 
+  -- permute respects the associator of the action
+
+  permute-▹Assoc : {n : ℕ} (σ σ' : Sym n) (u : FS.Fin (suc n) → A)
+    → permute (rev (σ ++ σ')) u ∙ ap FinVec→SList (▹Assoc (preCompAction (𝔖Action (suc n)) A) u σ σ')
+    ≡ permute (rev σ) u ∙ permute (rev σ') (u ∘ –> (Sym→Aut (rev σ)))
+  permute-▹Assoc {n} σ σ' u =
+    permute (rev (σ ++ σ')) u ∙ R
+      ≡⟨ ap (_∙ R) (PathP→relabel u (e₁ ∙ e₂) E T) ⟩
+    (P ∙ sym R) ∙ R
+      ≡⟨ sym (assoc P (sym R) R) ∙ ap (P ∙_) (lCancel R) ∙ sym (rUnit P) ⟩
+    P
+      ∎
+    where
+      B : (FS.Fin (suc n) → FS.Fin (suc n)) → Type ℓ
+      B g = FinVec→SList u ≡ FinVec→SList (u ∘ g)
+      q : rev (σ ++ σ') ≡ rev σ' ++ rev σ
+      module SymG = GroupTheory (CoxeterGroup n)
+      q = SymG.invDistr σ σ'
+      e₁ = ap (λ τ → –> (Sym→Aut τ)) q
+      e₂ = ap –> (IsGroupHom.pres· (Sym→AutHom .snd) (rev σ') (rev σ))
+      E = ▹Assoc (preCompAction (𝔖Action (suc n)) (FS.Fin (suc n))) (idfun _) σ σ'
+      R = relabel u E
+      P = permute (rev σ) u ∙ permute (rev σ') (u ∘ –> (Sym→Aut (rev σ)))
+      T = compPathP' {B = B} {p = e₁} {q = e₂} (λ i → permute (q i) u) (permute-++ (rev σ') (rev σ) u)
+
+  FinVecRel→Path-comp : (m : ℕ) {u v w : FS.Fin m → A}
+    (r : WreathRel (𝔖Action m) A u v) (s : WreathRel (𝔖Action m) A v w)
+    → Square
+        (FinVecRel→Path m {u} {v} r)
+        (FinVecRel→Path m {u} {w} (isTransActionRel (preCompAction (𝔖Action m) A) u v w r s))
+        refl
+        (FinVecRel→Path m {v} {w} s)
+  FinVecRel→Path-comp zero _ _ = refl
+  FinVecRel→Path-comp (suc n) {u} {v} {w} (σ , l) (σ' , l') = compPath→Square (sym (lUnit _) ∙ γ)
+    where
+      F : (FS.Fin (suc n) → A) → SList A
+      F = FinVec→SList
+      α = ▹Assoc (preCompAction (𝔖Action (suc n)) A) u σ σ'
+      β = ap (_∘ –> (Sym→Aut (rev σ'))) l
+      p₀ = permute (rev (σ ++ σ')) u
+      p₁ = permute (rev σ) u
+      p₂ = permute (rev σ') (u ∘ –> (Sym→Aut (rev σ)))
+      p₃ = permute (rev σ') v
+      γ =
+        p₀ ∙ ap F (α ∙ β ∙ l' ∙ refl)
+          ≡⟨ ap (λ r → p₀ ∙ ap F (α ∙ β ∙ r)) (sym (rUnit l')) ⟩
+        p₀ ∙ ap F (α ∙ β ∙ l')
+          ≡⟨ ap (p₀ ∙_) (ap-∙ F α (β ∙ l') ∙ ap (ap F α ∙_) (ap-∙ F β l')) ⟩
+        p₀ ∙ ap F α ∙ ap F β ∙ ap F l'
+          ≡⟨ assoc p₀ (ap F α) (ap F β ∙ ap F l') ∙ ap (_∙ (ap F β ∙ ap F l')) (permute-▹Assoc σ σ' u) ⟩
+        (p₁ ∙ p₂) ∙ ap F β ∙ ap F l'
+          ≡⟨ sym (assoc p₁ p₂ (ap F β ∙ ap F l')) ∙ ap (p₁ ∙_) (assoc p₂ (ap F β) (ap F l')) ⟩
+        p₁ ∙ (p₂ ∙ ap F β) ∙ ap F l'
+          ≡⟨ ap (λ z → p₁ ∙ z ∙ ap F l') (permute-nat (rev σ') l) ⟩
+        p₁ ∙ (ap F l ∙ p₃) ∙ ap F l'
+          ≡⟨ ap (p₁ ∙_) (sym (assoc (ap F l) p₃ (ap F l'))) ∙ assoc p₁ (ap F l) (p₃ ∙ ap F l') ⟩
+        (p₁ ∙ ap F l) ∙ p₃ ∙ ap F l'
+          ∎
+
   Vec//𝔖→SList : Vec//𝔖 A → SList A
-  Vec//𝔖→SList (m , x) =
+  Vec//𝔖→SList (m , v) =
     GQ.rec (isTransActionRel (preCompAction (𝔖Action m) A))
       is-groupoid
       FinVec→SList
       (FinVecRel→Path m)
-      (λ r s → sorry)
-      -- TODO: comp// case of Vec//𝔖→SList
-      --  from permute-++ and naturality of permute
-      x
+      (FinVecRel→Path-comp m)
+      v
 
   consVec : {m : ℕ} → A → (FS.Fin m → A) → FS.Fin (suc m) → A
   consVec x v = ⊎.rec (λ _ → x) v
