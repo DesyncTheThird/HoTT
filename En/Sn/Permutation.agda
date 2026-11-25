@@ -45,16 +45,23 @@ private
 τ≃Cancel : (k : Fin n) → τ≃ {n} k ∙ₑ τ≃ {n} k ≡ idEquiv _
 τ≃Cancel k = equivEq (funExt (τInvol k))
 
+τComm : (k l : Fin n) → suc (k .fst) <ᵗ l .fst → (x : FS.Fin (suc n)) → τ {n} k (τ {n} l x) ≡ τ {n} l (τ {n} k x)
+τComm = sorry
+  -- TODO: far transpositions commute (τComm)
+  --  by recursion on k, l and x, since suc k <ᵗ l computes
+
 τ≃Comm : (k l : Fin n) → suc (k .fst) <ᵗ l .fst → τ≃ {n} l ∙ₑ τ≃ {n} k ≡ τ≃ {n} k ∙ₑ τ≃ {n} l
-τ≃Comm = sorry
-  -- TODO: far transpositions commute (τ≃Comm)
-  --  by recursion on k and l
+τ≃Comm k l p = equivEq (funExt (τComm k l p))
+
+τBraid : (k l : Fin n) → suc (k .fst) ≡ l .fst
+  → (x : FS.Fin (suc n)) → τ {n} l (τ {n} k (τ {n} l x)) ≡ τ {n} k (τ {n} l (τ {n} k x))
+τBraid = sorry
+  -- TODO: adjacent transpositions braid (τBraid)
+  --  by recursion on k and l, mismatched cases by snotz and znots, recursing on injSuc
 
 τ≃Braid : (k l : Fin n) → suc (k .fst) ≡ l .fst
   → τ≃ {n} l ∙ₑ τ≃ {n} k ∙ₑ τ≃ {n} l ≡ τ≃ {n} k ∙ₑ τ≃ {n} l ∙ₑ τ≃ {n} k
-τ≃Braid = sorry
-  -- TODO: adjacent transpositions braid (τ≃Braid)
-  --  by recursion on k with l = suc k
+τ≃Braid k l p = equivEq (funExt (τBraid k l p))
 
 -- permutation representation
 

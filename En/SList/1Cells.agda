@@ -9,6 +9,10 @@ private
   variable
     A : Type ℓ
 
+swap-nat : (x y : A) {xs ys : SList A} (p : xs ≡ ys)
+  → swap x y xs ∙ ap (λ zs → y :: x :: zs) p ≡ ap (λ zs → x :: y :: zs) p ∙ swap x y ys
+swap-nat x y = homotopyNatural (swap x y)
+
 ++-Λ : (xs : SList A) → nil ++ xs ≡ xs
 ++-Λ xs = refl
 
@@ -239,7 +243,7 @@ module _ (x y : A) (xs ys : SList A) (z : A) (zs : SList A) (p : xs ++ ys ≡ ys
 
     β-nat : ap (x ::_) (ap (y ::_) p) ∙ swap x y (ys ++ xs)
       ≡ swap x y (xs ++ ys) ∙ ap (y ::_) (ap (x ::_) p)
-    β-nat = sym (homotopyNatural (swap x y) p)
+    β-nat = sym (swap-nat x y p)
 
     β-ap-∙₂ : ap (y ::_) (ap (x ::_) p) ∙ ap (y ::_) (++-:: x ys xs)
       ≡ ap (y ::_) (ap (x ::_) p ∙ ++-:: x ys xs)
