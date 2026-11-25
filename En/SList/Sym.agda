@@ -166,6 +166,12 @@ module _ {A : Type ℓ} where
   relabel→PathP v e e' {q = q} pq =
     (pq ∙ ap (λ r → q ∙ sym r) (relabel-uniq v e' e)) ◁ symP (compPath-filler q (sym (relabel v e)))
 
+  -- swaps are natural in relabellings
+
+  swapAt-relabel : {n : ℕ} (k : Fin n) {g h : FS.Fin (suc n) → FS.Fin (suc n)} (v : FS.Fin (suc n) → A) (e : g ≡ h)
+    → sym (relabel v e) ∙ swapAt k (v ∘ g) ≡ swapAt k (v ∘ h) ∙ sym (relabel v (ap (_∘ τ k) e))
+  swapAt-relabel k v e = sym (homotopyNatural (λ g → swapAt k (v ∘ g)) (sym e))
+
   -- words act by paths
 
   permute : {n : ℕ} (σ : Sym n) (v : FS.Fin (suc n) → A) → FinVec→SList v ≡ FinVec→SList (v ∘ –> (Sym→Aut σ))
@@ -181,10 +187,10 @@ module _ {A : Type ℓ} where
       P : Sym n → Type ℓ
       P σ = (v : FS.Fin (suc n) → A) → FinVec→SList v ≡ FinVec→SList (v ∘ –> (Sym→Aut σ))
 
-      _::*_ : (k : Fin n) {σ : Sym n} → P σ → P (Sym._::_ k σ)
+      _::*_ : (k : Fin n) {σ : Sym n} → P σ → P (k Sym.:: σ)
       _::*_ k {σ} f v = f v ∙ swapAt k (v ∘ –> (Sym→Aut σ))
 
-      cancel* : (k : Fin n) {σ : Sym n} (f : P σ) → PathP (λ i → P (cancel k σ i)) (_::*_ k {Sym._::_ k σ} (_::*_ k {σ} f)) f
+      cancel* : (k : Fin n) {σ : Sym n} (f : P σ) → PathP (λ i → P (cancel k σ i)) (_::*_ k {k Sym.:: σ} (_::*_ k {σ} f)) f
       cancel* k {σ} f i v = relabel→PathP v (λ j → –> (Sym→Aut (cancel k σ j))) e' pq i
         where
           ρ : FS.Fin (suc n) → FS.Fin (suc n)
@@ -202,8 +208,8 @@ module _ {A : Type ℓ} where
 
       comm* : (k l : Fin n) (ψ : suc (k .fst) <ᵗ l .fst) {σ : Sym n} (f : P σ)
         → PathP (λ i → P (comm k l ψ σ i))
-            (_::*_ l {Sym._::_ k σ} (_::*_ k {σ} f))
-            (_::*_ k {Sym._::_ l σ} (_::*_ l {σ} f))
+            (_::*_ l {k Sym.:: σ} (_::*_ k {σ} f))
+            (_::*_ k {l Sym.:: σ} (_::*_ l {σ} f))
       comm* k l ψ {σ} f i v = relabel→PathP v (λ j → –> (Sym→Aut (comm k l ψ σ j))) e' pq i
         where
           ρ : FS.Fin (suc n) → FS.Fin (suc n)
@@ -226,8 +232,8 @@ module _ {A : Type ℓ} where
 
       braid* : (k l : Fin n) (δ : suc (k .fst) ≡ l .fst) {σ : Sym n} (f : P σ)
         → PathP (λ i → P (braid k l δ σ i))
-            (_::*_ l {Sym._::_ k (Sym._::_ l σ)} (_::*_ k {Sym._::_ l σ} (_::*_ l {σ} f)))
-            (_::*_ k {Sym._::_ l (Sym._::_ k σ)} (_::*_ l {Sym._::_ k σ} (_::*_ k {σ} f)))
+            (_::*_ l {k Sym.:: l Sym.:: σ} (_::*_ k {l Sym.:: σ} (_::*_ l {σ} f)))
+            (_::*_ k {l Sym.:: k Sym.:: σ} (_::*_ l {k Sym.:: σ} (_::*_ k {σ} f)))
       braid* k l δ {σ} f i v = relabel→PathP v (λ j → –> (Sym→Aut (braid k l δ σ j))) e' pq i
         where
           ρ : FS.Fin (suc n) → FS.Fin (suc n)
@@ -251,9 +257,49 @@ module _ {A : Type ℓ} where
   permute-++ : {n : ℕ} (σ ρ : Sym n) (v : FS.Fin (suc n) → A)
     → PathP (λ i → FinVec→SList v ≡ FinVec→SList (v ∘ –> (IsGroupHom.pres· (Sym→AutHom .snd) σ ρ i)))
         (permute (σ ++ ρ) v) (permute ρ v ∙ permute σ (v ∘ –> (Sym→Aut ρ)))
-  permute-++ = sorry
-    -- TODO: permute is functorial (permute-++)
-    --  by SymElimProp
+  permute-++ {n} σ ρ v = relabel→PathP v (e σ) (e σ) (f σ v)
+    where
+      perm : FS.Fin (suc n) → FS.Fin (suc n)
+      perm = –> (Sym→Aut ρ)
+      e : (σ : Sym n) → –> (Sym→Aut (σ ++ ρ)) ≡ perm ∘ –> (Sym→Aut σ)
+      e σ i = –> (IsGroupHom.pres· (Sym→AutHom .snd) σ ρ i)
+      P : Sym n → Type ℓ
+      P σ = (v : FS.Fin (suc n) → A) → permute (σ ++ ρ) v ≡ (permute ρ v ∙ permute σ (v ∘ perm)) ∙ sym (relabel v (e σ))
+      nil* : P Sym.nil
+      nil* v =
+        permute (Sym.nil ++ ρ) v
+          ≡⟨ rUnit _ ⟩
+        permute ρ v ∙ refl
+          ≡⟨ ap (permute ρ v ∙_) (ap sym (relabel-uniq v refl (e Sym.nil)) ∙ lUnit _) ⟩
+        permute ρ v ∙ (permute Sym.nil (v ∘ perm) ∙ sym (relabel v (e Sym.nil)))
+          ≡⟨ assoc _ _ _ ⟩
+        (permute ρ v ∙ permute Sym.nil (v ∘ perm)) ∙ sym (relabel v (e Sym.nil))
+          ∎
+      _::*_ : (k : Fin n) {σ : Sym n} → P σ → P (k Sym.:: σ)
+      _::*_ k {σ} ih v =
+        permute (σ ++ ρ) v ∙ swapAt k (v ∘ –> (Sym→Aut (σ ++ ρ)))
+          ≡⟨ ap (_∙ swapAt k (v ∘ –> (Sym→Aut (σ ++ ρ)))) (ih v) ⟩
+        ((permute ρ v ∙ permute σ (v ∘ perm)) ∙ s) ∙ swapAt k (v ∘ –> (Sym→Aut (σ ++ ρ)))
+          ≡⟨ sym (assoc _ _ _) ⟩
+        (permute ρ v ∙ permute σ (v ∘ perm)) ∙ (s ∙ swapAt k (v ∘ –> (Sym→Aut (σ ++ ρ))))
+          ≡⟨ ap ((permute ρ v ∙ permute σ (v ∘ perm)) ∙_) (swapAt-relabel k v (e σ)) ⟩
+        (permute ρ v ∙ permute σ (v ∘ perm)) ∙ (w ∙ t)
+          ≡⟨ assoc _ w t ∙ ap (_∙ t) (sym (assoc (permute ρ v) (permute σ (v ∘ perm)) w)) ⟩
+        (permute ρ v ∙ (permute σ (v ∘ perm) ∙ w)) ∙ t
+          ≡⟨ refl ⟩
+        (permute ρ v ∙ permute (k Sym.:: σ) (v ∘ perm)) ∙ t
+          ≡⟨ ap₂ _∙_ refl (ap sym (relabel-uniq v (ap (_∘ τ k) (e σ)) (e (k Sym.:: σ)))) ⟩
+        (permute ρ v ∙ permute (k Sym.:: σ) (v ∘ perm)) ∙ sym (relabel v (e (k Sym.:: σ)))
+          ∎
+        where
+          s : FinVec→SList (v ∘ perm ∘ –> (Sym→Aut σ)) ≡ FinVec→SList (v ∘ –> (Sym→Aut (σ ++ ρ)))
+          s = sym (relabel v (e σ))
+          t : FinVec→SList (v ∘ perm ∘ –> (Sym→Aut σ) ∘ τ k) ≡ FinVec→SList (v ∘ –> (Sym→Aut (σ ++ ρ)) ∘ τ k)
+          t = sym (relabel v (ap (_∘ τ k) (e σ)))
+          w : FinVec→SList (v ∘ perm ∘ –> (Sym→Aut σ)) ≡ FinVec→SList (v ∘ perm ∘ –> (Sym→Aut σ) ∘ τ k)
+          w = swapAt k (v ∘ perm ∘ –> (Sym→Aut σ))
+      f : (σ : Sym n) → P σ
+      f = SymElimProp.elim P nil* _::*_ (λ σ → isPropΠ λ v → is-groupoid _ _ _ _)
 
   -- vectors up to the coxeter group as lists
 
