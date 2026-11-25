@@ -192,6 +192,25 @@ SMG*Fun*Sq-isSet {B* = B*} f =
     isSetΣ (isSetΠ λ _ → isSetSquareFromGroupoid B.is-groupoid _ _ _ _) λ _ →
     isSetΠ2 λ _ _ → isSetSquareFromGroupoid B.is-groupoid _ _ _ _)
 
+idSMG*Fun*Sq : ∀ {ℓ} {A : Type ℓ} (A* : SMG*Sq A) → SMG*Fun*Sq A* A* (idfun A)
+idSMG*Fun*Sq A* .-𝕀 = refl
+idSMG*Fun*Sq A* .-⊗ X Y = refl
+idSMG*Fun*Sq A* .-α₌ X Y Z = A* .α X Y Z
+idSMG*Fun*Sq A* .-α₁ X Y Z i j = A* .α X Y Z j
+idSMG*Fun*Sq A* .-α₂ X Y Z i j = A* .α X Y Z j
+idSMG*Fun*Sq A* .-Λ X i j = A* .Λ X (i ∧ ~ j)
+idSMG*Fun*Sq A* .-ρ X i j = A* .ρ X (i ∧ ~ j)
+idSMG*Fun*Sq A* .-β X Y i j = A* .β X Y i
+
+compSMG*Fun*Sq : ∀ {ℓ₁ ℓ₂ ℓ₃}
+  {A : Type ℓ₁} {A* : SMG*Sq A}
+  {B : Type ℓ₂} {B* : SMG*Sq B}
+  {C : Type ℓ₃} {C* : SMG*Sq C}
+  {f : A → B} {g : B → C}
+  → SMG*Fun*Sq A* B* f → SMG*Fun*Sq B* C* g → SMG*Fun*Sq A* C* (g ∘ f)
+compSMG*Fun*Sq = sorry
+  -- TODO: composition of SMG functors (compSMG*Fun*Sq)
+
 record SMG*Nat*Sq {ℓ ℓ'}
   {A : Type ℓ } {A* : SMG*Sq A}
   {B : Type ℓ'} {B* : SMG*Sq B}
