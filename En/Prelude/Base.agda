@@ -38,6 +38,14 @@ open import Cubical.Relation.Binary public
 variable
   ℓ ℓ' ℓ'' ℓ''' : Level
 
+-- doubleCompPath equational reasoning that shows all points
+∙∙-syntax : ∀ {ℓ} {A : Type ℓ} (x y z w : A) → x ≡ y → y ≡ z → z ≡ w → x ≡ w
+∙∙-syntax _ _ _ _ p q r = p ∙∙ q ∙∙ r
+{-# INLINE ∙∙-syntax #-}
+
+infixr 2.5 ∙∙-syntax
+syntax ∙∙-syntax x y z w p q r = x ≡⟨ p ⟩∙∙ y ≡⟨ q ⟩∙∙ z ≡⟨ r ⟩∙∙ w ∎∙∙
+
 infix 15 _≅_
 _≅_ = Iso
 

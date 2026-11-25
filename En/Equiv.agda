@@ -7,8 +7,11 @@ open import En.BAut
 open import En.UFin.Base
 open import En.UFin.Properties using ( UFin≃ΣBAut )
 open import En.HigherGroup
+open import En.SMG.Free
 open import En.FSMG.Base using ( FSMG )
+open import En.FSMG.Properties using ( isFreeFSMG )
 open import En.SList.Base
+open import En.SList.Properties using ( isFreeSList )
 open import En.SList.Sym
 open import En.SList.Concrete
 open import En.Sn.Concrete
@@ -19,9 +22,7 @@ open import En.Bag.Base
 -- free symmetric monoidal groupoids are swap lists
 
 FSMG≃SList : {A : Type ℓ} → FSMG A ≃ SList A
-FSMG≃SList = sorry
-  -- TODO: FSMGs are swap lists (FSMG≃SList)
-  --  free symmetric monoidal groupoids are swap lists; they both satisfy the same universal property
+FSMG≃SList = freeSMG≃ isFreeFSMG isFreeSList
 
 -- external proof using groupoid quotients
 

@@ -3,6 +3,7 @@ module En.FSMG.Properties where
 open import En.Prelude
 open import En.FSMG.Base
 import En.SMG as S hiding (SMG* ; SMG*Fun)
+open import En.SMG.Free
 open import Cubical.HITs.Truncation as Trunc
 
 FSMG* : ∀ {ℓ} (A : Type ℓ) → S.SMG*Sq (FSMG A)
@@ -210,6 +211,9 @@ module Univ {ℓ₁ ℓ₂} (A : Type ℓ₁) (B : Type ℓ₂) (B* : S.SMG*Sq B
       (λ _ → refl)
       ♭-retract
     )
+
+isFreeFSMG : {A : Type ℓ} → isFreeSMG (FSMG* A) η ℓ'
+isFreeFSMG {A = A} B B* = Univ.univ A B B*
 
 -- fsmg on groupoid truncation
 
