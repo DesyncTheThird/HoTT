@@ -28,13 +28,6 @@ FSMG≃SList = freeSMG≃ isFreeFSMG isFreeSList
 
 module Abstract {A : Type ℓ} where
 
-  -- swap lists are vectors up to the coxeter groups
-
-  SList≃Vec//𝔖 : SList A ≃ Vec//𝔖 A
-  SList≃Vec//𝔖 = sorry
-    -- TODO: swap lists as vectors up to 𝔖 (SList≃Vec//𝔖)
-    --  cells of SList go to constructors of Sym; maps by groupoid-quotient and SList recursion
-
   -- change of group from coxeter presentation to permutations
 
   Vec//𝔖≃Vec//Aut : Vec//𝔖 A ≃ Vec//Aut A
