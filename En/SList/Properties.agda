@@ -29,7 +29,7 @@ SList* A = record
   ; ⬡₌ = ++-⬡₌
   ; ⬡₁ = ++-⬡₁
   ; ⬡₂ = ++-⬡₂
-  ; β² = {!++-β²!} -- TODO: symmetry involution β² for SList*
+  ; β² = ++-β²
   ; is-groupoid = is-groupoid
  }
 

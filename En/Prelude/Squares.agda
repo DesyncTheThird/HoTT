@@ -104,7 +104,7 @@ HexagonRotate⁻ {p = p} {q} {r} {s} {t} {u} ⬡ .Hexagon.⬡₌ = t ∙ u ∙ s
 HexagonRotate⁻ {p = p} {q} {r} {s} {t} {u} ⬡ .Hexagon.⬡₁ i j = 
     hcomp (λ k → λ
       { (i = i0) → compPath→Square (sym (rUnit (sym p ∙ s))) j k
-      ; (i = i1) → invSides-fillerp (sym q) q refl (u ∙ sym r) (r ∙ sym u) (sym (symDistr r (sym u))) j k
+      ; (i = i1) → invSides-fillerp (sym q) q refl (u ∙ sym r) (r ∙ sym u) (sym (sym-∙ r (sym u))) j k
       ; (j = i0) → invSides-filler (sym p) q i k
       ; (j = i1) → compPath→Square (lUnit (t ∙ u ∙ sym r)) i k
       })

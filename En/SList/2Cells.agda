@@ -106,7 +106,6 @@ module _ (W X Y Z : SList A) where
 
 
 
-
 module _ (X Y Z : SList A) where
   opaque
     unfolding ++-:: ++-α ++-Λ ++-ρ
@@ -118,30 +117,135 @@ module _ (X Y Z : SList A) where
     -- x :: ++-α X Y Z ∙ x :: ++-β X (Y ++ Z) ∙ x :: ++-α Y Z X
     -- ++-α x :: X Y Z ∙ x :: ++-β X (Y ++ Z) ∙ ++-α Y Z X
 
-
-
-
-
-
-
-
     -- ap (_++ Z) (++-β X Y) ∙ (++-α Y X Z) ∙ ap (Y ++_) (++-β X Z)
 
 
-opaque
-  unfolding ++-⬡₌ ++-α ++-:: ++-β
 
-  -- temp2 : (x : A) (X Y Z : SList A) → ap (x ::_) (++-α Y X Z) ≡ {!++-α Y (x :: X) Z!}
-  -- temp2 = {!!}
 
-  temp3 : (x : A) (xs Y Z : SList A) → Square {!!} {!!} {!!} {!!}
-  temp3 x xs Y Z i j =
-      hcomp (λ k → λ
-        { (i = i0) → {!!}
-        ; (i = i1) → {!!}
-        ; (j = i0) → {!!}
-        ; (j = i1) → {!!}
-        }) {!!}
+
+
+
+module _ (x : A) (xs Y Z : SList A) where
+  opaque
+    -- unfolding ++-⬡₌ ++-α ++-:: ++-β ++-ρ
+
+    up : Square
+         (ap (_++ Z) (++-:: x Y xs))
+         (++-:: x Y (xs ++ Z))
+         (ap (x ::_) (++-α Y xs Z))
+         (++-α Y (x :: xs) Z)
+    up = flipSquare {!homotopyNaturalSq (λ a → ?) (++-:: x Y xs)!}
+      -- compPath→Square (
+      -- ap (x ::_) (++-α Y xs Z) ∙ ++-:: x Y (xs ++ Z)
+      --   ≡⟨ sym (homotopyNatural {!!} {!!}) ⟩
+      -- ap (_++ Z) (++-:: x Y xs) ∙ ++-α Y (x :: xs) Z
+      -- ∎
+      -- )
+
+-- homotopyNatural : {B : Type ℓ'} {f g : A → B} (H : ∀ a → f a ≡ g a) {x y : A} (p : x ≡ y) →
+--                   H x ∙ cong g p ≡ cong f p ∙ H y
+
+  opaque
+    unfolding -- ++-⬡₌ ++-α ++-:: ++-β ++-ρ
+    down : Square
+           refl
+           ((++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (++-:: x Z xs)))
+           (ap (x ::_) (++-⬡₌ xs Y Z))
+           (++-⬡₌ (x :: xs) Y Z)
+    down = {!!}
+
+  opaque
+    unfolding ++-β
+    left : Square
+           refl
+           (ap (_++ Z) (++-:: x Y xs))
+           (ap (x ::_) (ap (_++ Z) (++-β xs Y)))
+           (ap (_++ Z) (++-β (x :: xs) Y))
+    left = {!!}
+
+  opaque
+    unfolding ++-β
+
+    right : Square
+            (++-:: x Y (Z ++ xs) ∙ (ap (Y ++_) (++-:: x Z xs)))
+            (++-:: x Y (xs ++ Z))
+            (ap (x ::_) (ap (Y ++_) (sym (++-β xs Z))))
+            (ap (Y ++_) (sym (++-β (x :: xs) Z)))
+    right = compPath→Square (
+            ap (x ::_) (ap (Y ++_) (sym (++-β xs Z))) ∙ (++-:: x Y (xs ++ Z))
+              ≡⟨ {!!} ⟩
+            {!!}
+              ≡⟨ {!!} ⟩
+            {!!}
+              ≡⟨ {!!} ⟩
+            {!!}
+              ≡⟨ {!!} ⟩
+            {!!}
+              ≡⟨ {!!} ⟩
+            sym (ap (λ a → Y ++ (x :: a)) (++-β xs Z) ∙ sym (++-:: x Y (Z ++ xs)))
+              ≡⟨ refl ⟩
+            sym (ap (Y ++_) (ap (x ::_) (++-β xs Z)) ∙ sym (++-:: x Y (Z ++ xs)))
+              ≡⟨ sym-∙ (ap (Y ++_) (ap (x ::_) (++-β xs Z))) (sym (++-:: x Y (Z ++ xs))) ⟩
+            ++-:: x Y (Z ++ xs) ∙ sym (ap (Y ++_) (ap (x ::_) (++-β xs Z)))
+              ≡⟨ refl ⟩
+            ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (ap (x ::_) (sym (++-β xs Z)))
+              ≡⟨ refl ⟩
+            ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (sym (ap (x ::_) (++-β xs Z)))
+              ≡⟨ ap (λ a → ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) a) (rUnit (ap (x ::_) (sym (++-β xs Z)))) ⟩
+            ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (sym (ap (x ::_) (++-β xs Z) ∙ refl))
+              ≡⟨ ap (λ a → ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (sym (ap (x ::_) (++-β xs Z) ∙ a))) (sym (rCancel (++-:: x Z xs))) ⟩
+            ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (sym (ap (x ::_) (++-β xs Z) ∙ ++-:: x Z xs ∙ sym (++-:: x Z xs)))
+              ≡⟨ ap (λ a → ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (sym a)) (assoc (ap (x ::_) (++-β xs Z)) (++-:: x Z xs) (sym (++-:: x Z xs))) ⟩
+            ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (sym ((ap (x ::_) (++-β xs Z) ∙ ++-:: x Z xs) ∙ sym (++-:: x Z xs)))
+              ≡⟨ refl ⟩
+            ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (sym (++-β (x :: xs) Z ∙ sym (++-:: x Z xs)))
+              ≡⟨ ap (λ a → ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) a) (sym-∙ (++-β (x :: xs) Z) (sym (++-:: x Z xs))) ⟩
+            ++-:: x Y (Z ++ xs) ∙ ap (Y ++_) ((++-:: x Z xs) ∙ (sym (++-β (x :: xs) Z)))
+              ≡⟨ ap (++-:: x Y (Z ++ xs) ∙_) (ap-∙ (Y ++_) _ _) ⟩
+            ++-:: x Y (Z ++ xs) ∙ (ap (Y ++_) (++-:: x Z xs)) ∙ ap (Y ++_) (sym (++-β (x :: xs) Z))
+              ≡⟨ assoc (++-:: x Y (Z ++ xs)) (ap (Y ++_) (++-:: x Z xs)) (ap (Y ++_) (sym (++-β (x :: xs) Z))) ⟩
+            (++-:: x Y (Z ++ xs) ∙ (ap (Y ++_) (++-:: x Z xs))) ∙ ap (Y ++_) (sym (++-β (x :: xs) Z))
+            ∎
+            )
+
+  -- opaque
+  --   temp3 : (Square (ap (_++ Z) (++-β xs Y)) (ap (Y ++_) (sym (++-β xs Z))) (++-⬡₌ xs Y Z) (++-α Y xs Z)) → Square (ap (_++ Z) (++-β (x :: xs) Y)) (ap (Y ++_) (sym (++-β (x :: xs) Z))) (++-⬡₌ (x :: xs) Y Z) (++-α Y (x :: xs) Z)
+  --   temp3 P i j =
+  --       hcomp (λ k → λ
+  --         { (i = i0) → left j k
+  --         ; (i = i1) → right j k
+  --         ; (j = i0) → down i k
+  --         ; (j = i1) → up i k
+  --         }) (x :: P i j)
+
+    -- temp3 : (Square (ap (_++ Z) (++-β xs Y)) (ap (Y ++_) (sym (++-β xs Z))) (++-⬡₌ xs Y Z) (++-α Y xs Z)) → Square (ap (_++ Z) (++-β (x :: xs) Y)) (ap (Y ++_) (sym (++-β (x :: xs) Z))) (++-⬡₌ (x :: xs) Y Z) (++-α Y (x :: xs) Z)
+    -- temp3 P i j =
+    --     hcomp (λ k → λ
+    --       { (i = i0) → compPath→Square (
+    --         ap (x ::_) (ap (_++ Z) (++-β xs Y)) ∙ ap (_++ Z) (++-:: x Y xs)
+    --           ≡⟨ sorry ⟩
+    --         refl ∙ ap (_++ Z) (++-β (x :: xs) Y)
+    --         ∎
+    --         ) j k
+    --       ; (i = i1) → compPath→Square (
+    --         ap (x ::_) (ap (Y ++_) (sym (++-β xs Z))) ∙ (++-:: x Y (xs ++ Z))
+    --           ≡⟨ sorry ⟩
+    --         (++-:: x Y (Z ++ xs) ∙ (ap (Y ++_) (++-:: x Z xs))) ∙ ap (Y ++_) (sym (++-β (x :: xs) Z))
+    --         ∎
+    --         ) j k
+    --       ; (j = i0) → compPath→Square (
+    --         ap (x ::_) (++-⬡₌ xs Y Z) ∙ (++-:: x Y (Z ++ xs) ∙ ap (Y ++_) (++-:: x Z xs))
+    --           ≡⟨ sorry ⟩
+    --         refl ∙ ++-⬡₌ (x :: xs) Y Z
+    --         ∎
+    --         ) i k
+    --       ; (j = i1) → compPath→Square (
+    --         ap (x ::_) (++-α Y xs Z) ∙ ++-:: x Y (xs ++ Z)
+    --           ≡⟨ sorry ⟩
+    --         ap (_++ Z) (++-:: x Y xs) ∙ ++-α Y (x :: xs) Z
+    --         ∎
+    --         ) i k
+    --       }) (x :: P i j)
 
 
 module _ (X Y Z : SList A) where
@@ -195,15 +299,13 @@ module _ (X Y Z : SList A) where
         )
         -- x :: a (Y xs Z) = a (Y x :: xs Z)
         -- (λ x P i j → {!!})
-        (λ x {xs} P i j → {!x :: P i j!} -- tpt2 (λ a b → Square (ap (_++ Z) (++-β (x :: xs) Y)) (ap (Y ++_) (sym (++-β (x :: xs) Z))) a b) {!!} {!!}
-            -- ((λ i j → hcomp (λ k → λ
-            -- { (i = i0) → {!!}
-            -- ; (i = i1) → {!!}
-            -- ; (j = i0) → {!!}
-            -- ; (j = i1) → {!!}
-            -- })) {!!}) --
-            -- {!!}
-          )
+        (λ x {xs} P i j →
+          hcomp (λ k → λ
+            { (i = i0) → left x xs Y Z j k
+            ; (i = i1) → right x xs Y Z j k
+            ; (j = i0) → down x xs Y Z i k
+            ; (j = i1) → up x xs Y Z i k
+            }) (x :: P i j))
         (λ X → isOfHLevelPathP' 1 (is-groupoid (++-⬡₌ X Y Z i1) (++-α Y X Z i1)) _ _)
         X
 
@@ -282,25 +384,25 @@ module _ (X Y : SList A) where
           SListElimProp.elim
           (λ Y → ++-β (x :: xs) Y ≡ sym (++-β Y (x :: xs)))
           sorry -- {!refl!}
-          (λ y {ys} Q →
-            ++-β (x :: xs) (y :: ys)
-              ≡⟨ refl ⟩
-            ap (x ::_) (++-β xs (y :: ys)) ∙ ++-:: x (y :: ys) xs
-              ≡⟨ ap (λ a → ap (x ::_) a ∙ ++-:: x (y :: ys) xs) {!P !} ⟩
-            ap (x ::_) {!!} ∙ ++-:: x (y :: ys) xs
-              ≡⟨ {!!} ⟩
-            {!!}
-              ≡⟨ {!!} ⟩
-            {!!}
-              ≡⟨ {!!} ⟩
-            sym (++-:: y (x :: xs) ys) ∙ sym (ap (y ::_) (++-β ys (x :: xs)))
-              ≡⟨ sym (symDistr (ap (y ::_) (++-β ys (x :: xs))) (++-:: y (x :: xs) ys)) ⟩
-            sym (ap (y ::_) (++-β ys (x :: xs)) ∙ ++-:: y (x :: xs) ys)
-              ≡⟨ refl ⟩
-            sym (++-β (y :: ys) (x :: xs))
-            ∎
+          (λ y {ys} Q → {!!}
+            -- ++-β (x :: xs) (y :: ys)
+            --   ≡⟨ refl ⟩
+            -- ap (x ::_) (++-β xs (y :: ys)) ∙ ++-:: x (y :: ys) xs
+            --   ≡⟨ ap (λ a → ap (x ::_) a ∙ ++-:: x (y :: ys) xs) {!P !} ⟩
+            -- ap (x ::_) {!!} ∙ ++-:: x (y :: ys) xs
+            --   ≡⟨ {!!} ⟩
+            -- {!!}
+            --   ≡⟨ {!!} ⟩
+            -- {!!}
+            --   ≡⟨ {!!} ⟩
+            -- sym (++-:: y (x :: xs) ys) ∙ sym (ap (y ::_) (++-β ys (x :: xs)))
+            --   ≡⟨ sym (symDistr (ap (y ::_) (++-β ys (x :: xs))) (++-:: y (x :: xs) ys)) ⟩
+            -- sym (ap (y ::_) (++-β ys (x :: xs)) ∙ ++-:: y (x :: xs) ys)
+            --   ≡⟨ refl ⟩
+            -- sym (++-β (y :: ys) (x :: xs))
+            -- ∎
           )
-          sorry -- (λ ys → is-groupoid _ _ _ _)
+          (λ ys → is-groupoid (x :: xs ++ ys) (ys ++ x :: xs) (++-β (x :: xs) ys) (sym (++-β ys (x :: xs))))
           Y
           -- ++-β (x :: xs) Y
           --   ≡⟨ refl ⟩
@@ -315,7 +417,7 @@ module _ (X Y : SList A) where
           -- sym (++-β Y (x :: xs))
           -- ∎
         )
-        sorry -- (λ xs → is-groupoid (xs ++ Y) (Y ++ xs) (++-β xs Y) (sym (++-β Y xs)))
+        (λ xs → is-groupoid (xs ++ Y) (Y ++ xs) (++-β xs Y) (sym (++-β Y xs)))
         X
 
 -- let

@@ -12,6 +12,7 @@ open import Cubical.Foundations.Path public
 open import Cubical.Foundations.GroupoidLaws
   renaming ( cong-∙ to ap-∙
            ; cong-∙∙ to ap-∙∙
+           ; symDistr to sym-∙
            ) public
 open import Cubical.Foundations.Function public
 open import Cubical.Foundations.Equiv public
